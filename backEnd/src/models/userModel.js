@@ -1,29 +1,28 @@
-import pool from "../config/db.js";
+import { TorusGeometry } from "three";
+import sequelize from "../config/db.js";
+import { DataTypes } from "sequelize";
 
-export default class userModel {
-    static async getUsers()
+const User = sequelize.define(
+    "User",
     {
-        try{
-            const [rows] = await pool.query("SELECT * FROM ´user´");
-            return [rows];
-        }
-        catch(error)
-        {
-            console.error("Database error:", error);
-            throw error;
-        }
-    }
-    
-    static async logIn(user,password)
+        UserID:{
+            type: DataTypes.INTEGER,
+            autoIncrement:true,
+            primaryKey:true,
+        },
+        Username:{
+            type: DataTypes.STRING(100),
+            allowNull:true,
+        },
+        Password:{
+            type: DataTypes.STRING(100),
+            allowNull:true,
+        },
+    },
     {
-        try {
-            const [rows] = await pool.query("SELECT * FROM ´user´ WHERE Username = ? AND password = ?", [user, password]);
-            return rows[0] || null;
-        }
-        catch(error)
-        {
-            console.error("Database error:", error);
-            throw error;
-        }
+        tableName: "users",
+        timestamps:false
     }
-}
+);
+
+export default User;
