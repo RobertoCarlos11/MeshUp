@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Header from "../components/Header"
+import Footer from "../components/Footer"
 import Scene from "../components/Three/Scene"
 
 function Home()
@@ -27,7 +28,7 @@ function Home()
     
     return (
         <div className="bg-color">
-        <Header />
+        <Header/>
         <h1>Hola bienvenido a la pagina principal MESH UP!!!</h1>
         <div className="text-secondary flex justify-center space-x-auto space-y-5">
             <input type="file" onChange={handleFileChange} id="modelFile" />
@@ -39,7 +40,7 @@ function Home()
         </div>
 
         <Scene modelUrl = {modelUrl} textureUrl={textureUrl}/>
-
+        <Footer/>
         </div>
     )
 }
