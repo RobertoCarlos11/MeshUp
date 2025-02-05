@@ -1,1 +1,47 @@
 @import "tailwindcss";
+
+:root{
+    --background-color:#171219;
+    --secondary-color:#225560;
+    --primary-color: #06BCC1;
+    --comp-1-color:#FFFFFF;
+}
+
+.bg-color{
+    background-color: var(--background-color);
+}
+
+.bg-primary
+{
+    background-color: var(--primary-color);
+}
+
+.bg-secondary
+{
+    background-color: var(--secondary-color);
+}
+
+.bg-comp-1
+{
+    background-color: var(--comp-1-color);
+}
+
+.text-primary
+{
+    color: var(--primary-color);
+}
+
+.text-secondary
+{
+    color: var(--secondary-color);
+}
+
+.text-comp-1
+{
+    color: var(--comp-1-color);
+}
+
+.text-bg
+{
+    color: var(--background-color);
+}

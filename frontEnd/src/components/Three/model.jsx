@@ -12,9 +12,10 @@ const Model = ({modelUrl, textureUrl}) => {
         {
             child.castShadow = true;
             child.receiveShadow = true;
+            console.log(child.material);
             if(child.material && child.material.map) 
             {
-                child.material = new THREE.MeshStandardMaterial({map: texture});
+                child.material = new THREE.MeshToonMaterial({map: texture});
             }
             else{
                 child.material = new THREE.MeshStandardMaterial({color: "gray"});

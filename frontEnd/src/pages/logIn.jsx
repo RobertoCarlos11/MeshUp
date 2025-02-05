@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Header from "../components/Header"   
 import { getUsers,userLogIn } from "../services/userService";
 import { useNavigate } from "react-router-dom";
 
@@ -23,12 +24,13 @@ function logIn(){
     }   
 
     const handleUserButton = async () => {
-        const allUsers = await getUsers();
-        setUserData(allUsers.data[0]);
+        const allUsers = await getUsers("Dobeto", "Dobeto123");
+        setUserData(allUsers.data);
     }
 
     return(
         <>
+        <Header />
         <form onSubmit={handleForm} className="">
             <input className="" type="text" onChange={(e) => {setUser(e.currentTarget.value)}} name="username" id="username"/>
             <input type="password" onChange={(e) => {setPassword(e.currentTarget.value)}} name="password" id="password"/>

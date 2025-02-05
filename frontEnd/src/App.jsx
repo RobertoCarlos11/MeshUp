@@ -1,7 +1,6 @@
 import { BrowserRouter as Router,Routes, Route } from 'react-router-dom'
-import { useState } from 'react'
-import LogIn from './pages/logIn'
-import Home from './pages/home'
+import LogIn from './pages/LogIn'
+import Home from './pages/Home'
 import './App.css'
 
 function App() {
