@@ -11,7 +11,7 @@ const Scene = (props) =>
                 <ambientLight intensity={0.5}/>
                 <directionalLight position={[2,5,3]}/>
                 <OrbitControls/>
-                {props.modelUrl && props.textureUrl && <Model modelUrl={props.modelUrl} textureUrl={props.textureUrl}/>}
+                {props.modelUrl && <Model modelUrl={props.modelUrl} textureUrl={props.textureUrl}/>}
             </Canvas>
         </div>
     )
