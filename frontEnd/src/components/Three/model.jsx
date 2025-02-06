@@ -1,8 +1,9 @@
 import { useLoader } from "@react-three/fiber";
 import { FBXLoader, OBJLoader } from "three/examples/jsm/Addons.js"
 import * as THREE from "three";
+import { useEffect, useRef } from "react";
 
-const Model = ({modelUrl, textureUrl}) => {
+const Model = ({modelUrl, textureUrl,onModelLoaded}) => {
 
     const obj = useLoader(FBXLoader, modelUrl);
     const texture = textureUrl ? useLoader(THREE.TextureLoader, textureUrl) : null;
@@ -12,7 +13,6 @@ const Model = ({modelUrl, textureUrl}) => {
         {
             child.castShadow = true;
             child.receiveShadow = true;
-            console.log(child.material);
             if(child.material && child.material.map) 
             {
                 child.material = new THREE.MeshToonMaterial({map: texture});
@@ -22,6 +22,8 @@ const Model = ({modelUrl, textureUrl}) => {
             }
         }
     })
+
+
     return <primitive object={obj} scale={1}/>
 }
 
