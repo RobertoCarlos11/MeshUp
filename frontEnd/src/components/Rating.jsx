@@ -5,10 +5,18 @@ import { useState } from 'react';
 function Rating(props)
 {  
     const [stars, setStars] = useState(props.stars);
-    
+    const [ratingSelected, setRatingSelected] = useState(false);
+
+    const handleMouseClick = (index) => 
+    {
+        setStars(index+1);
+        props.starsGiven(index+1);
+        setRatingSelected(true);
+    }
+
     const handleMouseHover = (index) => 
     {
-        if(props.stars)
+        if(props.stars || ratingSelected)
             return;
         setStars(index+1);
     }
@@ -17,8 +25,8 @@ function Rating(props)
     <div className={props.className}>
         {[...Array(5)].map((_,index) => 
             index < stars ? 
-            <StarIcon onMouseEnter={()=> {handleMouseHover(index)}} key={index}/> :
-            <StarBorderIcon onMouseEnter={() => {handleMouseHover(index)}} key={index} /> 
+            <StarIcon onClick={() => handleMouseClick(index)} onMouseEnter={()=> {handleMouseHover(index)}} key={index}/> :
+            <StarBorderIcon onClick={() => handleMouseClick(index)} onMouseEnter={() => {handleMouseHover(index)}} key={index} /> 
         )}   
     </div>
     )
