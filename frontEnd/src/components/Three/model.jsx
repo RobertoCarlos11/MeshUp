@@ -1,9 +1,8 @@
 import { useLoader } from "@react-three/fiber";
 import { FBXLoader, OBJLoader } from "three/examples/jsm/Addons.js"
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
 
-const Model = ({modelUrl, textureUrl,onModelLoaded}) => {
+const Model = ({modelUrl, textureUrl}) => {
 
     const obj = useLoader(FBXLoader, modelUrl);
     const texture = textureUrl ? useLoader(THREE.TextureLoader, textureUrl) : null;
