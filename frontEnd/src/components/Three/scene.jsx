@@ -5,8 +5,8 @@ import Model from "./Model";
 const Scene = (props) => 
 {
     return(
-        <div className="w-full h-full">
-            <Canvas style={{width:"100%" , height:"500px" }}>
+        <div className={props.className}>
+            <Canvas className="rounded-md" style={{width:"100%" }}>
                 <color attach="background" args={["lightgray"]} />  
                 <ambientLight intensity={0.5}/>
                 <directionalLight position={[2,5,3]}/>
@@ -17,4 +17,9 @@ const Scene = (props) =>
     )
 }
 
+
+Scene.defaultProps = {
+    width: " ",
+    height: " ",
+}
 export default Scene
