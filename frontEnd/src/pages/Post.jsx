@@ -1,13 +1,28 @@
 import CommentCard from "../components/CommentCard";
 import Scene from "../components/Three/Scene";
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SendIcon from '@mui/icons-material/Send';
 import Rating from "../components/Rating";
+import { useState } from 'react';
+
 
 function Post() {
+
+    const [review, setReview] = useState();
+    const [starsGiven, setStarsGiven] = useState(0);
+
+    const handleStarsChange = (amount) => 
+    {
+        setStarsGiven(amount);
+    }
+
+    const handleReviewSubmit = () => 
+    {
+        alert(`Esta fue la review ${review} y estas fueron las estrellas ${starsGiven}`);
+    }
+
     return (
         <div className="w-screen h-screen flex justify-between px-12">
             <div className="w-1/2 space-y-2 px-2">
@@ -39,16 +54,14 @@ function Post() {
             <div className="flex flex-col w-1/2 px-2">
                 <div className="space-y-6 h-5/6 overflow-y-auto">
                 <CommentCard />
-                <CommentCard />
-                <CommentCard />
-                <CommentCard />
-                <CommentCard />
                 </div>
                 <div className="h-1/6 flex items-center flex-col">
-                    <input type="text" placeholder="Leave a review..." className="w-full border-b-2 border-[var(--primary-color)] text-comp-1" />
+                    <input type="text" onChange={(e) => setReview(e.target.value)} placeholder="Leave a review..." className="w-full border-b-2 border-[var(--primary-color)] text-comp-1" />
                     <div className="flex justify-between w-full py-2">
-                    <Rating className="text-yellow-400"/>
-                    <SendIcon className="text-primary"/>
+                    <Rating starsGiven={handleStarsChange} className="text-yellow-400"/>
+                    <button onClick={handleReviewSubmit}>
+                        <SendIcon className="text-primary"/>
+                    </button>
                     </div>
                 </div>
             </div>
