@@ -1,4 +1,3 @@
-import { TorusGeometry } from "three";
 import sequelize from "../config/db.js";
 import { DataTypes } from "sequelize";
 

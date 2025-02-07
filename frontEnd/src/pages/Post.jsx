@@ -13,13 +13,12 @@ function Post() {
     const [review, setReview] = useState();
     const [starsGiven, setStarsGiven] = useState(0);
 
-    const handleStarsChange = (amount) => 
-    {
+
+    const handleStarsChange = (amount) => {
         setStarsGiven(amount);
     }
 
-    const handleReviewSubmit = () => 
-    {
+    const handleReviewSubmit = () => {
         alert(`Esta fue la review ${review} y estas fueron las estrellas ${starsGiven}`);
     }
 
@@ -30,9 +29,9 @@ function Post() {
                     <h1 className="text-comp-1 text-2xl font-bold">Title Post</h1>
                     <h2 className="text-primary text-md font-semibold">User</h2>
                 </div>
-                <Scene className="h-1/2"/>
+                <Scene className="h-1/2" />
                 <div className="flex justify-between">
-                        <Rating stars={4} className="text-yellow-400"/>
+                    <Rating stars={4} className="text-yellow-400" />
                     <div className="flex space-x-4 text-primary">
                         <div className="flex">
                             <FavoriteBorderIcon />
@@ -53,15 +52,15 @@ function Post() {
             </div>
             <div className="flex flex-col w-1/2 px-2">
                 <div className="space-y-6 h-5/6 overflow-y-auto">
-                <CommentCard />
+                    <CommentCard />
                 </div>
                 <div className="h-1/6 flex items-center flex-col">
                     <input type="text" onChange={(e) => setReview(e.target.value)} placeholder="Leave a review..." className="w-full border-b-2 border-[var(--primary-color)] text-comp-1" />
                     <div className="flex justify-between w-full py-2">
-                    <Rating starsGiven={handleStarsChange} className="text-yellow-400"/>
-                    <button onClick={handleReviewSubmit}>
-                        <SendIcon className="text-primary"/>
-                    </button>
+                        <Rating starsGiven={handleStarsChange} className="text-yellow-400" />
+                        <button onClick={handleReviewSubmit}>
+                            <SendIcon className="text-primary" />
+                        </button>
                     </div>
                 </div>
             </div>
