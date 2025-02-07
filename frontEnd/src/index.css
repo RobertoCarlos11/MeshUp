@@ -4,6 +4,8 @@
     --secondary-color:#225560;
     --primary-color: #06BCC1;
     --comp-1-color:#FFFFFF;
+    --default-font-family: "Kufam";
+    color: var(--comp-1-color);
 }
 
 .bg-color{
