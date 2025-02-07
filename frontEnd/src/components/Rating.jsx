@@ -9,6 +9,9 @@ function Rating(props)
 
     const handleMouseClick = (index) => 
     {
+        if(props.stars)
+            return;
+
         setStars(index+1);
         props.starsGiven(index+1);
         setRatingSelected(true);
