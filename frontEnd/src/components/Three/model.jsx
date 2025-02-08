@@ -12,7 +12,6 @@ const Model = ({modelUrl, textureUrl}) => {
         {
             child.castShadow = true;
             child.receiveShadow = true;
-            console.log(child.material);
             if(child.material && child.material.map) 
             {
                 child.material = new THREE.MeshToonMaterial({map: texture});
@@ -22,6 +21,8 @@ const Model = ({modelUrl, textureUrl}) => {
             }
         }
     })
+
+
     return <primitive object={obj} scale={1}/>
 }
 

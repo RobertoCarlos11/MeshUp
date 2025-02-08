@@ -1,26 +1,32 @@
-import { TorusGeometry } from "three";
 import sequelize from "../config/db.js";
 import { DataTypes } from "sequelize";
 
 const User = sequelize.define(
     "User",
     {
-        UserID:{
-            type: DataTypes.INTEGER,
-            autoIncrement:true,
+        Email:{
+            type: DataTypes.STRING(50),
             primaryKey:true,
         },
         Username:{
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING(30),
+            allowNull:false,
+        },
+        Pass:{
+            type: DataTypes.STRING(30),
+            allowNull:false,
+        },
+        Profile_Picture:{
+            type: DataTypes.BLOB('medium'),
             allowNull:true,
         },
-        Password:{
-            type: DataTypes.STRING(100),
+        Birthdate:{
+            type: DataTypes.DATE(),
             allowNull:true,
-        },
+        }
     },
     {
-        tableName: "user",
+        tableName: "´User´",
         timestamps:false
     }
 );

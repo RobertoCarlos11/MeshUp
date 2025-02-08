@@ -21,10 +21,14 @@ export const getAllUsers = async (req,res) => {
 export const userLogIn = async (req, res) => {
     try{
         const {user, password} = req.params;
-        const userFound = await User.findOne({where:
+        const userFound = await User.findOne({
+            where:
             {
-            Username: user,
-            Password: password,
+                [Op.or]:[
+                    {Username: user},
+                    {Email: user}
+                ],
+                Pass: password,
             }}
         );
         
