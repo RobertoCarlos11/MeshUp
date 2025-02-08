@@ -1,3 +1,5 @@
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import CommentCard from "../components/CommentCard";
 import Scene from "../components/Three/Scene";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
@@ -23,6 +25,8 @@ function Post() {
     }
 
     return (
+        <>
+        <Header/>
         <div className="w-screen h-screen flex justify-between px-12">
             <div className="w-1/2 space-y-2 px-2">
                 <div>
@@ -65,6 +69,8 @@ function Post() {
                 </div>
             </div>
         </div>
+        <Footer/>
+        </>
     )
 }
 
