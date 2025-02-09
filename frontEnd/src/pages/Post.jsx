@@ -38,14 +38,14 @@ function Post() {
                     <Rating stars={4} className="text-yellow-400" />
                     <div className="flex space-x-4 text-primary">
                         <div className="flex">
-                            <FavoriteBorderIcon />
-                            <p className="text-comp-1">18</p>
+                            <FavoriteBorderIcon className='cursor-pointer'/>
+                            <p className="text-comp-1 m-1">18</p>
                         </div>
                         <div className="flex">
-                            <BookmarkBorderIcon />
-                            <p className="text-comp-1">18</p>
+                            <BookmarkBorderIcon className='cursor-pointer'/>
+                            <p className="text-comp-1 m-1">18</p>
                         </div>
-                        <FileDownloadOutlinedIcon />
+                        <FileDownloadOutlinedIcon className='cursor-pointer'/>
                     </div>
                 </div>
                 <div className="w-full h-1 rounded-md bg-secondary"></div>
@@ -61,9 +61,9 @@ function Post() {
                 <div className="h-1/6 flex items-center flex-col">
                     <input type="text" onChange={(e) => setReview(e.target.value)} placeholder="Leave a review..." className="w-full border-b-2 border-[var(--primary-color)] text-comp-1" />
                     <div className="flex justify-between w-full py-2">
-                        <Rating starsGiven={handleStarsChange} className="text-yellow-400" />
+                        <Rating starsGiven={handleStarsChange} className="text-yellow-400 cursor-pointer" />
                         <button onClick={handleReviewSubmit}>
-                            <SendIcon className="text-primary" />
+                            <SendIcon className="text-primary cursor-pointer" />
                         </button>
                     </div>
                 </div>

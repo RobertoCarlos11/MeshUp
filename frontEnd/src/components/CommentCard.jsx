@@ -4,7 +4,7 @@ import Rating from "../components/Rating"
 
 function CommentCard(props) {
     return (
-        <div className="border-1 border-[var(--primary-color)] rounded-md p-1">
+        <div className="border-1 border-[var(--primary-color)] rounded-md p-2">
             <div className="flex justify-between">
                 <div className="flex space-x-2">
                     <img src={React} className="" />
@@ -16,7 +16,7 @@ function CommentCard(props) {
                 <p className="text-comp-1 text-md">{props.Review}</p>
                 <div className="flex justify-between">
                     <div className="flex space-x-1 text-xs">
-                        <FavoriteBorderIcon className="text-primary" />
+                        <FavoriteBorderIcon className="text-primary cursor-pointer" />
                         <p className="text-comp-1 flex items-center">{props.Likes} Likes</p>
                     </div>
                     <div className="text-xs text-secondary">
