@@ -1,3 +1,5 @@
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import Scene from "../components/Three/Scene";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
@@ -27,6 +29,8 @@ function Upload() {
     }
 
     return (
+        <>
+        <Header/>
         <div className="space-x-auto h-screen w-screen flex justify-center">
             <div className="w-1/2 flex flex-col space-y-4">
                 <input type="text" placeholder="Add Title..." className="text-comp-1 font-bold text-2xl w-full" />
@@ -59,6 +63,8 @@ function Upload() {
                 <button className="bg-primary text-comp-1 rounded-md w-1/2 self-center">Upload</button>
             </div>
         </div>
+        <Footer/>
+        </>
     )
 }
 
