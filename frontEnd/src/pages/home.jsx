@@ -1,6 +1,7 @@
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import PostCard from "../components/PostCard";
+import Pagination from "../components/Three/Pagination";
 
 function Home(){
     
@@ -19,6 +20,7 @@ function Home(){
                 <PostCard/>
                 <PostCard/>
             </div>
+            <Pagination/>
             <Footer/>
         </div>
     )
