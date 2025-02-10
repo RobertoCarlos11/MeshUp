@@ -1,26 +1,30 @@
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import Texture from "../assets/Models/Gradient_UV_001.png";
+import Model from "../assets/Models/SRP_001.FBX";
+
 import Rating from './Rating';
-function PostCard(){
+import Scene from './Three/Scene';
+function PostCard(props){
     return(
         <>
         <div className="relative flex flex-col m-2 bg-white shadow-sm rounded-sm w-145">      
-            <div className='h-75 bg-[var(--secondary-color)] rounded-t-sm'>
-                <Rating stars={4} className="flex justify-end text-yellow-400 m-3"/>
-            </div>
+                <Scene className="h-75 rounded-md relative" modelUrl={Model} textureUrl={Texture}>
+                <Rating stars={props.Rating} className="absolute top-2 right-2 text-yellow-400"/>
+                </ Scene>
             <div className="mx-3 flex justify-between border-t pb-2 pt-2 px-1">
                 <span className="text-base text-[var(--secondary-color)] m-1">
-                    Post Name
+                    {props.PostName}
                 </span>
                 <div className='flex flex-row text-[var(--secondary-color)]'>
                         <div className="flex">
                             <FavoriteBorderIcon className='cursor-pointer'/>
-                            <p className="text-base m-1">18</p>
+                            <p className="text-base m-1">{props.Likes}</p>
                         </div>
                         <div className="flex">
                             <BookmarkBorderIcon className='cursor-pointer'/>
-                            <p className="text-base m-1">18</p>
+                            <p className="text-base m-1">{props.Saves}</p>
                         </div>
                         <MoreVertOutlinedIcon className='cursor-pointer'/>
                 </div>
@@ -28,5 +32,12 @@ function PostCard(){
         </div>
         </>
     )
+}
+
+PostCard.defaultProps = {
+    PostName: "Post Name",
+    Likes: 10,
+    Saves: 20,
+    Rating: 4,
 }
 export default PostCard;
