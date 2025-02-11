@@ -21,6 +21,8 @@ function Search_History(){
                     <Day_History/>
                     <Day_History/> 
 
+                    <center><button className="justify-center bg-[var(--primary-color)] cursor-pointer rounded-sm m-5 p-3 pb-2 pt-2">Delete Search History</button></center>
+                    
                 </div>
             <Footer/>
         </>
