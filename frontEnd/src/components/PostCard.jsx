@@ -10,7 +10,7 @@ function PostCard(){
                 <Rating stars={4} className="flex justify-end text-yellow-400 m-3"/>
             </div>
             <div className="mx-3 flex justify-between border-t pb-2 pt-2 px-1">
-                <span className="text-base text-[var(--secondary-color)] m-1">
+                <span className="cursor-pointer text-base text-[var(--secondary-color)] m-1">
                     Post Name
                 </span>
                 <div className='flex flex-row text-[var(--secondary-color)]'>
