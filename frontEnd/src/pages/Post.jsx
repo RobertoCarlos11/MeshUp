@@ -8,6 +8,8 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SendIcon from '@mui/icons-material/Send';
 import Rating from "../components/Rating";
 import { useState } from 'react';
+import Texture from "../assets/Models/Gradient_UV_001.png";
+import Model from "../assets/Models/SRP_001.FBX";
 
 
 function Post() {
@@ -33,7 +35,7 @@ function Post() {
                     <h1 className="text-comp-1 text-2xl font-bold">Title Post</h1>
                     <h2 className="text-primary text-md font-semibold">User</h2>
                 </div>
-                <Scene className="h-96" />
+                <Scene className="h-96" modelUrl={Model} textureUrl={Texture} />
                 <div className="flex justify-between">
                     <Rating stars={4} className="text-yellow-400" />
                     <div className="flex space-x-4 text-primary">
