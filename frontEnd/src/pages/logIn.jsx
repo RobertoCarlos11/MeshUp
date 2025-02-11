@@ -1,9 +1,8 @@
 import { useState } from "react";
-import Header from "../components/Header"   
 import { getUsers,userLogIn } from "../services/userService";
 import { useNavigate, Link } from "react-router-dom";
 
-function logIn(){
+function LogIn(){
 
     const navigate = useNavigate();
     const [user, setUser] = useState("");
@@ -37,4 +36,4 @@ function logIn(){
     )
 }
 
-export default logIn;
+export default LogIn;
