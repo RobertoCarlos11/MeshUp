@@ -15,7 +15,7 @@ function Collection(){
             </div>
         </div>
 
-        <div className="flex flex-wrap justify-center space-x-auto m-10 p-10">
+        <div className="flex flex-wrap justify-center space-x-auto m-5 p-5">
             <Collection_ELement/>
             <Collection_ELement/>
             <Collection_ELement/>
