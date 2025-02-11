@@ -31,7 +31,7 @@ function Upload() {
     return (
         <>
         <Header/>
-        <div className="space-x-auto h-screen w-screen flex justify-center">
+        <div className="space-x-auto h-screen flex justify-center">
             <div className="w-1/2 flex flex-col space-y-4">
                 <input type="text" placeholder="Add Title..." className="text-comp-1 font-bold text-2xl w-full" />
                 <Scene className="h-1/2" modelUrl={model && URL.createObjectURL(model)} textureUrl = {texture && URL.createObjectURL(texture)}/>

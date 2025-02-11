@@ -2,7 +2,7 @@ import LogoName from "../assets/LogoName.png";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import DefaultPfp from "../assets/no-user.png";
 import HeaderComponent from "./HeaderComponent";
-
+import {Link} from "react-router-dom";
 function Header(){
     return(
     <>
