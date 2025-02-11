@@ -16,7 +16,7 @@ const Scene = (props) =>
                 <OrbitControls/>
                 {props.modelUrl && <Model modelUrl={props.modelUrl} textureUrl={props.textureUrl} setCameraPosition={setCameraPosition}/>}
             </Canvas>
-            {props.children};
+            {props.children}
         </div>
     )
 }
