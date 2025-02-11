@@ -6,11 +6,11 @@ import Pagination from "../components/Three/Pagination";
 function Home(){
     
     return (
-        <div className="bg-color">
+        <div className="">
             <Header/>
-            <div className="text-secondary flex space-x-auto mr-5 ml-5">
-                <button className="text-[var(--comp-1-color)] bg-[var(--primary-color)] cursor-pointer rounded-sm m-2 p-4 pb-2 pt-2">Category</button>
-                <button className="text-[var(--comp-1-color)] border-2 border-solid border-[var(--primary-color)] cursor-pointer rounded-sm m-2 p-4 pb-2 pt-2">Category</button>
+            <div className="flex text-sm space-x-auto mr-5 ml-5">
+                <button className="bg-[var(--primary-color)] cursor-pointer rounded-sm m-2 p-3 pb-1 pt-1">Category</button>
+                <button className="border-2 border-solid border-[var(--primary-color)] cursor-pointer rounded-sm m-2 p-3 pb-1 pt-1">Category</button>
             </div>
             <div className="flex flex-wrap justify-center space-x-auto m-5">
                 <PostCard/>
