@@ -6,7 +6,7 @@ function HeaderComponent(){
     return(
     <>
         <div className='flex justify-center'>
-            <InsertChartOutlinedOutlinedIcon className='cursor-pointer m-2 text-[var(--primary-color)]'/>
+            <Link to="/Reports"><InsertChartOutlinedOutlinedIcon className='cursor-pointer m-2 text-[var(--primary-color)]'/></Link>
             <NotificationsOutlinedIcon className='cursor-pointer m-2 text-[var(--primary-color)]'/>
             <Link to="/Upload"><FileUploadOutlinedIcon className='cursor-pointer m-2 text-[var(--primary-color)]'/></Link>
             <Link to="/"><button className='text-base cursor-pointer bg-[var(--primary-color)] w-30 rounded-sm m-2 p-3 pb-1 pt-1'>Log In</button></Link>
