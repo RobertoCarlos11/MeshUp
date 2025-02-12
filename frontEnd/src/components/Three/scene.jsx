@@ -9,7 +9,7 @@ const Scene = (props) =>
 
     return(
         <div className={props.className}>
-            <Canvas className="rounded-md" style={{width:"100%" }} camera={{position: cameraPosition}}>
+            <Canvas className="rounded-t-sm" style={{width:"100%" }} camera={{position: cameraPosition}}>
                 <color attach="background" args={["lightgray"]} />  
                 <ambientLight intensity={0.5}/>
                 <directionalLight position={[2,5,3]}/>
