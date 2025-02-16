@@ -30,10 +30,10 @@ function Reports() {
                         </div>
                         <div className="flex flex-col m-2">
                             <label htmlFor="Category" className="font-semibold">Category</label>
-                            <select id="Category" className="text-sm border-1 border-solid border-[var(--primary-color)] rounded-sm p-1 mt-2 mb-2">
-                                <option className="bg-[var(--background-color)]">Youtube</option>
-                                <option className="bg-[var(--background-color)]">Youtube</option>
-                                <option className="bg-[var(--background-color)]">Youtube</option>
+                            <select id="Category" className="text-sm bg-[var(--background-color)] border-1 border-solid border-[var(--primary-color)] rounded-sm p-1 mt-2 mb-2">
+                                <option>Youtube</option>
+                                <option>Youtube</option>
+                                <option>Youtube</option>
                             </select>
                         </div>
                         <div className="flex flex-col m-2">
