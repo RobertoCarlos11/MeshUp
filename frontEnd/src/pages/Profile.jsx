@@ -2,6 +2,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Profile_Sections from "../components/Profile_Sections";
 import DefaultPfp from "../assets/no-user.png";
+import Button_Style from "../components/Button_Style";
 
 function Profile (){
     return(
@@ -24,7 +25,7 @@ function Profile (){
                     </div>
                 </div>
             </div>
-            <center><button className="text-sm cursor-pointer bg-[var(--primary-color)] w-25 rounded-sm m-2 p-2">Edit Profile</button></center>
+            <center><Button_Style name="Edit Profile" className="text-sm m-2 p-3 pt-1 pb-1"/></center>
         </div>
 
         <Profile_Sections/>
