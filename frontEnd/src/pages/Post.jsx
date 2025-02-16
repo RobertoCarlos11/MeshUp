@@ -58,7 +58,7 @@ function Post() {
                 </div>
             </div>
             <div className="flex flex-col w-1/2 px-2 h-5/6 justify-between">
-                <div className="flex flex-col flex-grow space-y-6 overflow-y-auto min-h-0">
+                <div className="flex flex-col flex-grow space-y-6 overflow-y-auto min-h-0 p-5">
                     <CommentCard />
                     <CommentCard />
                     <CommentCard />
@@ -77,7 +77,7 @@ function Post() {
                     <div className="flex justify-between w-full py-2">
                         <Rating starsGiven={handleStarsChange} className="text-yellow-400 cursor-pointer" />
                         <button onClick={handleReviewSubmit}>
-                            <SendIcon className="text-primary cursor-pointer" />
+                            <SendIcon className="text-[var(--primary-color)] cursor-pointer hover:text-[var(--secondary-color)]" />
                         </button>
                     </div>
                 </div>
