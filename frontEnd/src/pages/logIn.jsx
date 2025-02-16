@@ -25,7 +25,7 @@ function LogIn(){
                     <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" onChange={(e) => setUser(e.target.value)} type="text" placeholder="Username or Email Address"/>
                     <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password"/>
                     <div className="flex justify-center">
-                    <button onClick={handleLoginButton} className="w-1/2 text-xs bg-primary text-comp-1 font-semibold rounded-sm p-1">Log In</button>
+                    <button onClick={handleLoginButton} className="w-1/2 text-xs bg-[var(--primary-color)] font-semibold cursor-pointer rounded-sm m-2 p-3 pt-1 pb-1 border-2 border-solid border-[var(--primary-color)] hover:bg-transparent active:bg-[var(--background-color)]">Log In</button>
                     </div>
                 </form>
                 <div className="flex justify-center">
