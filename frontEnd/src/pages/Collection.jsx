@@ -2,6 +2,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Collection_ELement from "../components/Collection_Element";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import Button_Style from "../components/Button_Style";
 
 function Collection(){
     return (
@@ -21,8 +22,8 @@ function Collection(){
             <Collection_ELement/>
         </div>
 
-        <center><button className="justify-center bg-[var(--primary-color)] cursor-pointer rounded-sm m-5 p-3 pb-2 pt-2">Delete Collection</button></center>
-
+        <center><Button_Style name="Delete Collection" className="m-2 p-3 pt-1 pb-1"/></center> 
+        
         <Footer/>
         </>
     )
