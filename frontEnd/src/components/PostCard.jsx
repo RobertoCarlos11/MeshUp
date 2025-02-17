@@ -7,13 +7,14 @@ import Model from "../assets/Models/SRP_001.FBX";
 import Rating from './Rating';
 import Scene from './Three/Scene';
 import { useNavigate } from 'react-router-dom';
+
 function PostCard(props){
     const navigate = useNavigate();
     return(
         <>
         <div className="relative flex flex-col m-2 bg-white shadow-sm rounded-sm w-145">      
-                <Scene className="h-75 rounded-md relative" modelUrl={Model} textureUrl={Texture}>
-                <Rating stars={props.Rating} className="absolute top-2 right-2 text-yellow-400"/>
+                <Scene className="h-75 rounded-sm relative" modelUrl={Model} textureUrl={Texture}>
+                    <Rating stars={props.Rating} className="absolute top-2 right-2 text-yellow-400"/>
                 </ Scene>
             <div onClick={() => {navigate("/Post")}} className="cursor-pointer mx-3 flex justify-between border-t pb-2 pt-2 px-1">
                 <span className="text-base text-[var(--secondary-color)] m-1">
