@@ -1,5 +1,5 @@
 import { where } from 'sequelize';
-import User from '../models/userModel.js';
+import User from '../models/UserModel.js';
 
 export const getAllUsers = async (req,res) => {
     try{
