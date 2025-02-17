@@ -7,6 +7,7 @@ import Upload from './pages/Upload'
 import Profile from './pages/Profile'
 import Search_History from './pages/Search_History'
 import Collection from './pages/Collection'
+import Register from './pages/Register'
 import './App.css'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LogIn />} />
+          <Route path="/Register" element={<Register />} />
           <Route path="/Home" element={<Home />} />
           <Route path="/Post" element={<Post />} />
           <Route path="/Upload" element={<Upload />} />
