@@ -38,18 +38,19 @@ function Upload() {
                 <Scene className="h-1/2" modelUrl={model && URL.createObjectURL(model)} textureUrl = {texture && URL.createObjectURL(texture)}/>
                 <div className="flex w-full justify-between">
                     <div className="flex flex-row">
-                        <button onClick={handleUploadModel} className="cursor-pointer rounded-md items-center border-1 border-solid border-[var(--primary-color)] hover:bg-[var(--primary-color)] active:bg-[var(--secondary-color)] active:border-[var(--secondary-color)] m-1 p-3 pt-1 pb-1 transition duration-150 ease-in-out">
+                        <Button_Style inverted onClick={handleUploadModel} className="cursor-pointer m-1 px-3 py-1">
                             <ViewInArIcon />
                             <span className="text-xs">{model ? model.name : "Add a model..."}</span>
                             <input type="file" ref={modelRef} onChange={handleModelChange} hidden />
-                        </button>
-                        <button onClick={handleUploadTexture} className="cursor-pointer rounded-md items-center border-1 border-solid border-[var(--primary-color)] hover:bg-[var(--primary-color)] active:bg-[var(--secondary-color)] active:border-[var(--secondary-color)] m-1 p-3 pt-1 pb-1 transition duration-150 ease-in-out">
+                        </Button_Style>
+
+                        <Button_Style inverted onClick={handleUploadModel} className="cursor-pointer m-1 px-3 py-1">
                             <AddPhotoAlternateIcon />
                             <span className="text-xs">{texture ? texture.name : "Add a texture..."}</span>
                             <input type="file" ref={textureRef} onChange={handleTextureChange} hidden />
-
-                        </button>
+                        </Button_Style>
                     </div>
+                    
                     <select className="w-1/3 text-sm bg-[var(--background-color)] border-1 border-solid border-[var(--primary-color)] rounded-sm p-1 m-1">
                         <option value="Animals">Animals</option>
                         <option value="Technology">Technology</option>
