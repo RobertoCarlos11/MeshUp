@@ -12,7 +12,7 @@ function Home(){
             <Header/>
             <div className="flex text-sm space-x-auto mr-5 ml-5">
                 <Button_Style className="m-2 p-3 pb-1 pt-1" > Category </Button_Style>
-                <Button_Style2 name="Category" className="m-2 p-3 pb-1 pt-1"> Category </Button_Style2>
+                <Button_Style inverted className="m-2 p-3 pb-1 pt-1"> Category </Button_Style>
             </div>
             <div className="flex flex-wrap justify-center space-x-auto m-5">
                 <PostCard/>
