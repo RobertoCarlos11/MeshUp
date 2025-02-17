@@ -17,7 +17,7 @@ function LogIn(){
 
     }
     return(
-        <div className="h-screen w-screen flex justify-center items-center space-x-auto">
+        <div className="h-screen flex justify-center items-center space-x-auto">
             <div className="bg-secondary px-12 py-16 rounded-md">
                 <h1 className="text-comp-1 text-center font-bold text-2xl p-8">Welcome Back!</h1>
                 <h2 className="text-comp-1 text-center font-bold text-xl">Log In</h2>
@@ -29,7 +29,7 @@ function LogIn(){
                     </div>
                 </form>
                 <div className="flex justify-center">
-                <Link className="text-comp-1 font-light text-xs text-center">No account?. No problem!</Link>
+                <Link to="/Register" className="text-comp-1 font-light text-xs text-center">No account?. No problem!</Link>
                 </div>
             </div>
         </div>
