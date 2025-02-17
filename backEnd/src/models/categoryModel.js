@@ -25,4 +25,8 @@ const Category = sequelize.define(
     }
 );
 
+Category.associate = (models) => {
+    Category.hasMany(models.Post,{foreignKey:"CategoryId", as: "posts"});
+}
+
 export default Category;
