@@ -27,7 +27,12 @@ export const userRegister = async(user, password, birthdate, email) =>
 {
     try
     {
-        const response = await apiClient.post(`/api/users/${user}/${password}/${birthdate}/${email}`);
+        const response = await apiClient.post(`/api/users/`,{
+            user: user,
+            password: password,
+            birthdate: birthdate,
+            email: email,
+        });
         return response.data;
     }
     catch(error)
