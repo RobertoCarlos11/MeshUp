@@ -15,6 +15,8 @@ function LogIn(){
 
         alert(userFound.status ? `Usuario Encontrado: ${userFound.data.Username}` : "No existe o t equivocaste pendejo");
 
+        localStorage.setItem("user", userFound);
+        navigate("/Home");
     }
     return(
         <div className="h-screen flex justify-center items-center space-x-auto">
