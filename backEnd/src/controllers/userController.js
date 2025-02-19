@@ -1,5 +1,6 @@
-import { where } from 'sequelize';
+import { where, Op } from 'sequelize';
 import User from '../models/UserModel.js';
+import fs from 'fs';
 
 export const getAllUsers = async (req,res) => {
     try{
@@ -43,5 +44,31 @@ export const userLogIn = async (req, res) => {
     {
         res.status(500).json(error);
         console.log(error);
+    }
+}
+
+export const userRegister = async (req,res) => {
+    try
+    {
+        const {user, password, birthdate, email} = req.params;
+        
+        await User.create({
+            Username: user,
+            Pass: password,
+            Email: email,
+            Birthdate: birthdate,
+            Profile_Picture: null 
+        });
+
+        const payload = {
+            status: true,
+            message: "User registered successfully",
+        };
+        res.json(payload);
+    }
+    catch(error)
+    {
+        res.status(500).json(error);
+        console.log(error);   
     }
 }
