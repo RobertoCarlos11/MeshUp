@@ -50,8 +50,7 @@ export const userLogIn = async (req, res) => {
 export const userRegister = async (req,res) => {
     try
     {
-        const {user, password, birthdate, email} = req.params;
-        
+        const {user, password,birthdate,email} = req.body;
         await User.create({
             Username: user,
             Pass: password,
