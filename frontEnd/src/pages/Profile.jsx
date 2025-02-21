@@ -3,8 +3,11 @@ import Footer from "../components/Footer";
 import Profile_Sections from "../components/Profile_Sections";
 import DefaultPfp from "../assets/no-user.png";
 import Button_Style from "../components/Button_Style";
+import { useState } from "react";
 
 function Profile (){
+        const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+    
     return(
         <>
         <Header/>
@@ -15,7 +18,7 @@ function Profile (){
                 <img src={DefaultPfp} alt="ProfilePicture" className="border-4 border-solid border-[var(--background-color)] rounded-full w-45 h-45"/>
             </div>
             <div className="flex flex-col -mt-18 mb-3">
-                <span className="text-center text-2xl font-semibold">Username</span> 
+                <span className="text-center text-2xl font-semibold">{user.Username}</span> 
                 <div className="flex felx-row justify-center">
                     <div className="m-2">
                         <span className="text-base font-semibold mr-2">00</span>Posts
