@@ -16,14 +16,14 @@ function Search_History() {
                         <span className="text-base font-semibold m-2">00</span>
                         <span className="text-base m-2">Selected elements</span>
                     </div>
-                    <Button_Style2 name="Delete" className="text-sm m-2 p-3 pb-1 pt-1" />
+                    <Button_Style classname="text-sm m-2 px-3 py-1" inverted > Delete</Button_Style>
                 </div>
 
                 <Day_History />
                 <Day_History />
                 <Day_History />
 
-                <Button_Style className="text-sm m-5 p-3 pb-1 pt-1 w-1/3">
+                <Button_Style className="text-sm m-5 p-3 py-1 w-1/3">
                     Delete Search History
                 </Button_Style>
             </div>
