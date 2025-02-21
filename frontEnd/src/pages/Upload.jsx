@@ -64,7 +64,7 @@ function Upload() {
                 </div>
                 
                 <div className="flex justify-center">
-                <Button_Style className="text-sm m-2 p-3 pt-1 pb-1 w-1/3"> Upload </Button_Style>
+                <Button_Style className="text-sm m-2 p-3 py-1 w-1/3"> Upload </Button_Style>
                 </div>
             </div>
         </div>
