@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getUsers,userLogIn } from "../services/userService";
 import { useNavigate, Link } from "react-router-dom";
+import Button_Style from "../components/Button_Style";
 
 function LogIn(){
 
@@ -15,8 +16,11 @@ function LogIn(){
 
         alert(userFound.status ? `Usuario Encontrado: ${userFound.data.Username}` : "No existe o t equivocaste pendejo");
 
-        localStorage.setItem("user", userFound);
-        navigate("/Home");
+        if(userFound.status)
+        {
+            localStorage.setItem("user", JSON.stringify(userFound.data));
+            navigate("/Home");
+        }
     }
     return(
         <div className="h-screen flex justify-center items-center space-x-auto">
@@ -27,7 +31,9 @@ function LogIn(){
                     <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" onChange={(e) => setUser(e.target.value)} type="text" placeholder="Username or Email Address"/>
                     <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password"/>
                     <div className="flex justify-center">
-                    <button onClick={handleLoginButton} className="w-1/2 text-xs bg-[var(--primary-color)] font-semibold cursor-pointer rounded-sm m-2 p-3 pt-1 pb-1 border-2 border-solid border-[var(--primary-color)] hover:bg-transparent active:bg-[var(--background-color)]">Log In</button>
+                    <Button_Style className="w-1/2 text-sm" onClick={handleLoginButton}>
+                        Log In
+                    </Button_Style>
                     </div>
                 </form>
                 <div className="flex justify-center">
