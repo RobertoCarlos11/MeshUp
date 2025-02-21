@@ -33,7 +33,7 @@ function Register() {
                         <input id="Birthdate" onChange={e => setBirthdate(e.currentTarget.value)} className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" type="date" placeholder="Birthdate" />
                         <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" onChange = {e => setPassword(e.currentTarget.value)}type="password" placeholder="Password" />
                         <div className="flex justify-center">
-                            <Button_Style className="w-1/2" onClick={handleSignInButton}>Sign In</Button_Style>
+                            <Button_Style className="w-1/2 text-sm" onClick={handleSignInButton}>Sign In</Button_Style>
                         </div>
                     </form>
                     <div className="flex justify-center">
