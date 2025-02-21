@@ -28,7 +28,9 @@ function Profile (){
                     </div>
                 </div>
             </div>
-            <center><Button_Style name="Edit Profile" className="text-sm m-2 p-3 pt-1 pb-1"/></center>
+            <Button_Style className="text-sm m-2 px-3 py-1 w-32 self-center">
+                Edit Profile 
+                </Button_Style>
         </div>
 
         <Profile_Sections/>
