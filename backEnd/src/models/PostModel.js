@@ -1,6 +1,5 @@
-import { DarkModeOutlined } from "@mui/icons-material";
-import sequelize from "../config/db";
-import { DataTypes, Model } from "sequelize";
+import sequelize from "../config/db.js";
+import { DataTypes,NOW } from "sequelize";
 
 const Post = sequelize.define(
     "Post",{
@@ -18,7 +17,8 @@ const Post = sequelize.define(
             allowNull:false,
         },
         Post_Date:{
-            type: DataTypes.DATETIME(),
+            type: DataTypes.DATE(),
+            defaultValue: NOW,
             allowNull:false,
         },
         Likes:{
@@ -62,9 +62,10 @@ const Post = sequelize.define(
 
 Post.associate = (models)=>{
     Post.hasOne(models.Model,{foreignKey:"ModelId", as: "model"});
-    Post.hasOne(models.User,{foreignKey:"Email" , as: "user"});
-
+    Post.belongsTo(models.User, { foreignKey: "Email", as: "user" });
     Post.hasMany(models.Notification,{foreignKey:"PostId" , as: "notifications"});
     Post.hasMany(models.Category,{foreignKey:"CategoryId" , as: "category"});
     Post.hasMany(models.Comment,{foreignKey:"PostId" , as: "comments"});
 };
+
+export default Post;
