@@ -13,3 +13,16 @@ export const CreatePost = async (PostInfo) =>
         throw error.response?.data || error.message;
     }
 }
+
+export const GetAllPosts = async () => 
+{
+    try
+    {
+        const response = await apiClient.get("/api/post/");
+        return response.data;
+    }
+    catch(error)
+    {
+        throw error.response?.data || error.message;
+    }
+}
