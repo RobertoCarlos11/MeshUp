@@ -1,4 +1,4 @@
-import sequelize from "../config/db";
+import sequelize from "../config/db.js";
 import { DataTypes } from "sequelize";
 
 const Collection = sequelize.define(
@@ -31,8 +31,5 @@ const Collection = sequelize.define(
     }
 );
 
-Collection.associate = (models) => {
-    Collection.belongsTo(models.User,{foreignKey:"Email", as: "users"});
-    Collection.belongsToMany(models.Collection_Element, {foreignKey:"ElementId", as:"Collection Elements"});
-    Collection.belongsToMany(models.Post, {foreignKey:"PostId", as:"Posts"});
-};
+
+export default Collection;
