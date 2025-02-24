@@ -1,5 +1,9 @@
 import sequelize from "../config/db.js";
 import { DataTypes,NOW } from "sequelize";
+import User from "./UserModel.js";
+import Model from "./3DFileModel.js";
+import Category from "./CategoryModel.js";
+
 
 const Post = sequelize.define(
     "Post",{
@@ -33,7 +37,7 @@ const Post = sequelize.define(
             type: DataTypes.SMALLINT(),
             allowNull:false,
             references:{
-                model:"Model",
+                model:Model,
                 key:"ModelId",
             }
         },
@@ -41,7 +45,7 @@ const Post = sequelize.define(
             type: DataTypes.STRING(50),
             allowNull:false,
             references:{
-                model:"User",
+                model:User,
                 key:"Email",
             }
         },
@@ -49,7 +53,7 @@ const Post = sequelize.define(
             type: DataTypes.SMALLINT(),
             allowNull:false,
             references:{
-                model:"Category",
+                model:Category,
                 key:"CategoryId",
             }
         }
@@ -59,13 +63,5 @@ const Post = sequelize.define(
         timestamps: false
     }
 );
-
-Post.associate = (models)=>{
-    Post.hasOne(models.Model,{foreignKey:"ModelId", as: "model"});
-    Post.belongsTo(models.User, { foreignKey: "Email", as: "user" });
-    Post.hasMany(models.Notification,{foreignKey:"PostId" , as: "notifications"});
-    Post.hasMany(models.Category,{foreignKey:"CategoryId" , as: "category"});
-    Post.hasMany(models.Comment,{foreignKey:"PostId" , as: "comments"});
-};
 
 export default Post;

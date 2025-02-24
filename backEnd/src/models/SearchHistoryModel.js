@@ -1,4 +1,4 @@
-import sequelize from "../config/db";
+import sequelize from "../config/db.js";
 import { DataTypes } from "sequelize";
 
 const SearchHistory = sequelize.define(
@@ -35,6 +35,4 @@ const SearchHistory = sequelize.define(
     }
 );
 
-SearchHistory.associate = (models) => {
-    SearchHistory.belongsTo(models.User,{foreignKey:"Email", as: "users"});
-};
+export default SearchHistory;

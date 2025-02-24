@@ -1,6 +1,5 @@
 import sequelize from "../config/db.js";
 import { DataTypes } from "sequelize";
-
 const User = sequelize.define(
     "User",
     {
@@ -30,12 +29,5 @@ const User = sequelize.define(
         timestamps:false
     }
 );
-
-User.associate = (models) => {
-    User.hasMany(models.Post,{foreignKey:"Email", as: "posts"});
-    User.hasMany(models.Comment,{foreignKey:"Email", as: "comments"});
-    User.hasMany(models.Collection,{foreignKey:"Email", as: "collections"});
-    User.hasMany(models.SearchHistory,{foreignKey:"Email", as: "searchHistories"});
-}
 
 export default User;

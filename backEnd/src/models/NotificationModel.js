@@ -1,4 +1,4 @@
-import sequelize from "../config/db";
+import sequelize from "../config/db.js";
 import { DataTypes } from "sequelize";
 
 const Notification = sequelize.define(
@@ -35,7 +35,5 @@ const Notification = sequelize.define(
     }
 );
 
-Notification.associate = (models) => {
-    Notification.belongsTo(models.Post,{foreignKey:"PostId", as: "posts"});
-    Notification.belongsTo(models.User,{foreignKey:"Emitter_Email", as: "users"});
-}
+
+export default Notification;

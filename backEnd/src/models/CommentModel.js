@@ -1,5 +1,4 @@
-import { Email } from "@mui/icons-material";
-import sequelize from "../config/db";
+import sequelize from "../config/db.js";
 import { DataTypes } from "sequelize";
 
 const Comment = sequelize.define(
@@ -44,7 +43,5 @@ const Comment = sequelize.define(
     }
 );
 
-Comment.associate = (models) => {
-    Comment.belongsTo(models.Post,{foreignKey:"PostId", as: "posts"});
-    Comment.belongsTo(models.User,{foreignKey:"Email", as: "users"});
-}
+
+export default Comment;
