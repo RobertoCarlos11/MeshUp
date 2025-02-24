@@ -1,4 +1,4 @@
-import sequelize from "../config/db";
+import sequelize from "../config/db.js";
 import { DataTypes, SMALLINT } from "sequelize";
 
 const Collection_Element = sequelize.define(
@@ -19,7 +19,7 @@ const Collection_Element = sequelize.define(
         },
         PostId:
         {
-            type:DataTypes.SMALLINT();
+            type:DataTypes.SMALLINT(),
             references:
             {
                 model:"Post",
@@ -38,3 +38,5 @@ Collection_Element.associate = (models) =>
     Collection_Element.hasMany(models.Collection, {foreignKey:"CollectionId", as:"collections"});
     Collection_Element.hasMany(models.Post, {foreignKey:"PostId", as:"Posts"});
 };  
+
+export default Collection_Element;
