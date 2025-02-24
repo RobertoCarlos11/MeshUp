@@ -1,5 +1,6 @@
 import Post from "../models/PostModel.js"
-
+import User from "../models/UserModel.js"
+import Model from "../models/3DFileModel.js"
 export const InsertPost = async (req,res) => 
 {
     try
@@ -27,3 +28,34 @@ export const InsertPost = async (req,res) =>
         console.log(error);   
     }
 } 
+
+export const GetAllPosts = async (req,res) => 
+{
+    try
+    {
+        const PostsFound = await Post.findAll({
+            include: [{
+            model: User,
+            as: "user"
+            },
+            {
+            model: Model,
+            as:"model",
+            }
+        ],
+        });
+
+        const payload = {
+            status: true,
+            data: PostsFound,
+            message: "Posts fetched correctly",
+        }
+
+        res.json(payload);
+    }
+    catch(error)
+    {
+        res.status(500).json(error);
+        console.log(error);
+    }
+}
