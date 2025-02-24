@@ -33,10 +33,5 @@ const Collection_Element = sequelize.define(
     }
 );
 
-Collection_Element.associate = (models) => 
-{
-    Collection_Element.hasMany(models.Collection, {foreignKey:"CollectionId", as:"collections"});
-    Collection_Element.hasMany(models.Post, {foreignKey:"PostId", as:"Posts"});
-};  
 
 export default Collection_Element;
