@@ -5,7 +5,7 @@ import categoryRoutes from "./routes/categoryRoutes.js"
 import ModelRoutes from "./routes/3DModelRoutes.js" 
 import PostRoutes from "./routes/PostRoutes.js" 
 import cors from "cors";
-import models from "./config/db.js";
+import {syncDB, sequelize} from "./models/index.js"
 
 
 dotenv.config();
@@ -21,8 +21,16 @@ app.use("/api/post", PostRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server running on port: ${PORT}`)); 
+const startServer = async () => 
+{
+  try{
+    await syncDB();
+    app.listen(PORT, () => console.log(`Server running on port: ${PORT}`)); 
+  }
+  catch(error)
+  {
+    console.error("Failed to start server",error);
+  }
+};
 
-models.sync({ force: false })
-  .then(() => console.log("Database connected and models synchronized"))
-  .catch(err => console.error("Database connection error:", err));
+startServer();
