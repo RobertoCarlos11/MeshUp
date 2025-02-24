@@ -5,8 +5,7 @@ import DefaultPfp from "../assets/no-user.png";
 import HeaderComponent from "./HeaderComponent";
 import {Link, useNavigate} from "react-router-dom";
 
-function Header(){
-
+function Header({SearchChanged}){
     const user = localStorage.getItem("user");
     const navigate = useNavigate();
     const handleLogOut = () => 
@@ -15,6 +14,10 @@ function Header(){
         navigate("/");
     }
 
+    const handleWordChange = (e) => 
+    {
+        SearchChanged(e.currentTarget.value);
+    }
     return(
     <>
        <nav className="flex flex-row justify-between items-center p-3 text-xl ml-5 mr-5">
@@ -22,7 +25,7 @@ function Header(){
             
             <div className="relative m-2 w-[380vw] max-w-[90%]"> 
                 <SearchOutlinedIcon className="absolute transform left-2 translate-y-1 text-[var(--primary-color)]"/>
-                <input type="text" placeholder="Search" className="w-full text-sm text-opacity-10 border-2 border-solid border-[var(--primary-color)] rounded-sm p-1 pl-9"/>
+                <input type="text" placeholder="Search" onChange={handleWordChange} className="w-full text-sm text-opacity-10 border-2 border-solid border-[var(--primary-color)] rounded-sm p-1 pl-9"/>
             </div> |
             
             <HeaderComponent />
