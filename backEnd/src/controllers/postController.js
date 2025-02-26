@@ -59,3 +59,35 @@ export const GetAllPosts = async (req,res) =>
         console.log(error);
     }
 }
+
+export const getPost = async(req,res) => 
+{
+    const {postId} = req.params;
+    try{
+        const PostFound = await Post.findOne({
+            where:{
+                PostId:postId,
+            },
+            include:[{
+                model: User,
+                as: "user",
+            },{
+                model: Model,
+                as:"model",
+            }]
+        });
+
+        const payload = {
+            status: PostFound ? true : false,
+            data: PostFound,
+            message: PostFound ? "Post fetched Correctly" : "No Post exists with that PostId",
+        }
+
+        res.json(payload);
+    }
+    catch(error)
+    {
+        res.status(500).json(error);
+        console.log(error);
+    }
+}
