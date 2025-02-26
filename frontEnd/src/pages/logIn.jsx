@@ -2,25 +2,36 @@ import { useState } from "react";
 import { getUsers,userLogIn } from "../services/userService";
 import { useNavigate, Link } from "react-router-dom";
 import Button_Style from "../components/Button_Style";
+import Swal from "sweetalert2";
 
 function LogIn(){
 
     const navigate = useNavigate();
-    const [user, setUser] = useState("");
-    const [password, setPassword] = useState("");
+    const [user, setUser] = useState(null);
+    const [password, setPassword] = useState(null);
 
     const handleLoginButton = async (e) => {
         e.preventDefault();
+        if(!user || !password)
+            return Swal.fire({
+                title: "Missing Information!",
+                text: "Please fill out all information",
+                icon:"error",
+        });
+
         const userFound = await userLogIn(user,password);
         console.log(userFound);
 
-        alert(userFound.status ? `Usuario Encontrado: ${userFound.data.Username}` : "No existe o t equivocaste pendejo");
-
-        if(userFound.status)
-        {
+        Swal.fire({
+            title: userFound.status ? "User Found!" : "User not Found",
+            text: userFound.status ? `Welcome back ${userFound.data.Username}!` : "User cannot be found",
+            icon: userFound.status ? "success" : "error",
+        }).then((result) => {
+            if (result.isConfirmed && userFound.status) {
             localStorage.setItem("user", JSON.stringify(userFound.data));
             navigate("/Home");
-        }
+            }
+        });
     }
     return(
         <div className="h-screen flex justify-center items-center space-x-auto">
