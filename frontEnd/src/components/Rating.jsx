@@ -9,7 +9,7 @@ function Rating(props)
 
     const handleMouseClick = (index) => 
     {
-        if(props.stars)
+        if(props.stars || props.stars == 0)
             return;
 
         setStars(index+1);
@@ -19,7 +19,7 @@ function Rating(props)
 
     const handleMouseHover = (index) => 
     {
-        if(props.stars || ratingSelected)
+        if(props.stars || ratingSelected || props.stars == 0)
             return;
         setStars(index+1);
     }
