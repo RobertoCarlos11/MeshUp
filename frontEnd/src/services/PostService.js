@@ -26,3 +26,15 @@ export const GetAllPosts = async () =>
         throw error.response?.data || error.message;
     }
 }
+
+export const GetPost = async (PostId) => 
+{
+    try
+    {
+        const response = await apiClient.get(`/api/post/${PostId}`);
+        return response.data;
+    }
+    catch(error){
+        throw error.response?.data || error.message;
+    }
+}
