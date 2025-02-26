@@ -19,7 +19,7 @@ function App() {
           <Route path="/" element={<LogIn />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Home" element={<Home />} />
-          <Route path="/Post" element={<Post />} />
+          <Route path="/Post/:param" element={<Post />} />
           <Route path="/Upload" element={<ProtectedRoute element={<Upload />} />} />
           <Route path="/Profile" element={<ProtectedRoute element={<Profile />} />} />
           <Route path="/Search_History" element={<ProtectedRoute element={<Search_History />} />} />
