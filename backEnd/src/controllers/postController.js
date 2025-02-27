@@ -1,12 +1,11 @@
 import Post from "../models/PostModel.js"
 import User from "../models/UserModel.js"
 import Model from "../models/3DFileModel.js"
-export const InsertPost = async (req,res) => 
-{
-    try
-    {
-        const {title, description, categorySelected, email, modelId} = req.body;
-    
+import Comment from "../models/CommentModel.js"
+export const InsertPost = async (req, res) => {
+    try {
+        const { title, description, categorySelected, email, modelId } = req.body;
+
         await Post.create({
             Post_Name: title,
             Post_Description: description,
@@ -14,35 +13,32 @@ export const InsertPost = async (req,res) =>
             CategoryId: categorySelected,
             Email: email,
         });
-    
+
         const payload = {
-            status:true,
-            message:"Post registered succesfully",
+            status: true,
+            message: "Post registered succesfully",
         }
-    
+
         res.json(payload);
     }
-    catch(error)
-    {
+    catch (error) {
         res.status(500).json(error);
-        console.log(error);   
+        console.log(error);
     }
-} 
+}
 
-export const GetAllPosts = async (req,res) => 
-{
-    try
-    {
+export const GetAllPosts = async (req, res) => {
+    try {
         const PostsFound = await Post.findAll({
             include: [{
-            model: User,
-            as: "user"
+                model: User,
+                as: "user"
             },
             {
-            model: Model,
-            as:"model",
+                model: Model,
+                as: "model",
             }
-        ],
+            ],
         });
 
         const payload = {
@@ -53,27 +49,35 @@ export const GetAllPosts = async (req,res) =>
 
         res.json(payload);
     }
-    catch(error)
-    {
+    catch (error) {
         res.status(500).json(error);
         console.log(error);
     }
 }
 
-export const getPost = async(req,res) => 
-{
-    const {postId} = req.params;
-    try{
+export const getPost = async (req, res) => {
+    const { postId } = req.params;
+    try {
         const PostFound = await Post.findOne({
-            where:{
-                PostId:postId,
+            where: {
+                PostId: postId,
             },
-            include:[{
+            include: [{
                 model: User,
                 as: "user",
-            },{
+                attributes:["Username", "Email"],
+            }, {
                 model: Model,
-                as:"model",
+                as: "model",
+            },
+            {
+                model: Comment,
+                as: "comments",
+                include:[{
+                    model:User,
+                    as:"user",
+                    attributes:["Username", "Profile_Picture","Email"],
+                }]
             }]
         });
 
@@ -85,8 +89,7 @@ export const getPost = async(req,res) =>
 
         res.json(payload);
     }
-    catch(error)
-    {
+    catch (error) {
         res.status(500).json(error);
         console.log(error);
     }
