@@ -2,25 +2,22 @@ import React from "../assets/react.svg"
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Rating from "../components/Rating"
 
-function CommentCard(props) {
+function CommentCard({comment}) {
     return (
         <div className="border-1 border-[var(--primary-color)] rounded-md p-2">
             <div className="flex justify-between">
                 <div className="flex space-x-2">
                     <img src={React} className="" />
-                    <h1 className="text-primary text-md font-bold flex items-center">{props.User}</h1>
+                    <h1 className="text-primary text-md font-bold flex items-center">{comment.user.Username}</h1>
                 </div>
-                <Rating className="text-yellow-400" stars={props.Rating}/>
+                <Rating className="text-yellow-400" stars={comment.Rating}/>
             </div>
             <div>
-                <p className="text-comp-1 text-md">{props.Review}</p>
+                <p className="text-comp-1 text-md">{comment.Review}</p>
                 <div className="flex justify-between">
                     <div className="flex space-x-1 text-xs">
                         <FavoriteBorderIcon className="text-primary cursor-pointer" />
-                        <p className="text-comp-1 flex items-center">{props.Likes} Likes</p>
-                    </div>
-                    <div className="text-xs text-secondary">
-                    <p>{props.Date}</p>
+                        <p className="text-comp-1 flex items-center">{comment.Likes} Likes</p>
                     </div>
                 </div>
             </div>
