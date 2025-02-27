@@ -84,18 +84,10 @@ function Post() {
                 </div>
                 <div className="flex flex-col w-1/2 px-2 h-5/6 justify-between">
                     <div className="flex flex-col flex-grow space-y-6 overflow-y-auto min-h-0 p-5">
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
+                    {post?.comments ? post?.comments.map(comment => 
+                        <CommentCard key={comment.CommentId} comment={comment}/>
+                    ) : 
+                    <div>Loading Reviews...</div>}
                     </div>
                     <div className="flex flex-col items-center pt-6">
                         <input type="text" onChange={(e) => setReview(e.target.value)} placeholder="Leave a review..." className="w-full border-b-2 border-[var(--primary-color)] text-comp-1" />
