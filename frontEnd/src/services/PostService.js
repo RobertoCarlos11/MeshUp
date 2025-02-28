@@ -14,11 +14,12 @@ export const CreatePost = async (PostInfo) =>
     }
 }
 
-export const GetAllPosts = async () => 
+export const GetAllPosts = async (CategoryId = 0) => 
 {
+    console.log(CategoryId);
     try
     {
-        const response = await apiClient.get("/api/post/");
+        const response = await apiClient.get(`/api/post/${CategoryId}`);
         return response.data;
     }
     catch(error)
