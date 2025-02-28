@@ -19,7 +19,7 @@ export const GetAllPosts = async (CategoryId = 0) =>
     console.log(CategoryId);
     try
     {
-        const response = await apiClient.get(`/api/post/${CategoryId}`);
+        const response = await apiClient.get(`/api/post/posts/${CategoryId}`);
         return response.data;
     }
     catch(error)
