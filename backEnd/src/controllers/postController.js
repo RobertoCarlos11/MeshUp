@@ -29,16 +29,18 @@ export const InsertPost = async (req, res) => {
 
 export const GetAllPosts = async (req, res) => {
     try {
+
         const PostsFound = await Post.findAll({
             include: [{
-                model: User,
-                as: "user"
+            model: User,
+            as: "user"
             },
             {
-                model: Model,
-                as: "model",
+            model: Model,
+            as: "model",
             }
             ],
+            where: req.params.CategoryId === "0" ?  {}: { CategoryId : req.params.CategoryId },
         });
 
         const payload = {
