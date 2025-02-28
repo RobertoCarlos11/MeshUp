@@ -40,3 +40,19 @@ export const userRegister = async(user, password, birthdate, email) =>
         throw error.response?.data || error.message;
     }
 }
+
+export const updateUser = async(UserInfo) => 
+{
+    try
+    {
+        const response = await apiClient.put(`/api/users/`,UserInfo, {headers:{
+            "Content-Type": "multipart/form-data",
+        }});
+
+        return response.data;
+    }
+    catch(error)
+    {
+        throw error.response?.data || error.message;
+    }
+}
