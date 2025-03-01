@@ -9,7 +9,7 @@ import { useEffect,useState } from "react";
 function Header({SearchChanged, UserUpdated = true}){
     const [user, setUser] = useState();
     const navigate = useNavigate();
-    const [photoUrl, setPhotoUrl] = useState();
+    const [photoUrl, setPhotoUrl] = useState(null);
     const handleLogOut = () => 
         {
             localStorage.clear("user");
@@ -22,7 +22,14 @@ function Header({SearchChanged, UserUpdated = true}){
         const userLoggedIn = JSON.parse(localStorage.getItem("user"));
         setUser(userLoggedIn);
         console.log(userLoggedIn);
-        const PhotoArray = new Uint8Array(userLoggedIn.Profile_Picture.data);
+
+        if(!userLoggedIn.Profile_Picture)
+        {
+            console.log("Photo does not exist");
+            return;
+        }
+
+        const PhotoArray = new Uint8Array(userLoggedIn.Profile_Picture?.data);
         const PhotoBlob = new Blob([PhotoArray], {type:"image/png"});
         const PhotoUrl = URL.createObjectURL(PhotoBlob);
         setPhotoUrl(PhotoUrl);
@@ -45,11 +52,11 @@ function Header({SearchChanged, UserUpdated = true}){
             
             <HeaderComponent />
             
-            {user !== null && user?.Profile_Picture && (
+            {user !== null && (
                 <>
                     <Popover className="relative">
                         <PopoverButton className="h-10 w-10 m-2">
-                        <img src={user.Profile_Picture.data.length !== 0 ? photoUrl : null} className="cursor-pointer rounded-full"/>
+                        <img src={photoUrl !== null ? photoUrl : DefaultPfp} className="cursor-pointer rounded-full"/>
                         </PopoverButton>
 
                         <PopoverPanel className="absolute right-0 w-40 h-auto bg-[var(--background-color)] shadow-sm border-2 border-solid border-[var(--primary-color)] rounded-sm p-2 z-50 text-xs flex flex-col space-y-2">
