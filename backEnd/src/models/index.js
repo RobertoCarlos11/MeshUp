@@ -8,6 +8,7 @@ import Collection from "./CollectionModel.js";
 import SearchHistory from "./SearchHistoryModel.js";
 import Notification from "./NotificationModel.js";
 import CollectionElement from "./CollectionElementModel.js";
+import Likes from "./LikeModel.js";
 
 User.hasMany(Post, {foreignKey:"Email", as:"posts"});
 Post.belongsTo(User,{foreignKey:"Email", as:"user"});
@@ -18,12 +19,14 @@ Comment.belongsTo(User, {foreignKey:"Email", as:"user"});
 User.hasMany(Collection, {foreignKey:"Email", as:"collections"});
 Collection.belongsTo(User,{foreignKey:"Email", as:"user"});
 
+User.hasMany(Likes, {foreignKey:"Email", as:"likes"});
+Likes.belongsTo(User, {foreignKey:"Email", as:"user"});
+
 User.hasMany(SearchHistory, {foreignKey:"Email", as:"history"});
 SearchHistory.belongsTo(User,{foreignKey:"Email", as:"user"});
 
 User.hasMany(Notification, {foreignKey:"Emitter_Email", as:"notifications"});
 Notification.belongsTo(Notification,{foreignKey:"Emitter_Email", as:"emitter"});
-
 
 Post.belongsTo(Model,{foreignKey:"ModelId", as:"model"});
 Model.hasOne(Post,{foreignKey:"ModelId", as:"posts"});
