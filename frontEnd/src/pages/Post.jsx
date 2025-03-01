@@ -7,23 +7,29 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SendIcon from '@mui/icons-material/Send';
 import Rating from "../components/Rating";
-import { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
 import { GetPost } from "../services/postService";
+import Swal from "sweetalert2";
+import { CreateComment, getComments } from "../services/commentService";
+import { GetLikes } from "../services/likeService";
 
 
 function Post() {
     const { param } = useParams();
-    const [review, setReview] = useState();
+    const navigate = useNavigate();
+    const [review, setReview] = useState(null);
+    const [likes,setLikes] = useState(null);
     const [starsGiven, setStarsGiven] = useState(0);
+    const [finalRating, setFinalRating] = useState(null);
     const [post, setPost] = useState({});
     const [modelUrl, setModelUrl] = useState(null);
     const [textureUrl, setTextureUrl] = useState(null);
 
-
     useEffect(() => {
         const FetchPost = async () => {
             const PostFound = await GetPost(param);
+            const LikesFound = await GetLikes("post", PostFound.data.PostId);
             if (PostFound?.data) {
                 setPost(PostFound.data);
                 const { model } = await PostFound.data;
@@ -40,17 +46,72 @@ function Post() {
                     textureObjectURL = URL.createObjectURL(textureBlob);
                     setTextureUrl(textureObjectURL);
                 }
+                setPost((prev) => ({
+                    ...prev,
+                    Likes: LikesFound.data.count,
+                }));
+            }
+            else{
+                navigate("/Home");
             }
         }
         FetchPost();
     }, [param]);
 
+    useEffect(() => {
+    if(!post?.comments || post?.comments.length === 0)
+    {
+        setFinalRating(0);
+        return;
+    }
+
+    let rating = post.comments.reduce((acc, comment) => acc + comment.Rating, 0);
+    console.log(rating);
+    setFinalRating(rating / post.comments.length);
+    },[post?.comments]);
+
     const handleStarsChange = (amount) => {
         setStarsGiven(amount);
     }
 
-    const handleReviewSubmit = () => {
-        alert(`Esta fue la review ${review} y estas fueron las estrellas ${starsGiven}`);
+    const handlePostLike = () => 
+    {
+        setPost((prev) => ({
+            ...prev,
+            Likes: prev.Likes + 1,
+        }));
+    };
+
+    const handleReviewSubmit = async () => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if(!review)
+            Swal.fire({
+            title:"Inputs missing",
+            text:"Please fill out the review befoure you send it",
+            icon:"error",
+        });
+
+        const response = await CreateComment(review,starsGiven,post.PostId, user.Email);
+
+        if(response.status)
+            Swal.fire({
+            title:"Review created",
+            text:"The review was created succesfully",
+            icon:"success",
+            timer:2000,
+        });
+        
+        const newComments = await getComments(post.PostId);
+        
+        setPost((prev) => 
+        ({
+            ...prev,
+            comments: newComments.data,
+        }));
+
+
+        handleStarsChange(0);
+        setReview("");
     }
     return (
         <>
@@ -63,11 +124,11 @@ function Post() {
                     </div>
                     <Scene className="h-96" model={modelUrl} texture={textureUrl}></Scene>
                     <div className="flex justify-between">
-                        <Rating stars={4} className="text-yellow-400" />
+                        <Rating stars={finalRating} className="text-yellow-400" />
                         <div className="flex space-x-4 text-primary">
                             <div className="flex">
-                                <FavoriteBorderIcon className='cursor-pointer' />
-                                <p className="text-comp-1 m-1">{post.Likes === null ? 0 : post.Likes}</p>
+                                <FavoriteBorderIcon className='cursor-pointer' onClick={handlePostLike} />
+                                <p className="text-comp-1 m-1">{post.Likes}</p>
                             </div>
                             <div className="flex">
                                 <BookmarkBorderIcon className='cursor-pointer' />
@@ -90,9 +151,9 @@ function Post() {
                     <div>Loading Reviews...</div>}
                     </div>
                     <div className="flex flex-col items-center pt-6">
-                        <input type="text" onChange={(e) => setReview(e.target.value)} placeholder="Leave a review..." className="w-full border-b-2 border-[var(--primary-color)] text-comp-1" />
+                        <input type="text" value={review} onChange={(e) => setReview(e.target.value)} placeholder="Leave a review..." className="w-full border-b-2 border-[var(--primary-color)] text-comp-1" />
                         <div className="flex justify-between w-full py-2">
-                            <Rating starsGiven={handleStarsChange} className="text-yellow-400 cursor-pointer" />
+                            <Rating starsGiven={handleStarsChange} stars={starsGiven} className="text-yellow-400 cursor-pointer" />
                             <button onClick={handleReviewSubmit}>
                                 <SendIcon className="text-[var(--primary-color)] cursor-pointer hover:text-[var(--secondary-color)]" />
                             </button>
