@@ -1,15 +1,18 @@
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function Rating(props)
 {  
     const [stars, setStars] = useState(props.stars);
     const [ratingSelected, setRatingSelected] = useState(false);
 
+    useEffect(() => {
+        setStars(props.stars);
+    },[props.stars]);
     const handleMouseClick = (index) => 
     {
-        if(props.stars || props.stars == 0)
+        if(props.stars || !props.starsGiven)
             return;
 
         setStars(index+1);
@@ -19,7 +22,7 @@ function Rating(props)
 
     const handleMouseHover = (index) => 
     {
-        if(props.stars || ratingSelected || props.stars == 0)
+        if(props.stars || ratingSelected|| !props.starsGiven)
             return;
         setStars(index+1);
     }
@@ -38,5 +41,6 @@ function Rating(props)
 Rating.defaultProps = {
     className: " ",
     stars: null,
+    starsGiven: null,
 }
 export default Rating;
