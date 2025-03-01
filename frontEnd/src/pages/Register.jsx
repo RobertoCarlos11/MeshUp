@@ -1,23 +1,83 @@
-import { Link } from "react-router-dom";
-import Button_Style from "../components/Button_Style";
 import { useState } from "react";
-import { userRegister } from "../services/userService";
+import { useNavigate, Link } from "react-router-dom";
+import { userRegister, getUser } from "../services/userService";
+import Button_Style from "../components/Button_Style";
+import Swal from "sweetalert2";
 
 function Register() {
-
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [email, setEmail] = useState(null);
     const [birthdate, setBirthdate] = useState(null);
     const [password, setPassword] = useState(null);
 
-    const handleSignInButton = async (e) => 
-    {
+    const handleSignInButton = async (e) => {
         e.preventDefault();
-        if(!user || !email || !birthdate || !password)
-            return alert("Porfavor ingrese todos los campos");
+        if(!user || !email || !birthdate || !password){
+            Swal.fire({
+                icon: "error",
+                title: "Oops!!",
+                text: "Please fill all fields."
+            })
+        }
 
-        const response = await userRegister(user,password,birthdate,email);
-        console.log(response);
+        const emailValid = validateEmail(email);
+        const dateValid = validateDate(birthdate);
+        const passwordValid = validatePassword(password);
+
+        function validateEmail(email) {
+            const emailRegExp = new RegExp('^.+@.+\..+$');
+            if(!emailRegExp.test(email)){
+                return "Invalid e-mail adress!";
+            }else{ return true; }
+        }
+
+        function validateDate(date){
+            const today = new Date();
+            const birthDate = new Date(date);
+
+            if(birthDate > today){
+                return "Invalid Birthdate!";
+            }else{ return true; }
+        }
+        
+        function validatePassword(password){
+            const passRegExp = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{8,}$');
+            if(!passRegExp.test(password)){
+                return "Password must contain Upper and Lower case letters, numbers and special characters!";
+            }else{ return true; }
+        }
+
+        if (emailValid == true && dateValid == true && passwordValid == true){
+            const response = await userRegister(user, password, birthdate, email);
+            console.log(response);
+
+            if (response.status ==  true){
+                Swal.fire({
+                    icon: "success",
+                    title:"You're all set!",
+                    text: "User registrated sucessfullly!!"
+                })
+                navigate("/");
+            }else{
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops!!",
+                    text: response.message 
+                })
+            }
+
+        }else{
+            const messages = [emailValid, dateValid, passwordValid];
+            const errorMsg =  messages.filter(message => message !== true).join("<br>");
+
+            Swal.fire({
+                icon: "error",
+                title: "Oops!!",
+                html: errorMsg
+            })
+        }
+        
     }
 
     return (
@@ -37,7 +97,7 @@ function Register() {
                         </div>
                     </form>
                     <div className="flex justify-center">
-                        <Link to="/" className="text-comp-1 font-light text-xs text-center">Already have an account?</Link>
+                        <Link to="/" className="text-comp-1 font-light text-xs text-center underline">Already have an account?</Link>
                     </div>
                 </div>
             </div>
