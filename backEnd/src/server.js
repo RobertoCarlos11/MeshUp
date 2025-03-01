@@ -4,8 +4,11 @@ import userRoutes from "./routes/userRoutes.js"
 import categoryRoutes from "./routes/categoryRoutes.js" 
 import ModelRoutes from "./routes/3DModelRoutes.js" 
 import PostRoutes from "./routes/PostRoutes.js" 
+import CommentRoutes from "./routes/commentRoutes.js" 
+import likeRoutes from "./routes/likeRoutes.js"
 import cors from "cors";
 import {syncDB, sequelize} from "./models/index.js"
+import {createDummyData} from "./postDeploy/dummyData.js"
 
 
 dotenv.config();
@@ -18,6 +21,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/3DModel", ModelRoutes);
 app.use("/api/post", PostRoutes);
+app.use("/api/comment", CommentRoutes);
+app.use("/api/like", likeRoutes);
 
 const PORT = process.env.PORT || 5000;
 
