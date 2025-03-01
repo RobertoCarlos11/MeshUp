@@ -27,6 +27,10 @@ function Profile() {
             return;
 
         localStorage.setItem("user", JSON.stringify(user));
+
+        if(!user.Profile_Picture)
+            return;
+
         const PhotoArray = new Uint8Array(user.Profile_Picture.data);
         const PhotoBlob = new Blob([PhotoArray], {type:"image/png"});
         const PhotoUrl = URL.createObjectURL(PhotoBlob);
@@ -91,7 +95,7 @@ function Profile() {
             ...prev,
             Profile_Picture: {data: photoArray.length === 0 ? prev.Profile_Picture.data : photoArray,type:"buffer",},
         }));
-        
+
         setUserUpdated(true);
     }
 
@@ -149,7 +153,7 @@ function Profile() {
                             <input type="file" hidden ref={PhotoInputRef} onChange={(e) => handlePhotoChange(e)}/>
                             <div onMouseEnter={() => setIconHidden(false)} onMouseLeave={() => setIconHidden(true)} className="relative w-50">
                                 <div onClick={() => openPhotoFile()} hidden={iconHidden} className="absolute inset-0 bg-black/50"></div>
-                                <img ref={PhotoRef} src={photoUrl} className="z-0 w-50" />
+                                <img ref={PhotoRef} src={photoUrl !== null ? photoUrl : DefaultPfp} className="z-0 w-50" />
                                 <AddAPhotoIcon className="absolute inset-0 m-auto w-12 h-12 text-white" hidden={iconHidden} />
                             </div>
                         </div>
