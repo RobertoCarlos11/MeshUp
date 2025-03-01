@@ -38,7 +38,7 @@ export const GetAllPosts = async (req, res) => {
             {
             model: Model,
             as: "model",
-            }
+            },
             ],
             where: req.params.CategoryId === "0" ?  {}: { CategoryId : req.params.CategoryId },
         });
