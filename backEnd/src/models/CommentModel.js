@@ -16,10 +16,6 @@ const Comment = sequelize.define(
             type: DataTypes.TINYINT(),
             allowNull:false,
         },
-        Likes:{
-            type: DataTypes.SMALLINT(),
-            allowNull:true,
-        },
         Email:{
             type: DataTypes.STRING(50),
             allowNull:false,

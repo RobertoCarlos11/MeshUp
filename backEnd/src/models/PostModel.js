@@ -25,10 +25,6 @@ const Post = sequelize.define(
             defaultValue: NOW,
             allowNull:false,
         },
-        Likes:{
-            type: DataTypes.SMALLINT(),
-            allowNull:true,
-        },
         Post_Status:{
             type: DataTypes.BOOLEAN(),
             defaultValue: true,
