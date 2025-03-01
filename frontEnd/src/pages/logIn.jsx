@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { getUsers,userLogIn } from "../services/userService";
+import { getAllUsers,userLogIn } from "../services/userService";
 import { useNavigate, Link } from "react-router-dom";
 import Button_Style from "../components/Button_Style";
 import Swal from "sweetalert2";
 
 function LogIn(){
-
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [password, setPassword] = useState(null);
@@ -27,9 +26,9 @@ function LogIn(){
             text: userFound.status ? `Welcome back ${userFound.data.Username}!` : "User cannot be found",
             icon: userFound.status ? "success" : "error",
         }).then((result) => {
-            if (result.isConfirmed && userFound.status) {
-            localStorage.setItem("user", JSON.stringify(userFound.data));
-            navigate("/Home");
+                if (result.isConfirmed && userFound.status) {
+                localStorage.setItem("user", JSON.stringify(userFound.data));
+                navigate("/Home");
             }
         });
     }
@@ -48,7 +47,7 @@ function LogIn(){
                     </div>
                 </form>
                 <div className="flex justify-center">
-                <Link to="/Register" className="text-comp-1 font-light text-xs text-center">No account?. No problem!</Link>
+                <Link to="/Register" className="text-comp-1 font-light text-xs text-center underline">No account?. No problem!</Link>
                 </div>
             </div>
         </div>
