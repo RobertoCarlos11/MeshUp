@@ -39,6 +39,11 @@ export const GetAllPosts = async (req, res) => {
             model: Model,
             as: "model",
             },
+            {
+            model: Comment,
+            as:"comments",
+            attributes:["Rating"],
+            }
             ],
             where: req.params.CategoryId === "0" ?  {}: { CategoryId : req.params.CategoryId },
         });
