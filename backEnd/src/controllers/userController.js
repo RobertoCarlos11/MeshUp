@@ -14,8 +14,7 @@ export const getAllUsers = async (req, res) => {
             data: users,
         };
         res.json(payload);
-    }
-    catch (error) {
+    }catch(error) {
         res.status(500).json(error);
     }
 }
@@ -24,16 +23,14 @@ export const userLogIn = async (req, res) => {
     try {
         const { user, password } = req.params;
         const userFound = await User.findOne({
-            where:
-            {
+            where:{
                 [Op.or]: [
                     { Username: user },
                     { Email: user }
                 ],
                 Pass: password,
             }
-        }
-        );
+        });
 
         const payload = {
             status: userFound ? true : false,
@@ -41,8 +38,7 @@ export const userLogIn = async (req, res) => {
             data: userFound
         }
         res.json(payload);
-    }
-    catch (error) {
+    }catch (error) {
         res.status(500).json(error);
         console.log(error);
     }
@@ -51,17 +47,44 @@ export const userLogIn = async (req, res) => {
 export const userRegister = async (req, res) => {
     try {
         const { user, password, birthdate, email } = req.body;
-        await User.create({
-            Username: user,
-            Pass: password,
-            Email: email,
-            Birthdate: birthdate,
-            Profile_Picture: null
+        const existingUser = await User.findAll({
+            where: {
+                [Op.or]: [
+                    { Username: user },
+                    { Email: email }
+                ]
+            }
         });
+        
+        let message;
+        let status;
 
+        if (existingUser.length) {
+            const usernameTaken = existingUser.some(u => u.Username === user);
+            const emailTaken = existingUser.some(u => u.Email === email);
+
+            if (usernameTaken && emailTaken) {
+                message = "Email and Username already registered!";
+            } else if (usernameTaken) {
+                message = "Username already registered!";
+            } else {
+                message = "Email already registered!";
+            }
+            status = false;
+        } else {
+            await User.create({
+                Username: user,
+                Pass: password,
+                Email: email,
+                Birthdate: birthdate,
+                Profile_Picture: null
+            });
+            message = "User registered successfully!";
+            status = true;
+        }
         const payload = {
-            status: true,
-            message: "User registered successfully",
+            status: status,
+            message: message
         };
         res.json(payload);
     }
@@ -92,8 +115,6 @@ export const userUpdate = async (req, res) => {
                 where: { Email: Email },
             }
         );
-
-
         const payload = {
             status: true,
             message: "User updated successfully",
