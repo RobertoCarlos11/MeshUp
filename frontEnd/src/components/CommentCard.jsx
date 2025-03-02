@@ -1,11 +1,27 @@
 import React from "../assets/react.svg"
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Rating from "../components/Rating"
 import { useEffect,useState } from "react";
+import Like_Button from "./Like_Button";
+import { GetLikes, InsertLike, UpdateLike } from "../services/likeService";
 
-function CommentCard({comment}) {
+function CommentCard({commentItem,userLoggedIn}) {
 
     const [photoUrl, setPhotoUrl] = useState(null);
+    const [comment, setComment] = useState(commentItem);
+
+    useEffect(() => {
+        const getLikesOfComment = async () => {
+            const LikesFound = await GetLikes("comment", comment.CommentId,userLoggedIn);
+
+            setComment((prev) => ({
+                ...prev,
+                Likes: LikesFound.data.count,
+                UserLiked: LikesFound.UserLiked?.Status,
+            }));
+        }   
+        getLikesOfComment();     
+    },[]);
+
     useEffect(() => {
         if(!comment.user.Profile_Picture)
             return;
@@ -19,6 +35,28 @@ function CommentCard({comment}) {
     {
         return () => URL.revokeObjectURL(photoUrl);
     },[photoUrl]);
+
+    const handleCommentLike = async () => {
+        let response;
+        if(comment.UserLiked === undefined)
+        {
+            response = await InsertLike("comment", comment.CommentId, userLoggedIn);
+            setComment((prev) =>({
+                ...prev,
+                Likes: prev.Likes + 1,
+                UserLiked: true,
+            }));
+        }
+        else{
+            response = await UpdateLike("comment", comment.CommentId, userLoggedIn, !comment.UserLiked);
+            setComment((prev) =>({
+                ...prev,
+                Likes: comment.UserLiked ? prev.Likes -1 : prev.Likes + 1,
+                UserLiked: !prev.UserLiked,
+            }));
+        }
+    }
+
     return (
         <div className="border-1 border-[var(--primary-color)] rounded-md p-2">
             <div className="flex justify-between">
@@ -32,7 +70,7 @@ function CommentCard({comment}) {
                 <p className="text-comp-1 text-md">{comment.Review}</p>
                 <div className="flex justify-between">
                     <div className="flex space-x-1 text-xs">
-                        <FavoriteBorderIcon className="text-primary cursor-pointer" />
+                        <Like_Button status={comment.UserLiked} onClick={handleCommentLike} className="text-primary cursor-pointer" />
                         <p className="text-comp-1 flex items-center">{comment.Likes} Likes</p>
                     </div>
                 </div>

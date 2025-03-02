@@ -7,19 +7,19 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SendIcon from '@mui/icons-material/Send';
 import Rating from "../components/Rating";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { GetPost } from "../services/postService";
 import Swal from "sweetalert2";
 import { CreateComment, getComments } from "../services/commentService";
-import { GetLikes } from "../services/likeService";
-
+import { GetLikes, InsertLike, UpdateLike } from "../services/likeService";
+import Like_Button from "../components/Like_Button";
 
 function Post() {
+    const user = JSON.parse(localStorage.getItem("user"));
     const { param } = useParams();
     const navigate = useNavigate();
     const [review, setReview] = useState(null);
-    const [likes,setLikes] = useState(null);
     const [starsGiven, setStarsGiven] = useState(0);
     const [finalRating, setFinalRating] = useState(null);
     const [post, setPost] = useState({});
@@ -29,7 +29,7 @@ function Post() {
     useEffect(() => {
         const FetchPost = async () => {
             const PostFound = await GetPost(param);
-            const LikesFound = await GetLikes("post", PostFound.data.PostId);
+            const LikesFound = await GetLikes("post", PostFound.data.PostId, user.Email);
             if (PostFound?.data) {
                 setPost(PostFound.data);
                 const { model } = await PostFound.data;
@@ -49,6 +49,7 @@ function Post() {
                 setPost((prev) => ({
                     ...prev,
                     Likes: LikesFound.data.count,
+                    UserLiked: LikesFound.UserLiked?.Status,
                 }));
             }
             else{
@@ -74,18 +75,35 @@ function Post() {
         setStarsGiven(amount);
     }
 
-    const handlePostLike = () => 
+    const handlePostLike = async () => 
     {
-        setPost((prev) => ({
-            ...prev,
-            Likes: prev.Likes + 1,
-        }));
+        let response;
+        
+        if(post.UserLiked === undefined)
+        {
+            response = await InsertLike("post", post.PostId, user.Email);
+            setPost((prev) => ({
+                ...prev,
+                UserLiked: true,
+                Likes: prev.Likes+1,
+            }));   
+        }
+        else
+        {
+            response = await UpdateLike("post", post.PostId, user.Email, !post.UserLiked);
+            setPost((prev) => ({
+                ...prev,
+                Likes: post.UserLiked ? prev.Likes - 1 : prev.Likes+1,
+                UserLiked: !prev.UserLiked,
+            }));
+        }
     };
 
     const handleReviewSubmit = async () => {
+       
         const user = JSON.parse(localStorage.getItem("user"));
-        if(!review)
-            Swal.fire({
+        if(review === null || review === "")
+           return Swal.fire({
             title:"Inputs missing",
             text:"Please fill out the review befoure you send it",
             icon:"error",
@@ -127,7 +145,7 @@ function Post() {
                         <Rating stars={finalRating} className="text-yellow-400" />
                         <div className="flex space-x-4 text-primary">
                             <div className="flex">
-                                <FavoriteBorderIcon className='cursor-pointer' onClick={handlePostLike} />
+                                <Like_Button className="cursor-pointer" status={post.UserLiked} onClick={handlePostLike}/>
                                 <p className="text-comp-1 m-1">{post.Likes}</p>
                             </div>
                             <div className="flex">
@@ -146,7 +164,7 @@ function Post() {
                 <div className="flex flex-col w-1/2 px-2 h-5/6 justify-between">
                     <div className="flex flex-col flex-grow space-y-6 overflow-y-auto min-h-0 p-5">
                     {post?.comments ? post?.comments.map(comment => 
-                        <CommentCard key={comment.CommentId} comment={comment}/>
+                        <CommentCard key={comment.CommentId} commentItem={comment} userLoggedIn={user.Email}/>
                     ) : 
                     <div>Loading Reviews...</div>}
                     </div>
