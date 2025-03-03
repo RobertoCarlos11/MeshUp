@@ -14,9 +14,20 @@ export const CreatePost = async (PostInfo) =>
     }
 }
 
+export const GetAllPostsOfUser = async (Email) => {
+    try
+    {
+        const response = await apiClient.get(`/api/post/user/${Email}`);
+        return response.data;
+    }
+    catch(error)
+    {
+        throw error.response?.data || error.message;
+    }
+}
+
 export const GetAllPosts = async (CategoryId = 0) => 
 {
-    console.log(CategoryId);
     try
     {
         const response = await apiClient.get(`/api/post/posts/${CategoryId}`);
