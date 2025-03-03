@@ -12,13 +12,13 @@ function PostCard({ Post }) {
     const navigate = useNavigate();
 
     const user = JSON.parse(localStorage.getItem("user"));
-    const { model } = Post;
     const [modelUrl, setModelUrl] = useState(null);
     const [likes, setLikes] = useState();
     const [userLiked, setUserLiked] = useState();
     const [textureUrl, setTextureUrl] = useState(null);
-
+    
     useEffect(() => {
+        const { model } = Post;
         let modelObjectURL, textureObjectURL;
         if (model.Model) {
             const modelArray = new Uint8Array(model.Model.data);
@@ -36,14 +36,14 @@ function PostCard({ Post }) {
             if (modelObjectURL) URL.revokeObjectURL(modelObjectURL);
             if (textureObjectURL) URL.revokeObjectURL(textureObjectURL);
         };
-    }, [model.Model, model.Texture]);
+    }, []);
 
     useEffect(() => {
         const getLikesOfPost = async () => {
             const LikesFound = await GetLikes("post", Post.PostId, user.Email);
             setLikes(LikesFound.data.count);
             setUserLiked(LikesFound?.UserLiked.Status);
-        }
+            }
 
         getLikesOfPost();
     }, []);
