@@ -3,8 +3,9 @@ import User_Posts from "../components/User_Posts";
 import User_Collections from "./User_Collections";
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import PostCard from "./PostCard";
 
-function Profile_Sections(){
+function Profile_Sections({Posts = null}){
     const [activeTab, setActiveTab] = useState("posts");
 
     return(
@@ -26,11 +27,11 @@ function Profile_Sections(){
             </button>
         </div>
 
-        {activeTab === "posts" && (
+        {activeTab === "posts" && Posts?.length > 0 && (
             <div className="flex flex-wrap justify-center space-x-auto m-10">
-                <User_Posts/>
-                <User_Posts/>
-                <User_Posts/>
+                {Posts && Posts.map(post => 
+                    <PostCard Post={post}/>
+                )}
             </div>
         )}
 
