@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { userRegister, getUser } from "../services/userService";
+import { userRegister } from "../services/userService";
 import Button_Style from "../components/Button_Style";
 import Swal from "sweetalert2";
 
