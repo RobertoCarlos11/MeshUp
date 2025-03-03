@@ -61,7 +61,7 @@ function Home(){
             </div>
             <div className="flex flex-wrap justify-center space-x-auto m-5">
                 {postsFound ? postsFound.filter(item => search === "" || item.Post_Name.toLowerCase().includes(search.toLowerCase())).map(item => {
-                    return <PostCard key = {item.PostId} Post={item}/>
+                    return item && <PostCard key = {item.PostId} Post={item}/>
                 }):
                 <div className="text-4xl animate-bounce flex items-center justify-center">
                 <img src={Logo} className="w-1/4" alt="LogoName"/>

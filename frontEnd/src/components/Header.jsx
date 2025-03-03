@@ -7,6 +7,7 @@ import {Link, useNavigate} from "react-router-dom";
 import { useEffect,useState } from "react";
 
 function Header({SearchChanged, UserUpdated = true}){
+    const userLoggedIn = JSON.parse(localStorage.getItem("user"));
     const [user, setUser] = useState();
     const navigate = useNavigate();
     const [photoUrl, setPhotoUrl] = useState(null);
@@ -19,7 +20,6 @@ function Header({SearchChanged, UserUpdated = true}){
         useEffect(() => {
         if(!UserUpdated)
                 return;
-        const userLoggedIn = JSON.parse(localStorage.getItem("user"));
         setUser(userLoggedIn);
         console.log(userLoggedIn);
 
@@ -34,7 +34,7 @@ function Header({SearchChanged, UserUpdated = true}){
         const PhotoUrl = URL.createObjectURL(PhotoBlob);
         setPhotoUrl(PhotoUrl);
         
-    },[]);
+    },[UserUpdated]);
 
     const handleWordChange = (e) => 
     {
@@ -60,7 +60,7 @@ function Header({SearchChanged, UserUpdated = true}){
                         </PopoverButton>
 
                         <PopoverPanel className="absolute right-0 w-40 h-auto bg-[var(--background-color)] shadow-sm border-2 border-solid border-[var(--primary-color)] rounded-sm p-2 z-50 text-xs flex flex-col space-y-2">
-                            <Link to="/Profile">See Profile</Link>
+                            <Link to={`/Profile/${userLoggedIn.Email}`}>See Profile</Link>
                             <Link  to="/Search_History">Search History</Link>
                             <p className="cursor-pointer" onClick={handleLogOut}>Log Out</p>
                         </PopoverPanel>

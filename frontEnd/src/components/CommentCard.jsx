@@ -2,6 +2,7 @@ import React from "../assets/react.svg"
 import Rating from "../components/Rating"
 import { useEffect,useState } from "react";
 import Like_Button from "./Like_Button";
+import { Link } from "react-router-dom";
 import { GetLikes, InsertLike, UpdateLike } from "../services/likeService";
 
 function CommentCard({commentItem,userLoggedIn}) {
@@ -62,7 +63,9 @@ function CommentCard({commentItem,userLoggedIn}) {
             <div className="flex justify-between">
                 <div className="flex space-x-2">
                     <img src={photoUrl === null ? React : photoUrl} className="w-10 h-10" />
+                    <Link to={`/Profile/${comment.user.Email}`}>
                     <h1 className="text-primary text-md font-bold flex items-center">{comment.user.Username}</h1>
+                    </Link>
                 </div>
                 <Rating className="text-yellow-400" stars={comment.Rating}/>
             </div>

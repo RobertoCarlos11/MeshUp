@@ -62,6 +62,38 @@ export const GetAllPosts = async (req, res) => {
     }
 }
 
+export const getPostsOfUser = async(req,res) =>
+{
+    try{
+        const {Email} = req.params;
+        const response = await Post.findAll({
+            where:{
+                Email:Email,
+            },
+            include:[{
+                model: Model,
+                as:"model",
+            },{
+                model:Comment,
+                as:"comments",
+                attributes: ["Rating"],
+            }]
+        });
+
+        const payload = {
+            status: true,
+            data: response,
+            message:`Posts of user ${Email} fetched successfully`,
+        }
+
+        res.json(payload);
+    }
+    catch(error)
+    {
+        res.status(500).json(error);
+        console.log(error);
+    }
+}
 export const getPost = async (req, res) => {
     const { postId } = req.params;
     try {
