@@ -29,7 +29,7 @@ function Post() {
     useEffect(() => {
         const FetchPost = async () => {
             const PostFound = await GetPost(param);
-            const LikesFound = await GetLikes("post", PostFound.data.PostId, user.Email);
+            const LikesFound = await GetLikes("post", PostFound.data.PostId, user?.Email);
             if (PostFound?.data) {
                 setPost(PostFound.data);
                 const { model } = await PostFound.data;
@@ -79,6 +79,14 @@ function Post() {
     {
         let response;
         
+        if(user === null)
+            return Swal.fire({
+                title: "You need to log in!",
+                text:"Please log in to like the post",
+                icon:"error",
+                timer: 2000,
+        });
+
         if(post.UserLiked === undefined)
         {
             response = await InsertLike("post", post.PostId, user.Email);
@@ -166,7 +174,7 @@ function Post() {
                 <div className="flex flex-col w-1/2 px-2 h-5/6 justify-between">
                     <div className="flex flex-col flex-grow space-y-6 overflow-y-auto min-h-0 p-5">
                     {post?.comments ? post?.comments.map(comment => 
-                        <CommentCard key={comment.CommentId} commentItem={comment} userLoggedIn={user.Email}/>
+                        <CommentCard key={comment.CommentId} commentItem={comment} userLoggedIn={user?.Email}/>
                     ) : 
                     <div>Loading Reviews...</div>}
                     </div>

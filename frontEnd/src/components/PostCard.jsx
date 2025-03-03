@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GetLikes,InsertLike,UpdateLike } from '../services/likeService';
 import Like_Button from './Like_Button';
+import Swal from 'sweetalert2';
 
 function PostCard({ Post }) {
     const navigate = useNavigate();
@@ -51,8 +52,15 @@ function PostCard({ Post }) {
     const handlePostLike = async () => {
         let response;
 
+        if(user === null)
+            return Swal.fire({
+                title:"You need to log in.",
+                text:"Please log in to like the post!",
+                icon:"error",
+                timer:2000,
+        });
+        
         if (userLiked === undefined) {
-
             response = await InsertLike("post", Post.PostId, user.Email);
             setLikes(likes + 1);
             setUserLiked(true);
