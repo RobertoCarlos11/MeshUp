@@ -1,6 +1,9 @@
 import { where, Op } from 'sequelize';
 import User from '../models/UserModel.js';
 import multer from "multer";
+import Model from "../models/3DFileModel.js";
+import Post from "../models/PostModel.js";
+import Comment from "../models/CommentModel.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -16,6 +19,33 @@ export const getAllUsers = async (req, res) => {
         res.json(payload);
     }catch(error) {
         res.status(500).json(error);
+    }
+}
+
+export const getUser = async (req,res) => 
+{
+    try
+    {
+        const {Email} = req.params;
+        const user = await User.findOne({
+            where:{
+                Email: Email,
+            },
+        });
+
+        const payload=
+        {
+            status:"true",
+            message:"User Fetched successfully!",
+            data: user,
+        }
+
+        res.json(payload);
+    }
+    catch(error)
+    {
+        res.status(500).json(error);
+        console.log(error);
     }
 }
 
