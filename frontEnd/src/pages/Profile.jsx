@@ -146,7 +146,7 @@ function Profile() {
                         </div>
                     </div>
                 </div>
-                {userLoggedIn.Email === user.Email &&
+                {userLoggedIn?.Email === user.Email &&
                     <Button_Style className="text-sm m-2 px-3 py-1 w-32 self-center" onClick={handleOpen}>
                         Edit Profile
                     </Button_Style>}    

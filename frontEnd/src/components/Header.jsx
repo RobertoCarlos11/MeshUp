@@ -23,7 +23,7 @@ function Header({SearchChanged, UserUpdated = true}){
         setUser(userLoggedIn);
         console.log(userLoggedIn);
 
-        if(!userLoggedIn.Profile_Picture)
+        if(!userLoggedIn?.Profile_Picture)
         {
             console.log("Photo does not exist");
             return;
@@ -52,7 +52,7 @@ function Header({SearchChanged, UserUpdated = true}){
             
             <HeaderComponent />
             
-            {user !== null && (
+            {user !== null && user !== undefined && (
                 <>
                     <Popover className="relative">
                         <PopoverButton className="h-10 w-10 m-2">
