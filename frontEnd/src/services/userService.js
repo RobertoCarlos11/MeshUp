@@ -11,6 +11,18 @@ export const getUsers = async () => {
     }
 }
 
+export const getUser = async(Email) => 
+{
+    try{
+        const response = await apiClient(`/api/users/${Email}`);
+
+        return response.data;
+    }
+    catch(error)
+    {
+        throw error.response?.data || error.message;
+    }
+}
 export const userLogIn = async (user,password) => {
     try
     {
