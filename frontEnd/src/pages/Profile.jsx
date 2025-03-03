@@ -6,37 +6,52 @@ import Button_Style from "../components/Button_Style";
 import { useEffect, useRef, useState } from "react";
 import { Modal } from "@mui/material";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import { updateUser } from "../services/userService";
+import { updateUser, getUser } from "../services/userService";
 import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
+import { GetAllPostsOfUser } from "../services/postService";
 
 function Profile() {
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+    const { ProfileId } = useParams();
+    const userLoggedIn = JSON.parse(localStorage.getItem("user"));
+    const [user, setUser] = useState({});
+    const [posts, setPosts] = useState();
     const [iconHidden, setIconHidden] = useState(true);
     const [photoUrl, setPhotoUrl] = useState(null);
     const [open, setOpen] = useState(false);
-    const [userUpdated, setUserUpdated] = useState(true);
-    const [photoArray, setPhotoArray] = useState([]);    
+    const [userUpdated, setUserUpdated] = useState(false);
+    const [photoArray, setPhotoArray] = useState([]);
     const PhotoInputRef = useRef();
     const PhotoRef = useRef();
-    
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
     useEffect(() => {
-        if(!userUpdated)
+        const FetchUserInfo = async () => {
+            const UserFound = await getUser(ProfileId);
+            setUser(UserFound.data);
+        }
+        FetchUserInfo();
+
+        const FetchPostsOfUser = async () => {
+            const PostsFound = await GetAllPostsOfUser(ProfileId);
+            setPosts(PostsFound.data);
+        }
+
+        FetchPostsOfUser();
+    }, [ProfileId]);
+
+
+    useEffect(() => {
+        if (!user.Profile_Picture)
             return;
 
-        localStorage.setItem("user", JSON.stringify(user));
-
-        if(!user.Profile_Picture)
-            return;
-
-        const PhotoArray = new Uint8Array(user.Profile_Picture.data);
-        const PhotoBlob = new Blob([PhotoArray], {type:"image/png"});
+        const PhotoArray = new Uint8Array(photoArray.length > 0 ? photoArray : user.Profile_Picture.data);
+        const PhotoBlob = new Blob([PhotoArray], { type: "image/png" });
         const PhotoUrl = URL.createObjectURL(PhotoBlob);
         setPhotoUrl(PhotoUrl);
-        setUserUpdated(false);
-    },[userUpdated, user]);
+    }, [user.Profile_Picture]);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -53,83 +68,88 @@ function Profile() {
     const handlePhotoChange = (e) => {
         const photoSelected = e.currentTarget.files[0];
 
-        setUser((prev) =>({
+        setUser((prev) => ({
             ...prev,
             Profile_Picture: photoSelected,
         }));
-        if(photoSelected)
-            {
-                const reader = new FileReader();
-                reader.readAsArrayBuffer(photoSelected);
-                
-                reader.onload = () => {
-                    const uint8Array = new Uint8Array(reader.result); 
-                    setPhotoArray([...uint8Array]);
-                    PhotoRef.current.src = URL.createObjectURL(new Blob([reader.result],{type: photoSelected.type}));
-                };
+        if (photoSelected) {
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(photoSelected);
+
+            reader.onload = () => {
+                const uint8Array = new Uint8Array(reader.result);
+                setPhotoArray([...uint8Array]);
+                PhotoRef.current.src = URL.createObjectURL(new Blob([reader.result], { type: photoSelected.type }));
+            };
         }
     }
 
-    const handleSave = async (e) => 
-    {
+    const handleSave = async (e) => {
         e.preventDefault();
         const formData = new FormData();
 
-        for(const key in user)
-        {
-            if(user.hasOwnProperty(key))
+        for (const key in user) {
+            if (user.hasOwnProperty(key))
                 formData.append(key, user[key]);
         }
         const response = await updateUser(formData);
 
-        if(response.status)
-        {
+        if (response.status) {
             handleClose();
             Swal.fire({
-            title:"Successfully updated!",
-            text:"Your information was successfully updated",
-            icon:"success",
-            timer:2000,});
-        }   
+                title: "Successfully updated!",
+                text: "Your information was successfully updated",
+                icon: "success",
+                timer: 2000,
+            });
+        }
         setUser((prev) => ({
             ...prev,
-            Profile_Picture: {data: photoArray.length === 0 ? prev.Profile_Picture.data : photoArray,type:"buffer",},
+            Profile_Picture: { data: photoArray.length === 0 ? prev.Profile_Picture.data : photoArray, type: "buffer", },
         }));
-
         setUserUpdated(true);
     }
 
-    const handleUpdateUser = (e) => 
-    {
-        const {name,value} = e.target;
+    useEffect(() => {
+        if(!userUpdated)
+            return;
+
+        localStorage.setItem("user", JSON.stringify(user));
+        setUserUpdated(false);
+    },[userUpdated]);
+    const handleUpdateUser = (e) => {
+        const { name, value } = e.target;
         setUser((prev) => ({
-                ...prev,
+            ...prev,
             [name]: value,
         }));
     }
+
+
     return (
         <>
-            <Header UserUpdated={userUpdated}/>
+            <Header />
             <div className="bg-[var(--secondary-color)] h-40"></div>
 
             <div className="flex flex-col justify-center">
                 <div className="flex justify-center transform -translate-y-1/2">
-                    <img src={photoUrl ?? DefaultPfp} alt="ProfilePicture" className="border-4 border-solid border-[var(--background-color)] rounded-full w-45 h-45" />
+                    <img src={photoUrl !== null ? photoUrl : DefaultPfp} alt="ProfilePicture" className="border-4 border-solid border-[var(--background-color)] rounded-full w-45 h-45" />
                 </div>
                 <div className="flex flex-col -mt-18 mb-3">
                     <span className="text-center text-2xl font-semibold">{user.Username}</span>
                     <div className="flex felx-row justify-center">
                         <div className="m-2">
-                            <span className="text-base font-semibold mr-2">00</span>Posts
+                            <span className="text-base font-semibold mr-2">{posts?.length}</span>Posts
                         </div>
                         <div className="m-2">
                             <span className="text-base font-semibold mr-2">00</span>Collections
                         </div>
                     </div>
                 </div>
-                <Button_Style className="text-sm m-2 px-3 py-1 w-32 self-center" onClick={handleOpen}>
-                    Edit Profile
-                </Button_Style>
+                {userLoggedIn.Email === user.Email &&
+                    <Button_Style className="text-sm m-2 px-3 py-1 w-32 self-center" onClick={handleOpen}>
+                        Edit Profile
+                    </Button_Style>}    
             </div>
             <Modal open={open} onClose={handleClose} className="flex items-center justify-center">
                 <div className="p-4 bg-color rounded shadow-lg">
@@ -150,7 +170,7 @@ function Profile() {
                         </div>
                         <div className="mb-4 flex flex-col items-center">
                             <label className="block text-sm font-bold mb-2">Profile Picture</label>
-                            <input type="file" hidden ref={PhotoInputRef} onChange={(e) => handlePhotoChange(e)}/>
+                            <input type="file" hidden ref={PhotoInputRef} onChange={(e) => handlePhotoChange(e)} />
                             <div onMouseEnter={() => setIconHidden(false)} onMouseLeave={() => setIconHidden(true)} className="relative w-50">
                                 <div onClick={() => openPhotoFile()} hidden={iconHidden} className="absolute inset-0 bg-black/50"></div>
                                 <img ref={PhotoRef} src={photoUrl !== null ? photoUrl : DefaultPfp} className="z-0 w-50" />
@@ -170,7 +190,7 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            <Profile_Sections />
+            {posts && <Profile_Sections Posts={posts} />}
             <Footer />
         </>
     )
