@@ -8,7 +8,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SendIcon from '@mui/icons-material/Send';
 import Rating from "../components/Rating";
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { GetPost } from "../services/postService";
 import Swal from "sweetalert2";
 import { CreateComment, getComments } from "../services/commentService";
@@ -138,7 +138,9 @@ function Post() {
                 <div className="flex flex-col w-1/2 space-y-2 px-2 h-auto">
                     <div>
                         <h1 className="text-comp-1 text-2xl font-bold">{post.Post_Name}</h1>
+                        <Link to={`/Profile/${post.user?.Email}`}>
                         <h2 className="text-primary text-md font-semibold">{post.user?.Username}</h2>
+                        </Link>
                     </div>
                     <Scene className="h-96" model={modelUrl} texture={textureUrl}></Scene>
                     <div className="flex justify-between">
