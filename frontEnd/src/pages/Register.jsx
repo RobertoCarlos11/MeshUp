@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { userRegister } from "../services/userService";
 import Button_Style from "../components/Button_Style";
@@ -10,6 +10,12 @@ function Register() {
     const [email, setEmail] = useState(null);
     const [birthdate, setBirthdate] = useState(null);
     const [password, setPassword] = useState(null);
+
+
+
+        useEffect(() => {
+            localStorage.removeItem("user");
+        },[]);
 
     const handleSignInButton = async (e) => {
         e.preventDefault();
