@@ -26,9 +26,9 @@ function CommentCard({ commentItem, userLoggedIn = null }) {
     }, []);
 
     useEffect(() => {
-        if (!comment.user.Profile_Picture)
+        if (!comment?.user?.Profile_Picture)
             return;
-        const PhotoArray = new Uint8Array(comment.user.Profile_Picture.data);
+        const PhotoArray = new Uint8Array(comment?.user?.Profile_Picture.data);
         const PhotoBlob = new Blob([PhotoArray]);
         const PhotoUrl = URL.createObjectURL(PhotoBlob);
         setPhotoUrl(PhotoUrl);
@@ -72,17 +72,17 @@ function CommentCard({ commentItem, userLoggedIn = null }) {
             <div className="flex justify-between">
                 <div className="flex h-full space-x-2">
                     <img src={photoUrl === null ? DefaultPfp : photoUrl} className="w-10 h-10" />
-                    <Link to={`/Profile/${comment.user.Email}`} className="flex items-center">
-                        <h1 className="text-primary text-md font-bold">{comment.user.Username}</h1>
+                    <Link to={`/Profile/${comment.user?.Email}`} className="flex items-center">
+                        <h1 className="text-primary text-md font-bold">{comment.user?.Username}</h1>
                     </Link>
                 </div>
-                <Rating className="text-yellow-400" stars={comment.Rating} />
+                <Rating className="text-yellow-400" stars={comment?.Rating} />
             </div>
             <div>
-                <p className="text-comp-1 text-md">{comment.Review}</p>
+                <p className="text-comp-1 text-md">{comment?.Review}</p>
                 <div className="flex justify-between">
                     <div className="flex space-x-1 text-xs">
-                        <Like_Button status={comment.UserLiked} onClick={handleCommentLike} className="text-primary cursor-pointer" />
+                        <Like_Button status={comment?.UserLiked} onClick={handleCommentLike} className="text-primary cursor-pointer" />
                         <p className="text-comp-1 flex items-center">{comment.Likes} Likes</p>
                     </div>
                 </div>
