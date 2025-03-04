@@ -10,9 +10,10 @@ function Rating(props)
     useEffect(() => {
         setStars(props.stars);
     },[props.stars]);
+
     const handleMouseClick = (index) => 
     {
-        if(props.stars || !props.starsGiven)
+        if(!props.starsGiven)
             return;
 
         setStars(index+1);
