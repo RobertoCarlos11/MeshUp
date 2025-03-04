@@ -11,8 +11,11 @@ import Logo from "../assets/Logo.png";
 
 function Home() {
 
+    const postsPerPage = 6;
     const [categoriesFound, setCategoriesFound] = useState();
     const [postsFound, setPostsFound] = useState();
+    const [displayedPosts, setDisplayedPosts] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
     const [categorySelected, setCategorySelected] = useState(0);
 
@@ -42,6 +45,15 @@ function Home() {
         setCategorySelected(prevCategory => prevCategory === CategoryId ? 0 : CategoryId);
     }
 
+    const handleIndexChanged = async (index) => {
+        setCurrentPage(index);
+    }
+    
+    useEffect(() => {
+        const startIndex = (currentPage -1) * postsPerPage;
+        setDisplayedPosts(postsFound?.slice(startIndex,startIndex + postsPerPage));
+    },[currentPage,postsFound]);
+
     return (
         <div className="">
             <Header SearchChanged={handleSearch} />
@@ -57,9 +69,9 @@ function Home() {
                 ))}
             </div>
             <div className="flex flex-wrap justify-center space-x-auto m-5">
-                {postsFound ? (
-                    postsFound.length > 0 ? (
-                        postsFound
+                {displayedPosts ? (
+                    displayedPosts.length > 0 ? (
+                        displayedPosts
                             .filter(item => search === "" || item.Post_Name.toLowerCase().includes(search.toLowerCase()))
                             .map(item => item && <PostCard key={item.PostId} Post={item} />)
                     ) : (
@@ -72,7 +84,7 @@ function Home() {
                     </div>
                 )}
             </div>
-            <Pagination />
+            <Pagination Pages={postsFound?.length && Math.ceil(postsFound?.length / postsPerPage)} indexSelectedChanged={handleIndexChanged} />
             <Footer />
         </div>
     )
