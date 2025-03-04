@@ -15,6 +15,7 @@ import { CreateComment, getComments, UpdateComment } from "../services/commentSe
 import { GetLikes, InsertLike, UpdateLike } from "../services/likeService";
 import Like_Button from "../components/Like_Button";
 import Button_Style from "../components/Button_Style";
+import JSZip from "jszip";
 
 function Post() {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -76,7 +77,7 @@ function Post() {
     },[post?.comments]);
 
     useEffect(() => {
-        const commentFound = post?.comments?.find(comment => comment.user?.Email === user.Email);
+        const commentFound = post?.comments?.find(comment => comment.user?.Email === user?.Email);
         setStarsGiven(commentFound?.Rating);
         setReview(commentFound?.Review);
         setUserReviewed(commentFound);
@@ -121,13 +122,21 @@ function Post() {
 
     const handleReviewSubmit = async () => {
 
+        if(user === null)
+        return Swal.fire({
+            title:"You need to log in.",
+            text:"Please log in to like the post!",
+            icon:"error",
+            timer:2000,
+        });
         
-        if(review === null || review === "")
+        if(review === null || review === "" || review === undefined)
            return Swal.fire({
             title:"Inputs missing",
             text:"Please fill out the review befoure you send it",
             icon:"error",
         });
+
 
         let response;
         if(userReviewed !== undefined)
@@ -171,6 +180,27 @@ function Post() {
         setReview("");
     }
 
+    const DownloadModel = async () => {
+        const zip = new JSZip();
+
+        const modelBlob = new Uint8Array(post.model.Model.data);
+        zip.file(`${post.Post_Name}.fbx`, modelBlob);
+
+        const textureBlob = new Uint8Array(post.model.Texture.data);
+        zip.file(`${post.Post_Name}.png`, textureBlob);
+
+        zip.generateAsync({type: "blob"}).then((content) => {
+            const zipUrl = URL.createObjectURL(content);
+            const link = document.createElement("a");
+
+            link.href = zipUrl;
+            link.download = `${post.Post_Name}.zip`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    }
+
     return (
         <>
             <Header />
@@ -194,7 +224,7 @@ function Post() {
                                 <BookmarkBorderIcon className='cursor-pointer' />
                                 <p className="text-comp-1 m-1">18</p>
                             </div>
-                            <FileDownloadOutlinedIcon className='cursor-pointer' />
+                            <FileDownloadOutlinedIcon className='cursor-pointer' onClick={DownloadModel} />
                         </div>
                     </div>
                     <div className="w-full h-1 rounded-md bg-secondary"></div>
