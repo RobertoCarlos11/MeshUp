@@ -58,3 +58,31 @@ export const getComments = async (req,res) =>
         res.status(500).json(error);
     }
 }
+
+export const updateComment = async (req,res) => 
+{
+    try{
+        const {Review, Rating, PostId, Email, CommentId} = req.body;
+
+        await Comment.update({
+            Review: Review,
+            Rating: Rating,
+            PostId: PostId,
+            Email: Email,
+        },{
+            where:{CommentId: CommentId},
+        });
+        
+        const payload = {
+        status: true,
+        message: "Comment updated successfully",
+    }
+    
+    res.json(payload);
+
+    }
+    catch(error)
+    {
+        res.status(500).json(error);
+    }
+}
