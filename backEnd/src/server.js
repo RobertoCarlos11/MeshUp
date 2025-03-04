@@ -6,6 +6,7 @@ import ModelRoutes from "./routes/3DModelRoutes.js"
 import PostRoutes from "./routes/PostRoutes.js" 
 import CommentRoutes from "./routes/commentRoutes.js" 
 import likeRoutes from "./routes/likeRoutes.js"
+import notificationRoutes from "./routes/notificationRoutes.js";
 import cors from "cors";
 import {syncDB, sequelize} from "./models/index.js"
 import {createDummyData} from "./postDeploy/dummyData.js"
@@ -23,6 +24,7 @@ app.use("/api/3DModel", ModelRoutes);
 app.use("/api/post", PostRoutes);
 app.use("/api/comment", CommentRoutes);
 app.use("/api/like", likeRoutes);
+app.use("/api/notification", notificationRoutes);
 
 const PORT = process.env.PORT || 5000;
 

@@ -87,6 +87,7 @@ NotificationId SMALLINT AUTO_INCREMENT PRIMARY KEY,
 Matter VARCHAR(50),
 Emitter_Email VARCHAR(50),
 PostId SMALLINT,
+Status BIT DEFAULT 0,
 FOREIGN KEY (Emitter_Email) REFERENCES User(Email),
 FOREIGN KEY (PostId) REFERENCES Post(PostId)
 );

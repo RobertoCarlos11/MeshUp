@@ -26,7 +26,7 @@ User.hasMany(SearchHistory, {foreignKey:"Email", as:"history"});
 SearchHistory.belongsTo(User,{foreignKey:"Email", as:"user"});
 
 User.hasMany(Notification, {foreignKey:"Emitter_Email", as:"notifications"});
-Notification.belongsTo(Notification,{foreignKey:"Emitter_Email", as:"emitter"});
+Notification.belongsTo(User,{foreignKey:"Email", as:"emitter"});
 
 Post.belongsTo(Model,{foreignKey:"ModelId", as:"model"});
 Model.hasOne(Post,{foreignKey:"ModelId", as:"posts"});
@@ -37,8 +37,8 @@ Category.hasMany(Post, {foreignKey:"CategoryId",as:"posts"});
 Post.hasMany(Comment,{foreignKey:"PostId", as:"comments"});
 Comment.belongsTo(Post, {foreignKey:"PostId", as:"posts"});
 
-Post.hasMany(Notification,{foreignKey:"PostId", as:"posts"});
-Notification.belongsTo(Post,{foreignKey:"PostId", as:"notifications"});
+Post.hasMany(Notification,{foreignKey:"PostId", as:"notifications"});
+Notification.belongsTo(Post,{foreignKey:"PostId", as:"posts"});
 
 Collection.hasMany(CollectionElement, { foreignKey: "CollectionId", as: "elements" });
 CollectionElement.belongsTo(Collection, { foreignKey: "CollectionId", as: "collection" });

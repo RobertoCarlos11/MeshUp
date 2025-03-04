@@ -20,6 +20,11 @@ const Notification = sequelize.define(
                 key:"PostId",
             }
         },
+        Status:{
+            type: DataTypes.BOOLEAN(),
+            allowNull: false,
+            defaultValue: 0,
+        },
         Emitter_Email:{
             type: DataTypes.STRING(50),
             allowNull:false,
