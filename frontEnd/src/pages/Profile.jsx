@@ -177,7 +177,7 @@ function Profile() {
                             <div className="flex flex-col items-center">
                                 <label className="block text-sm font-bold mb-2">Profile Picture</label>
                                 <input type="file" hidden ref={PhotoInputRef} onChange={(e) => handlePhotoChange(e)}/>
-                                <div onMouseEnter={() => setIconHidden(false)} onMouseLeave={() => setIconHidden(true)} className="relative w-50">
+                                <div onMouseEnter={() => setIconHidden(false)} onMouseLeave={() => setIconHidden(true)} className="relative w-50 cursor-pointer">
                                     <div onClick={() => openPhotoFile()} hidden={iconHidden} className="absolute inset-0 bg-black/50"></div>
                                     <img ref={PhotoRef} src={photoUrl !== null ? photoUrl : DefaultPfp} className="z-0 w-50"/>
                                     <AddAPhotoIcon className="absolute inset-0 m-auto w-12 h-12 text-white" hidden={iconHidden}/>
