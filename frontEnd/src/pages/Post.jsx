@@ -11,15 +11,18 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { GetPost } from "../services/postService";
 import Swal from "sweetalert2";
-import { CreateComment, getComments } from "../services/commentService";
+import { CreateComment, getComments, UpdateComment } from "../services/commentService";
 import { GetLikes, InsertLike, UpdateLike } from "../services/likeService";
 import Like_Button from "../components/Like_Button";
+import Button_Style from "../components/Button_Style";
 
 function Post() {
     const user = JSON.parse(localStorage.getItem("user"));
     const { param } = useParams();
     const navigate = useNavigate();
     const [review, setReview] = useState(null);
+    const [userReviewed, setUserReviewed] = useState();
+    const [reviewUpdateAtt, setReviewUpdateAtt] = useState();
     const [starsGiven, setStarsGiven] = useState(0);
     const [finalRating, setFinalRating] = useState(null);
     const [post, setPost] = useState({});
@@ -32,6 +35,7 @@ function Post() {
             if (PostFound?.data && PostFound.data !== null) {
                 const LikesFound = await GetLikes("post", PostFound.data.PostId, user?.Email);
                 setPost(PostFound.data);
+                console.log(userReviewed);
                 const { model } = await PostFound.data;
                 let modelObjectURL, textureObjectURL;
                 if (model.Model) {
@@ -71,6 +75,14 @@ function Post() {
     setFinalRating(rating / post.comments.length);
     },[post?.comments]);
 
+    useEffect(() => {
+        const commentFound = post?.comments?.find(comment => comment.user?.Email === user.Email);
+        setStarsGiven(commentFound?.Rating);
+        setReview(commentFound?.Review);
+        setUserReviewed(commentFound);
+        setReviewUpdateAtt(commentFound === undefined ? true : false);
+    },[post?.comments]);
+
     const handleStarsChange = (amount) => {
         setStarsGiven(amount);
     }
@@ -108,8 +120,8 @@ function Post() {
     };
 
     const handleReviewSubmit = async () => {
-       
-        const user = JSON.parse(localStorage.getItem("user"));
+
+        
         if(review === null || review === "")
            return Swal.fire({
             title:"Inputs missing",
@@ -117,9 +129,27 @@ function Post() {
             icon:"error",
         });
 
-        const response = await CreateComment(review,starsGiven,post.PostId, user.Email);
+        let response;
+        if(userReviewed !== undefined)
+        {
+            response = await UpdateComment(review, starsGiven,post.PostId, user.Email, userReviewed.CommentId);
 
-        if(response.status)
+            if(response.status) {
+                await Swal.fire({
+                    title: "Review updated",
+                    text: "The review was updated successfully.",
+                    icon: "success",
+                    showConfirmButton: true
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+        }
+        else{
+            response = await CreateComment(review,starsGiven,post.PostId, user.Email);
+        }
+
+        if(response.status && userReviewed === undefined)
             Swal.fire({
             title:"Review created",
             text:"The review was created succesfully",
@@ -127,18 +157,20 @@ function Post() {
             timer:2000,
         });
         
-        const newComments = await getComments(post.PostId);
+        const newComments = await getComments(post?.PostId);
         
+        setPost({});
+
         setPost((prev) => 
         ({
             ...prev,
             comments: newComments.data,
         }));
 
-
         handleStarsChange(0);
         setReview("");
     }
+
     return (
         <>
             <Header />
@@ -179,6 +211,13 @@ function Post() {
                     <div>Loading Reviews...</div>}
                     </div>
                     <div className="flex flex-col items-center pt-6">
+                    {
+                        userReviewed !== undefined && reviewUpdateAtt === false ? 
+                        (<div className="flex flex-col items-center">
+                            <h1>You've already submitted a review</h1>
+                            <Button_Style className="w-1/2" onClick={() => setReviewUpdateAtt(true)}>Update Review</Button_Style>
+                        </div>): 
+                        (<>
                         <input type="text" value={review} onChange={(e) => setReview(e.target.value)} placeholder="Leave a review..." className="w-full border-b-2 border-[var(--primary-color)] text-comp-1" />
                         <div className="flex justify-between w-full py-2">
                             <Rating starsGiven={handleStarsChange} stars={starsGiven} className="text-yellow-400 cursor-pointer" />
@@ -186,6 +225,8 @@ function Post() {
                                 <SendIcon className="text-[var(--primary-color)] cursor-pointer hover:text-[var(--secondary-color)]" />
                             </button>
                         </div>
+                        </>)
+                    }
                     </div>
                 </div>
             </div>

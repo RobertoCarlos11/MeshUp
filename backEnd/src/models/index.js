@@ -26,7 +26,7 @@ User.hasMany(SearchHistory, {foreignKey:"Email", as:"history"});
 SearchHistory.belongsTo(User,{foreignKey:"Email", as:"user"});
 
 User.hasMany(Notification, {foreignKey:"Emitter_Email", as:"notifications"});
-Notification.belongsTo(User,{foreignKey:"Email", as:"emitter"});
+Notification.belongsTo(User,{foreignKey:"Emitter_Email", as:"emitter"});
 
 Post.belongsTo(Model,{foreignKey:"ModelId", as:"model"});
 Model.hasOne(Post,{foreignKey:"ModelId", as:"posts"});

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {userLogIn } from "../services/userService";
 import { useNavigate, Link } from "react-router-dom";
 import Button_Style from "../components/Button_Style";
@@ -9,6 +9,10 @@ function LogIn(){
     const [user, setUser] = useState(null);
     const [password, setPassword] = useState(null);
 
+    useEffect(() => {
+        localStorage.removeItem("user");
+    },[]);
+    
     const handleLoginButton = async (e) => {
         e.preventDefault();
         if(!user || !password)

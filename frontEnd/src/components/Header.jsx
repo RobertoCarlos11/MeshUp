@@ -56,7 +56,7 @@ function Header({SearchChanged, UserUpdated = true}){
                 <>
                     <Popover className="relative">
                         <PopoverButton className="h-10 w-10 m-2">
-                        <img src={photoUrl !== null ? photoUrl : DefaultPfp} className="cursor-pointer rounded-full"/>
+                        <img src={photoUrl !== null ? photoUrl : DefaultPfp} className="cursor-pointer rounded-full w-10 h-10"/>
                         </PopoverButton>
 
                         <PopoverPanel className="absolute right-0 w-40 h-auto bg-[var(--background-color)] shadow-sm border-2 border-solid border-[var(--primary-color)] rounded-sm p-2 z-50 text-xs flex flex-col space-y-2">

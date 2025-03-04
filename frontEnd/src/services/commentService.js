@@ -31,3 +31,22 @@ export const getComments = async (PostId) =>
         throw error.response?.data || error.message;
     }
 } 
+
+export const UpdateComment = async (review, rating, postId, email, commentId) => 
+{
+    try{
+        const response = await apiClient.put("/api/comment/",
+            {Review: review,
+            Rating: rating,
+            PostId: postId,
+            Email: email,
+            CommentId: commentId}
+        );
+
+        return response.data;
+    }
+    catch(error)
+    {
+        throw error.response?.data || error.message;
+    }
+}
