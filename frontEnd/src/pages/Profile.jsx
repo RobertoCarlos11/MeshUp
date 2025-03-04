@@ -208,7 +208,7 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            {displayedPosts && <Profile_Sections Posts={displayedPosts} />}
+            {displayedPosts ? <Profile_Sections Posts={displayedPosts} /> : <p> Loading...</p>}
             {posts && <Pagination Pages={Math.ceil(posts.length / postsPerPage)} indexSelectedChanged={handleIndexChanged}/>}
             <Footer />
         </>
