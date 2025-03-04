@@ -8,10 +8,12 @@ import { Modal } from "@mui/material";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { updateUser, getUser } from "../services/userService";
 import Swal from "sweetalert2";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { GetAllPostsOfUser } from "../services/postService";
 
 function Profile() {
+
+    const navigate = useNavigate();
     const { ProfileId } = useParams();
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
     const [user, setUser] = useState({});
@@ -30,6 +32,9 @@ function Profile() {
     useEffect(() => {
         const FetchUserInfo = async () => {
             const UserFound = await getUser(ProfileId);
+            if(UserFound.data === null)
+                return navigate("/Home");
+            
             setUser(UserFound.data);
         }
         FetchUserInfo();
