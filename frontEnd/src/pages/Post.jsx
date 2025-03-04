@@ -29,8 +29,8 @@ function Post() {
     useEffect(() => {
         const FetchPost = async () => {
             const PostFound = await GetPost(param);
-            const LikesFound = await GetLikes("post", PostFound.data.PostId, user?.Email);
-            if (PostFound?.data) {
+            if (PostFound?.data && PostFound.data !== null) {
+                const LikesFound = await GetLikes("post", PostFound.data.PostId, user?.Email);
                 setPost(PostFound.data);
                 const { model } = await PostFound.data;
                 let modelObjectURL, textureObjectURL;
