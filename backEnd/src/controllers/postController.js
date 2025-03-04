@@ -6,7 +6,7 @@ export const InsertPost = async (req, res) => {
     try {
         const { title, description, categorySelected, email, modelId } = req.body;
 
-        await Post.create({
+        const postCreated = await Post.create({
             Post_Name: title,
             Post_Description: description,
             ModelId: modelId,
@@ -17,6 +17,7 @@ export const InsertPost = async (req, res) => {
         const payload = {
             status: true,
             message: "Post registered succesfully",
+            data: postCreated,
         }
 
         res.json(payload);
