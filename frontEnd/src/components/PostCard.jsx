@@ -153,15 +153,15 @@ function PostCard({ Post }) {
 
         if(response.status == true){
             Swal.fire({
-                icon: "sucess",
+                icon: "success",
                 title: "Sucess",
                 text: "Sucessfully added to collection!!"
             });
         }else{
             Swal.fire({
-                icon: "error",
-                title: "Oops!!",
-                text: "Error at adding to collection"
+                icon: "warning",
+                title: "Hold On!!",
+                text: "This post is already in the collection!!"
             });
         }
 
@@ -238,8 +238,8 @@ function PostCard({ Post }) {
                                         <button 
                                             key={collection.CollectionId} 
                                             onClick={() => {
-                                                setCollectionId(collection.CollectionId); // Set collection ID when clicked
-                                                addToCollection(collection.CollectionId); // Call addToCollection with selected collection ID
+                                                setCollectionId(collection.CollectionId);
+                                                addToCollection(collection.CollectionId);
                                             }} 
                                             className="flex justify-start border-b-1 border-solid border-[var(--primary-color)] cursor-pointer">
                                             {collection.Collection_Name}
