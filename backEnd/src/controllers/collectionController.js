@@ -32,19 +32,32 @@ export const InsertCollection = async (req,res) => {
 
 export const InsertCollectionElement = async (req,res) => {
     try{
-        const { collectionId } = req.params;
-        const { postId } = req.body;
-
-        await Collection_Element.create({
-            CollectionId: collectionId,
-            PostId: postId 
+        const { collectionId, postId } = req.params;
+    
+        const existingPost = await Collection_Element.findAll({
+            where:{ 
+                CollectionId: collectionId,
+                PostId: postId 
+            }
         });
 
-        const payload = {
-            status: true,
-            message: "Collection Element created sucessfully"
-        }
+        let status;
 
+        if(existingPost.length){
+            status = false;
+        }else{
+            status = true; 
+
+            await Collection_Element.create({
+                CollectionId: collectionId,
+                PostId: postId 
+            });
+        }
+        const payload = {
+            status: status,
+            message: status == true? "Collection Element created sucessfully" : "Repeated Collection Element"
+        }
+        
         res.json(payload);
 
     }catch(error){
