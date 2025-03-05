@@ -8,7 +8,7 @@ import {
 const router = e.Router();
 
 router.post("/", InsertCollection);
-router.post("/:collectionId", InsertCollectionElement);
+router.post("/:collectionId/:postId", InsertCollectionElement);
 router.get("/:email", getCollections);
 
 export default router;
