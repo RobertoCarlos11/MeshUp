@@ -9,9 +9,11 @@ import { GetAllCategories } from "../services/categoryService";
 import { CreateModel } from "../services/modelService";
 import { CreatePost } from "../services/PostService";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function Upload() {
     const user = JSON.parse(localStorage.getItem("user"));
+    const navigate = useNavigate(); 
     const [postInfo, setPostInfo] = useState({
         title: "",
         model: null,
@@ -84,12 +86,16 @@ function Upload() {
         const responsePost = await CreatePost(PostInfo);
 
         if (responsePost.status)
-            Swal.fire({
+            {
+                await Swal.fire({
                 title: "Success",
                 text: "Post succesfully created!",
                 timer: 2000,
                 icon: "success",
             });
+
+            await navigate(`/Post/${responsePost.data.PostId}`);
+        }
 
         console.log(responsePost);
         e.currentTarget.disabled = false;

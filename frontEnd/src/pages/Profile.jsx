@@ -10,9 +10,11 @@ import { updateUser, getUser } from "../services/userService";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetAllPostsOfUser } from "../services/postService";
+import Pagination from "../components/Pagination";
 
 function Profile() {
 
+    const postsPerPage = 6;
     const navigate = useNavigate();
     const { ProfileId } = useParams();
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
@@ -23,6 +25,8 @@ function Profile() {
     const [open, setOpen] = useState(false);
     const [userUpdated, setUserUpdated] = useState(false);
     const [photoArray, setPhotoArray] = useState([]);
+    const [displayedPosts, setDisplayedPosts] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
     const PhotoInputRef = useRef();
     const PhotoRef = useRef();
 
@@ -130,6 +134,15 @@ function Profile() {
         }));
     }
 
+    const handleIndexChanged = async (index) => {
+        setCurrentPage(index);
+    }
+    
+    useEffect(() => {
+        const startIndex = (currentPage -1) * postsPerPage;
+        setDisplayedPosts(posts?.slice(startIndex,startIndex + postsPerPage));
+    },[currentPage,posts]);
+
 
     return (
         <>
@@ -193,7 +206,8 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            {posts && <Profile_Sections Posts={posts} />}
+            {displayedPosts ? <Profile_Sections Posts={displayedPosts} /> : <p> Loading...</p>}
+            {posts && <Pagination Pages={Math.ceil(posts.length / postsPerPage)} indexSelectedChanged={handleIndexChanged}/>}
             <Footer />
         </>
     )
