@@ -4,7 +4,6 @@ import CommentCard from "../components/CommentCard";
 import Scene from "../components/Three/Scene";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SendIcon from '@mui/icons-material/Send';
 import Rating from "../components/Rating";
 import { useEffect, useState } from 'react';
@@ -16,6 +15,8 @@ import { GetLikes, InsertLike, UpdateLike } from "../services/likeService";
 import Like_Button from "../components/Like_Button";
 import Button_Style from "../components/Button_Style";
 import JSZip from "jszip";
+import Logo from "../assets/Logo.png";
+
 
 function Post() {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -201,7 +202,19 @@ function Post() {
         });
     }
 
-    return (
+
+    return post.Post_Status === false ? 
+    <>
+    <Header />
+    <div className="flex items-center justify-center h-screen">
+        <img src={Logo} className="w-1/4" alt="LogoName" />
+        <h1>
+            This Post is disabled.
+        </h1>
+    </div>
+    </>
+    : 
+    (
         <>
             <Header />
             <div className="flex space-x-6 mx-5 h-screen">
