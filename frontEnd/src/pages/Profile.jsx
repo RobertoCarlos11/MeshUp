@@ -134,7 +134,7 @@ function Profile() {
         }));
     }
 
-    const handleIndexChanged = async (index) => {
+    const handleIndexChanged = (index) => {
         setCurrentPage(index);
     }
     
@@ -142,7 +142,6 @@ function Profile() {
         const startIndex = (currentPage -1) * postsPerPage;
         setDisplayedPosts(posts?.slice(startIndex,startIndex + postsPerPage));
     },[currentPage,posts]);
-
 
     return (
         <>
@@ -208,7 +207,7 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            {displayedPosts ? <Profile_Sections Posts={displayedPosts} /> : <p> Loading...</p>}
+            {displayedPosts ? <Profile_Sections Posts={displayedPosts} UserLoggedIn = {userLoggedIn.Email} UserProfile= {ProfileId}/> : <p> Loading...</p>}
             {posts && <Pagination Pages={Math.ceil(posts.length / postsPerPage)} indexSelectedChanged={handleIndexChanged}/>}
             <Footer />
         </>
