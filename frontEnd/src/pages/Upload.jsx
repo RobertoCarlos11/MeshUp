@@ -43,15 +43,6 @@ function Upload() {
         textureRef.current.click();
     }
 
-    const isPostInfoComplete = () => {
-        Object.keys(postInfo).every(key => {
-            const value = postInfo[key];
-            console.log(postInfo[key]);
-            return value !== null || value !== "";
-        }
-        )
-    }
-
     const IsPostComplete = () => {
         return Object.values(postInfo).every(x => x !== null && x !== "");
     }
