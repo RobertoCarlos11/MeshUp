@@ -5,12 +5,26 @@ import DefaultPfp from "../assets/no-user.png";
 import HeaderComponent from "./HeaderComponent";
 import {Link, useNavigate} from "react-router-dom";
 import { useEffect,useState } from "react";
+import { GetAllPosts } from "../services/postService";
 
-function Header({SearchChanged, UserUpdated = true}){
+function Header({UserUpdated = true}){
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
     const [user, setUser] = useState();
     const navigate = useNavigate();
+    const [postsFound, setPostsFound] = useState(null);
+    const [search, setSearch] = useState("");
     const [photoUrl, setPhotoUrl] = useState(null);
+
+    const FetchPosts = async (categoryId) => {
+            setPostsFound(null);
+            const posts = await GetAllPosts(categoryId);
+            setPostsFound(posts.data);
+        }
+    useEffect(() => {
+        FetchPosts(0);  
+        console.log(postsFound);
+    },[]);
+
     const handleLogOut = () => 
         {
             localStorage.clear("user");
@@ -38,7 +52,7 @@ function Header({SearchChanged, UserUpdated = true}){
 
     const handleWordChange = (e) => 
     {
-        SearchChanged(e.currentTarget.value);
+        setSearch(e.currentTarget.value);
     }
     return(
     <>
@@ -47,7 +61,21 @@ function Header({SearchChanged, UserUpdated = true}){
             
             <div className="relative m-2 w-[380vw] max-w-[90%]"> 
                 <SearchOutlinedIcon className="absolute transform left-2 translate-y-1 text-[var(--primary-color)]"/>
-                <input type="text" placeholder="Search" onChange={handleWordChange} className="w-full text-sm text-opacity-10 border-2 border-solid border-[var(--primary-color)] rounded-sm p-1 pl-9"/>
+                <input type="text" placeholder="Search" value={search} onChange={handleWordChange} className="w-full text-sm text-opacity-10 border-2 border-solid border-[var(--primary-color)] rounded-sm p-1 pl-9"/>
+                {search !== "" && (
+                <div className="absolute right-0 w-full min-h-auto max-h-40 bg-[var(--background-color)] shadow-sm border-2 border-solid border-[var(--primary-color)] rounded-sm p-2 z-50 text-xs flex flex-col space-y-2 overflow-y-auto">
+                    {postsFound && postsFound
+                    .filter(item => search !== "" && item.Post_Name.toLowerCase().includes(search.toLowerCase()))
+                    .map(post => (
+                        <div className="hover:bg-[var(--primary-color)] p-1 rounded-md">
+                        <Link onClick={() => setSearch("")} to={`/Post/${post.PostId}`}>
+                        <p key={post.PostId}> {post.Post_Name}</p>
+                        </Link>
+                        </div>
+                    ))}
+                </div>
+                )
+                }
             </div>
             
             <HeaderComponent />
