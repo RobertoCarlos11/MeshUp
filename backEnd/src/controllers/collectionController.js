@@ -1,6 +1,7 @@
 import Collection from "../models/CollectionModel.js";
 import Collection_Element from "../models/CollectionElementModel.js";
-
+import Model from "../models/3DFileModel.js";
+import Post from "../models/PostModel.js";
 export const InsertCollection = async (req,res) => {
     try{
         const { collectionName, email , postId} = req.body;
@@ -74,6 +75,20 @@ export const getCollections = async (req, res) => {
             where:{ 
                 Email: email,
                 Collection_Status: 1
+            },
+            include:{
+                model:Collection_Element,
+                as:"elements",
+                include:
+                {
+                model:Post,
+                as:"post",
+                include:{
+                    model:Model,
+                    as:"model",
+                }
+                },
+                limit:4,
             }
         });
 
