@@ -1,15 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import User_Collections from "./User_Collections";
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
+import Pagination from "./Pagination";
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PostCard from "./PostCard";
 
-function Profile_Sections({Posts = null, UserLoggedIn, UserProfile}){
+function Profile_Sections({Posts = null}){
     const [activeTab, setActiveTab] = useState("posts");
-    const filteredPosts = Posts.filter(post =>
-        UserLoggedIn === UserProfile || post.Post_Status === true);
 
-    console.log(UserLoggedIn === UserProfile);
     return(
         <>
         <div className="flex justify-center border-b-2 border-solid m-10">
@@ -31,7 +29,7 @@ function Profile_Sections({Posts = null, UserLoggedIn, UserProfile}){
 
         {activeTab === "posts" && Posts?.length > 0 && (
             <div className="flex flex-wrap justify-center space-x-auto m-10">
-                {Posts.map(post => 
+                {Posts && Posts.map(post => 
                     <PostCard key={post.Post_Id} Post={post}/>
                 )}
             </div>
@@ -44,7 +42,6 @@ function Profile_Sections({Posts = null, UserLoggedIn, UserProfile}){
                 <User_Collections/>
             </div>
         )}
-
         </>
     )
 }
