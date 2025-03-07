@@ -71,7 +71,10 @@ export const getCollections = async (req, res) => {
         const { email } = req.params;
 
         const response = await Collection.findAll({
-            where:{ Email: email }
+            where:{ 
+                Email: email,
+                Collection_Status: 1
+            }
         });
 
         const payload = {
@@ -85,5 +88,27 @@ export const getCollections = async (req, res) => {
     }catch(error){
         res.status(500).json(error);
         console.log(error);
+    }
+}
+
+export const deleteCollection = async (req, res) => {
+    try{
+        const { collectionId } = req.params;
+
+        await Collection.update(
+            { Collection_Status: 0 },
+            { where:{ collectionId: collectionId },}
+        );
+
+        const payload = {
+            status: true,
+            message: "Sucessfully deleted collection"
+        }
+
+        res.json(payload);
+
+    }catch(error){
+        res.status(500).json(error);
+        console.los(error);
     }
 }
