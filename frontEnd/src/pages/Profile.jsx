@@ -10,6 +10,7 @@ import { updateUser, getUser } from "../services/userService";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetAllPostsOfUser } from "../services/postService";
+import { getCollections } from "../services/collectionService";
 import Pagination from "../components/Pagination";
 
 function Profile() {
@@ -20,6 +21,7 @@ function Profile() {
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
     const [user, setUser] = useState({});
     const [posts, setPosts] = useState();
+    const [collections, setCollections] = useState();
     const [iconHidden, setIconHidden] = useState(true);
     const [photoUrl, setPhotoUrl] = useState(null);
     const [open, setOpen] = useState(false);
@@ -47,8 +49,14 @@ function Profile() {
             const PostsFound = await GetAllPostsOfUser(ProfileId);
             setPosts(PostsFound.data);
         }
-
         FetchPostsOfUser();
+
+        const FetchCollectionsUser = async () => {
+            const CollectionsFound = await getCollections(ProfileId);
+            setCollections(CollectionsFound.data);
+        }
+        FetchCollectionsUser();
+
     }, [ProfileId]);
 
 
@@ -126,6 +134,7 @@ function Profile() {
         localStorage.setItem("user", JSON.stringify(user));
         setUserUpdated(false);
     },[userUpdated]);
+
     const handleUpdateUser = (e) => {
         const { name, value } = e.target;
         setUser((prev) => ({
@@ -160,7 +169,7 @@ function Profile() {
                             <span className="text-base font-semibold mr-2">{posts?.length}</span>Posts
                         </div>
                         <div className="m-2">
-                            <span className="text-base font-semibold mr-2">00</span>Collections
+                            <span className="text-base font-semibold mr-2">{collections?.length}</span>Collections
                         </div>
                     </div>
                 </div>
@@ -206,7 +215,7 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            {displayedPosts ? <Profile_Sections Posts={displayedPosts} /> : <p> Loading...</p>}
+            {displayedPosts ? <Profile_Sections Posts={displayedPosts} /> : <p className="text-center"> Loading...</p>}
             {posts && <Pagination Pages={Math.ceil(posts.length / postsPerPage)} indexSelectedChanged={handleIndexChanged}/>}
             <Footer />
         </>
