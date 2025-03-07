@@ -30,3 +30,12 @@ export const getCollections = async (email) => {
         throw error.response?.data || error.message;
     }
 }
+
+export const deleteCollection = async (collectionId) => {
+    try {
+        const response = await apiClient.put(`/api/collection/${collectionId}`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
