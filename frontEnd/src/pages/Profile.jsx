@@ -125,7 +125,7 @@ function Profile() {
 
         if (response.status) {
             handleClose();
-            Swal.fire({
+            await Swal.fire({
                 title: "Successfully updated!",
                 text: "Your information was successfully updated",
                 icon: "success",
