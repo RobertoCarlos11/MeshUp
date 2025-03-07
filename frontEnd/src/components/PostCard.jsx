@@ -48,7 +48,7 @@ function PostCard({ Post }) {
             if (modelObjectURL) URL.revokeObjectURL(modelObjectURL);
             if (textureObjectURL) URL.revokeObjectURL(textureObjectURL);
         };
-    }, []);
+    }, [Post]);
 
     useEffect(() => {
         const getLikesOfPost = async () => {
@@ -78,7 +78,7 @@ function PostCard({ Post }) {
             post_Status: Post.Post_Status,
             categoryId: Post.CategoryId,
         });
-    },[]);
+    },[Post]);
 
     const handlePostLike = async () => {
         let response;
