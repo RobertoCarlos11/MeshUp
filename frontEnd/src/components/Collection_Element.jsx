@@ -6,7 +6,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 function Collection_ELement(){
     return(
         <>
-         <div className="relative flex flex-col m-2 bg-white shadow-sm rounded-sm w-145 scale-95">      
+         <div className="relative flex flex-col m-2 bg-white shadow-sm rounded-sm w-140 scale-95">      
             <div className='h-75 bg-[var(--secondary-color)] rounded-t-sm flex justify-end'>
                 <DeleteOutlineOutlinedIcon className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 m-3'/>
             </div>

@@ -89,7 +89,7 @@ function Header({UserUpdated = true}){
 
                         <PopoverPanel className="absolute right-0 w-40 h-auto bg-[var(--background-color)] shadow-sm border-2 border-solid border-[var(--primary-color)] rounded-sm p-2 z-50 text-xs flex flex-col space-y-2">
                             <Link to={`/Profile/${userLoggedIn.Email}`}>See Profile</Link>
-                            <Link  to="/Search_History">History</Link>
+                            <Link  to="/Search_History">Search History</Link>
                             <p className="cursor-pointer" onClick={handleLogOut}>Log Out</p>
                         </PopoverPanel>
                     </Popover> 

@@ -22,7 +22,7 @@ function Collection(){
             <Collection_ELement/>
         </div>
 
-        <center><Button_Style name="Delete Collection" className="m-2 p-3 pt-1 pb-1"/></center> 
+        <center><Button_Style className="text-sm m-2 p-3 pt-1 pb-1">Delete Collection</Button_Style></center> 
         
         <Footer/>
         </>

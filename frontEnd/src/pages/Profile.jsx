@@ -10,6 +10,7 @@ import { updateUser, getUser } from "../services/userService";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetAllPostsOfUser } from "../services/postService";
+import { getCollections } from "../services/collectionService";
 import Pagination from "../components/Pagination";
 
 function Profile() {
@@ -20,6 +21,7 @@ function Profile() {
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
     const [user, setUser] = useState({});
     const [posts, setPosts] = useState();
+    const [collections, setCollections] = useState();
     const [iconHidden, setIconHidden] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [displayedPosts, setDisplayedPosts] = useState();
@@ -59,8 +61,14 @@ function Profile() {
             
             setPosts(Posts);
         }
-
         FetchPostsOfUser();
+
+        const FetchCollectionsUser = async () => {
+            const CollectionsFound = await getCollections(ProfileId);
+            setCollections(CollectionsFound.data);
+        }
+        FetchCollectionsUser();
+
     }, [ProfileId]);
 
 
@@ -138,6 +146,7 @@ function Profile() {
         localStorage.setItem("user", JSON.stringify(user));
         setUserUpdated(false);
     },[userUpdated]);
+
     const handleUpdateUser = (e) => {
         const { name, value } = e.target;
         setUser((prev) => ({
@@ -162,51 +171,49 @@ function Profile() {
                             <span className="text-base font-semibold mr-2">{posts?.length}</span>Posts
                         </div>
                         <div className="m-2">
-                            <span className="text-base font-semibold mr-2">00</span>Collections
+                            <span className="text-base font-semibold mr-2">{collections?.length}</span>Collections
                         </div>
                     </div>
                 </div>
                 {userLoggedIn?.Email === user.Email &&
-                    <Button_Style className="text-sm m-2 px-3 py-1 w-32 self-center" onClick={handleOpen}>
-                        Edit Profile
-                    </Button_Style>}    
+                    <Button_Style className="text-sm m-2 px-3 py-1 w-32 self-center" onClick={handleOpen}>Edit Profile</Button_Style>}    
             </div>
             <Modal open={open} onClose={handleClose} className="flex items-center justify-center">
-                <div className="p-4 bg-color rounded shadow-lg">
-                    <h2>Edit Profile</h2>
-                    <form className="flex justify-between space-x-6">
-                        <div className="">
-                            <div className="mb-4">
-                                <label className="block text-sm font-bold mb-2">Username</label>
-                                <input type="text" name="Username" onChange={handleUpdateUser} defaultValue={user.Username} className="shadow appearance-none border rounded w-full py-2 px-3 text-comp-1 leading-tight focus:outline-none focus:shadow-outline" />
+                <div className="flex items-center justify-center  w-1/3 h-1/2">
+                    <div className="p-8 bg-color rounded shadow-lg">
+                        <header className="p-2 border-b-2 border-solid border-[var(--primary-color)]">
+                            <h2 className="text-center text-lg font-bold">EDIT PROFILE</h2>
+                        </header>
+                        <form className="flex justify-between space-x-6 py-6">
+                            <div className="">
+                                <div className="mb-4">
+                                    <label className="block text-sm font-bold mb-2">Username</label>
+                                    <input type="text" name="Username" onChange={handleUpdateUser} defaultValue={user.Username} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)]" />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-bold mb-2">Password</label>
+                                    <input type="text" name="Pass" onChange={handleUpdateUser} defaultValue={user.Pass} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)]" />
+                                </div>
+                                <div className="mb-4"></div>
+                                <label className="block text-sm font-bold mb-2">Birthdate</label>
+                                <input type="date" name="Birthdate" onChange={handleUpdateUser} defaultValue={formatDate(user.Birthdate)} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)]" />
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-bold mb-2">Password</label>
-                                <input type="text" name="Pass" onChange={handleUpdateUser} defaultValue={user.Pass} className="shadow appearance-none border rounded w-full py-2 px-3 text-comp-1 leading-tight focus:outline-none focus:shadow-outline" />
+                            <div className="flex flex-col items-center">
+                                <label className="block text-sm font-bold mb-2">Profile Picture</label>
+                                <input type="file" hidden ref={PhotoInputRef} onChange={(e) => handlePhotoChange(e)}/>
+                                <div onMouseEnter={() => setIconHidden(false)} onMouseLeave={() => setIconHidden(true)} className="relative w-50 cursor-pointer">
+                                    <div onClick={() => openPhotoFile()} hidden={iconHidden} className="absolute inset-0 bg-black/50"></div>
+                                    <img ref={PhotoRef} src={photoUrl !== null ? photoUrl : DefaultPfp} className="z-0 w-50"/>
+                                    <AddAPhotoIcon className="absolute inset-0 m-auto w-12 h-12 text-white" hidden={iconHidden}/>
+                                </div>
                             </div>
-                            <div className="mb-4"></div>
-                            <label className="block text-sm font-bold mb-2">Birthdate</label>
-                            <input type="date" name="Birthdate" onChange={handleUpdateUser} defaultValue={formatDate(user.Birthdate)} className="shadow appearance-none border rounded w-full py-2 px-3 text-comp-1 leading-tight focus:outline-none focus:shadow-outline" />
-                        </div>
-                        <div className="mb-4 flex flex-col items-center">
-                            <label className="block text-sm font-bold mb-2">Profile Picture</label>
-                            <input type="file" hidden ref={PhotoInputRef} onChange={(e) => handlePhotoChange(e)} />
-                            <div onMouseEnter={() => setIconHidden(false)} onMouseLeave={() => setIconHidden(true)} className="relative w-50">
-                                <div onClick={() => openPhotoFile()} hidden={iconHidden} className="absolute inset-0 bg-black/50"></div>
-                                <img ref={PhotoRef} src={photoUrl !== null ? photoUrl : DefaultPfp} className="z-0 w-50" />
-                                <AddAPhotoIcon className="absolute inset-0 m-auto w-12 h-12 text-white" hidden={iconHidden} />
+                        </form>
+                        <footer className="p-2 border-t-2 border-solid border-[var(--primary-color)]">
+                            <div className="flex justify-center">
+                                <Button_Style className="text-sm m-2 p-3 pb-1 pt-1" onClick={handleSave}>Save</Button_Style>
+                                <Button_Style className="text-sm m-2 p-3 pb-1 pt-1" onClick={handleClose}>Cancel</Button_Style>
                             </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                        </div>
-                    </form>
-                    <div className="flex justify-evenly">
-                        <Button_Style className="text-sm px-3 py-1" onClick={handleSave}>
-                            Save
-                        </Button_Style>
-                        <Button_Style className="text-sm px-3 py-1" onClick={handleClose}>
-                            Cancel
-                        </Button_Style>
+                        </footer>
                     </div>
                 </div>
             </Modal >
