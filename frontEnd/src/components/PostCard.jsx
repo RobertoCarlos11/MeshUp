@@ -14,9 +14,7 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { Modal } from "@mui/material";
 import Swal from 'sweetalert2';
 import { InsertCollection, InsertCollectionElement, getCollections } from '../services/collectionService';
-import { Modal } from '@mui/material';
 import { GetAllCategories } from '../services/categoryService';
-import Button_Style from './Button_Style';
 import { UpdatePost } from '../services/postService';
 
 function PostCard({ Post }) {
@@ -25,7 +23,6 @@ function PostCard({ Post }) {
     const location = useLocation();
     const [updatedPost, setUpdatedPost] = useState({});
     const user = JSON.parse(localStorage.getItem("user"));
-    const [open, setOpen] = useState(false);
     const [categories, setCategories] = useState(null);
     const [modelUrl, setModelUrl] = useState(null);
     const [likes, setLikes] = useState();
@@ -36,9 +33,13 @@ function PostCard({ Post }) {
     const [userCollections, setUserCollections] = useState([]);
     
     const [open, setOpen] = useState(false);
+    const [openCollection, setOpenCollection] = useState(false);
     
-    const handleOpen = () => userLoggedIn === null ?  handleNoSession() : setOpen(true);
+    const handleOpen = ()=> setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const handleOpenCollection = () => userLoggedIn === null ?  handleNoSession() : setOpenCollection(true);
+    const handleCloseCollection = () => setOpenCollection(false);
 
     useEffect(() => {
         const { model } = Post;
@@ -138,7 +139,7 @@ function PostCard({ Post }) {
         e.preventDefault();
     
         if (!collectionName ){
-            handleClose();
+            handleCloseCollection();
             Swal.fire({
                 icon: "error",
                 title: "Oops!!",
@@ -147,7 +148,7 @@ function PostCard({ Post }) {
                 result.isConfirmed ? handleOpen() : '';
             });
         }else{
-            handleClose();
+            handleCloseCollection();
             const response = await InsertCollection(collectionName, userLoggedIn.Email, Post.PostId);
             console.log(response);
 
@@ -255,10 +256,10 @@ function PostCard({ Post }) {
                             <PopoverPanel className='absolute left-0 w-50 h-auto bg-[var(--background-color)] shadow-sm border-2 border-solid border-[var(--primary-color)] rounded-sm p-2 z-50 text-xs text-comp-1 flex flex-col space-y-2'>
                                 <div className='border-b-1 border-solid border-[var(--primary-color)]'>
                                     <AddOutlinedIcon/>
-                                    <button className='cursor-pointer' onClick={handleOpen}>Add to New Collection</button>
+                                    <button className='cursor-pointer' onClick={handleOpenCollection}>Add to New Collection</button>
                                 </div>
 
-                                <Modal open= {open} onClose= {handleClose} className='flex items-center justify-center'>
+                                <Modal open= {openCollection} onClose= {handleCloseCollection} className='flex items-center justify-center'>
                                     <div className="flex items-center justify-center w-1/3 h-1/2">
                                         <div className="p-8 bg-color rounded shadow-lg">
                                             <header className='border-b-2 border-colid border-[var(--primary-color)] p-2'>
@@ -270,7 +271,7 @@ function PostCard({ Post }) {
                                             </form>
                                             <footer className='text-center border-t-2 border-colid border-[var(--primary-color)] p-2'>
                                                 <Button_Style className='text-sm m-2 p-3 py-1' onClick={createCollection}>Save</Button_Style>
-                                                <Button_Style className='text-sm m-2 p-3 py-1' onClick={handleClose}>Cancel</Button_Style>
+                                                <Button_Style className='text-sm m-2 p-3 py-1' onClick={handleCloseCollection}>Cancel</Button_Style>
                                             </footer>
                                         </div>
                                     </div>
