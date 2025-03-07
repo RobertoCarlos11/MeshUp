@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import User_Posts from "../components/User_Posts";
 import User_Collections from "./User_Collections";
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PostCard from "./PostCard";
+import { getCollections } from "../services/collectionService";
 
 function Profile_Sections({Posts = null}){
+    const userLoggedIn = JSON.parse(localStorage.getItem("user"));
     const [activeTab, setActiveTab] = useState("posts");
+    const [collections, setCollections] = useState();
+
+    useEffect(() => {
+        const FetchCollectionsUser = async () => {
+            const CollectionsFound = await getCollections(userLoggedIn.Email);
+            setCollections(CollectionsFound.data);
+        }
+        FetchCollectionsUser();
+    }, [userLoggedIn.Email]);
 
     return(
         <>
@@ -35,11 +46,11 @@ function Profile_Sections({Posts = null}){
             </div>
         )}
 
-        {activeTab === "collections" && (
+        {activeTab === "collections" && collections?.length > 0 &&(
             <div className="flex flex-wrap justify-center space-x-auto m-10">
-                <User_Collections/>
-                <User_Collections/>
-                <User_Collections/>
+                {collections && collections.map(collection =>
+                    <User_Collections Collection = {collection}/>
+                )}
             </div>
         )}
 
