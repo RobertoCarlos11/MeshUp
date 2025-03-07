@@ -12,12 +12,14 @@ function Profile_Sections({Posts = null}){
     const [collections, setCollections] = useState();
 
     useEffect(() => {
+        if(activeTab !== "collections")
+            return;
         const FetchCollectionsUser = async () => {
             const CollectionsFound = await getCollections(userLoggedIn.Email);
             setCollections(CollectionsFound.data);
         }
         FetchCollectionsUser();
-    }, [userLoggedIn.Email]);
+    }, [userLoggedIn.Email, activeTab]);
 
     return(
         <>
