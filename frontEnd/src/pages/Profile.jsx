@@ -23,17 +23,27 @@ function Profile() {
     const [posts, setPosts] = useState();
     const [collections, setCollections] = useState();
     const [iconHidden, setIconHidden] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [displayedPosts, setDisplayedPosts] = useState();
     const [photoUrl, setPhotoUrl] = useState(null);
     const [open, setOpen] = useState(false);
     const [userUpdated, setUserUpdated] = useState(false);
     const [photoArray, setPhotoArray] = useState([]);
-    const [displayedPosts, setDisplayedPosts] = useState();
-    const [currentPage, setCurrentPage] = useState(1);
     const PhotoInputRef = useRef();
     const PhotoRef = useRef();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    
+    const handleIndexChanged = (index) => {
+        setCurrentPage(index);
+    }
+
+    useEffect(() => {
+    const startIndex = (currentPage -1) * postsPerPage;
+    setDisplayedPosts(posts?.slice(startIndex,startIndex + postsPerPage))
+    },[currentPage,posts, ProfileId]);
 
     useEffect(() => {
         const FetchUserInfo = async () => {
@@ -47,7 +57,9 @@ function Profile() {
 
         const FetchPostsOfUser = async () => {
             const PostsFound = await GetAllPostsOfUser(ProfileId);
-            setPosts(PostsFound.data);
+        const Posts = PostsFound.data.filter(post => userLoggedIn?.Email === ProfileId || post.Post_Status === true);
+            
+            setPosts(Posts);
         }
         FetchPostsOfUser();
 
@@ -143,16 +155,6 @@ function Profile() {
         }));
     }
 
-    const handleIndexChanged = async (index) => {
-        setCurrentPage(index);
-    }
-    
-    useEffect(() => {
-        const startIndex = (currentPage -1) * postsPerPage;
-        setDisplayedPosts(posts?.slice(startIndex,startIndex + postsPerPage));
-    },[currentPage,posts]);
-
-
     return (
         <>
             <Header />
@@ -215,8 +217,8 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            {displayedPosts ? <Profile_Sections Posts={displayedPosts} /> : <p className="text-center"> Loading...</p>}
-            {posts && <Pagination Pages={Math.ceil(posts.length / postsPerPage)} indexSelectedChanged={handleIndexChanged}/>}
+            {displayedPosts ? <Profile_Sections Posts={displayedPosts} UserLoggedIn = {userLoggedIn.Email} UserProfile= {ProfileId}/> : <p> Loading...</p>}
+            {posts && <Pagination Pages={Math.ceil(posts?.length / postsPerPage)} indexSelectedChanged={handleIndexChanged} />}
             <Footer />
         </>
     )

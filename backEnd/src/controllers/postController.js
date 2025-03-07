@@ -46,7 +46,10 @@ export const GetAllPosts = async (req, res) => {
             attributes:["Rating"],
             }
             ],
-            where: req.params.CategoryId === "0" ?  {}: { CategoryId : req.params.CategoryId },
+            where: {
+                ...(req.params.CategoryId === "0" ? {} : { CategoryId: req.params.CategoryId }),
+                Post_Status: true,
+            }
         });
 
         const payload = {
@@ -130,6 +133,35 @@ export const getPost = async (req, res) => {
         res.json(payload);
     }
     catch (error) {
+        res.status(500).json(error);
+        console.log(error);
+    }
+}
+
+export const UpdatePost = async (req, res) => {
+    try{
+        const {postId, post_Name, post_Description, post_Status, categoryId } = req.body;
+        await Post.update({
+            Post_Name: post_Name,
+            Post_Description: post_Description,
+            Post_Status: post_Status,
+            CategoryId: categoryId
+        },
+        {
+           where:{
+            PostId: postId,
+           } 
+        });
+
+        const payload = {
+            status: true,
+            message: "Post Updated Successfully!",
+        }
+
+        res.json(payload);
+    }
+    catch(error)
+    {
         res.status(500).json(error);
         console.log(error);
     }

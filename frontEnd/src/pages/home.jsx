@@ -72,7 +72,6 @@ function Home() {
                 {displayedPosts ? (
                     displayedPosts.length > 0 ? (
                         displayedPosts
-                            .filter(item => search === "" || item.Post_Name.toLowerCase().includes(search.toLowerCase()))
                             .map(item => item && <PostCard key={item.PostId} Post={item} />)
                     ) : (
                         <p className="text-center text-xl text-gray-500">No posts found.</p>

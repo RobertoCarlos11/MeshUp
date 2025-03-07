@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import User_Posts from "../components/User_Posts";
 import User_Collections from "./User_Collections";
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
+import Pagination from "./Pagination";
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PostCard from "./PostCard";
 import { getCollections } from "../services/collectionService";
@@ -41,7 +41,7 @@ function Profile_Sections({Posts = null}){
         {activeTab === "posts" && Posts?.length > 0 && (
             <div className="flex flex-wrap justify-center space-x-auto m-10">
                 {Posts && Posts.map(post => 
-                    <PostCard Post={post}/>
+                    <PostCard key={post.Post_Id} Post={post}/>
                 )}
             </div>
         )}
@@ -53,7 +53,6 @@ function Profile_Sections({Posts = null}){
                 )}
             </div>
         )}
-
         </>
     )
 }

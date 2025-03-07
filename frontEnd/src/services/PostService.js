@@ -50,3 +50,16 @@ export const GetPost = async (PostId) =>
         throw error.response?.data || error.message;
     }
 }
+
+export const UpdatePost = async (UpdatedPost) => 
+{
+    try{
+        const response = await apiClient.put("/api/post/",UpdatedPost);
+
+        return response.data;
+    }
+    catch(error)
+    {
+        throw error.response?.data || error.message;
+    }
+}
