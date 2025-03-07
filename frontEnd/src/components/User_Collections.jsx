@@ -1,9 +1,13 @@
 import Swal from 'sweetalert2';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { deleteCollection } from '../services/collectionService';
+import Scene from './Three/Scene';
+import { useEffect, useState } from 'react';
 
 function User_Collections({Collection}) {
        
+    const [models, setModels] = useState();
+
     const handleDeleteCollection = () => {
         Swal.fire({
             icon: "warning",
@@ -29,8 +33,8 @@ function User_Collections({Collection}) {
                 icon: "success",
                 title: "Sucess!!",
                 text: "Sucessfully deleted collection!!"
-            }).then((result) => {
-                location.reload();
+            }).then(() => {
+                window.location.reload();
             });
         }else{
             Swal.fire({
@@ -41,14 +45,47 @@ function User_Collections({Collection}) {
         }
     }
     
+    useEffect(() => {
+        const {elements} = Collection;
+        const newModels = {};
+        
+        elements.forEach(element => {
+            const {post} = element; 
+            const {model} = post;
+
+            const ModelArray = new Uint8Array(model.Model.data);
+            const ModelBlob = new Blob([ModelArray]);
+            const ModelURL = URL.createObjectURL(ModelBlob);
+
+            
+            const TextureArray = new Uint8Array(model.Texture.data);
+            const TextureBlob = new Blob([TextureArray]);
+            const TextureURL =  URL.createObjectURL(TextureBlob);
+
+            console.log(post);
+
+            newModels[post.PostId] = { model: ModelURL, texture: TextureURL };
+        });
+
+        setModels((prev) => ({
+            ...prev,
+            ...newModels,
+        }));
+
+    },[Collection]);
     return (
         <>
             <div className="flex flex-col">
-                <div className="relative flex flex-col m-2 -mb-4 bg-white shadow-lg rounded-sm w-145 scale-95 overflow-hidden z-2">      
-                    <div className='h-75 bg-[var(--secondary-color)] rounded-t-sm flex justify-end'>
-                        <DeleteOutlineOutlinedIcon onClick={handleDeleteCollection} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 m-3'/>
+                <div className="relative flex flex-col m-2 -mb-4 bg-white shadow-lg rounded-sm w-145 scale-95 overflow-hidden z-2"> 
+                    <div className='flex justify-center items-center h-75'>
+                    {models && Object.entries(models).map(([postId, modelData]) => (
+                        <div key={postId} className='w-1/4 h-full flex-shrink-0 flex-grow-0'>
+                            <Scene model={modelData.model} texture={modelData.texture} className="h-full w-full rounded-sm relative"/>
+                        </div>
+                    ))}
                     </div>
                     <div className="mx-3 flex justify-between border-t pb-2 pt-2 px-1">
+                    <DeleteOutlineOutlinedIcon onClick={handleDeleteCollection} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 m-3'/>
                         <span className="cursor-pointer text-base text-[var(--secondary-color)] m-1">
                             {Collection.Collection_Name}    
                         </span>
