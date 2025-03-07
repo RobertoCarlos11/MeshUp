@@ -18,7 +18,6 @@ function PostCard({ Post }) {
     const navigate = useNavigate();
     
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
-    const [user, setUser] = useState();
     const [modelUrl, setModelUrl] = useState(null);
     const [likes, setLikes] = useState();
     const [userLiked, setUserLiked] = useState();
@@ -111,7 +110,6 @@ function PostCard({ Post }) {
 
     const createCollection = async(e) => {
         e.preventDefault();
-        setUser(userLoggedIn);
     
         if (!collectionName ){
             handleClose();
@@ -130,7 +128,7 @@ function PostCard({ Post }) {
             if(response.status == true){
                 Swal.fire({
                     icon: "success",
-                    title: "Sucess",
+                    title: "Sucess!!",
                     text: "Collection created sucessfully!!"
                 });
             }else{
@@ -145,7 +143,6 @@ function PostCard({ Post }) {
     }
 
     const addToCollection = async (collectionId) => {
-        setUser(userLoggedIn);
 
         const response = await InsertCollectionElement(collectionId, Post.PostId);
         console.log(collectionId, Post.PostId);
