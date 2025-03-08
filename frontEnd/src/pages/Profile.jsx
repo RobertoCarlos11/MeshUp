@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { GetAllPostsOfUser } from "../services/postService";
 import { getCollections } from "../services/collectionService";
 import Pagination from "../components/Pagination";
+import Logo from "../assets/Logo.png";
 
 function Profile() {
 
@@ -217,7 +218,12 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            {displayedPosts ? <Profile_Sections Posts={displayedPosts} UserLoggedIn = {userLoggedIn.Email} UserProfile= {ProfileId}/> : <p> Loading...</p>}
+            {displayedPosts ? <Profile_Sections Posts={displayedPosts} UserLoggedIn = {userLoggedIn.Email} UserProfile= {ProfileId}/> : (
+                                    <div className="text-2xl animate-bounce flex items-center justify-center">
+                                        <img src={Logo} className="w-1/5" alt="LogoName" />
+                                        <p>Loading...</p>
+                                    </div>
+            )}
             {posts && <Pagination Pages={Math.ceil(posts?.length / postsPerPage)} indexSelectedChanged={handleIndexChanged} />}
             <Footer />
         </>
