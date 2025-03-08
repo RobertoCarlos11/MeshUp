@@ -11,7 +11,7 @@ import collectionRoutes from "./routes/collectionRoutes.js";
 import cors from "cors";
 import {syncDB, sequelize} from "./models/index.js"
 import {createDummyData} from "./postDeploy/dummyData.js"
-
+import reportRoutes from "./routes/reportsRoutes.js"
 
 dotenv.config();
 
@@ -27,7 +27,7 @@ app.use("/api/comment", commentRoutes);
 app.use("/api/like", likeRoutes);
 app.use("/api/notification", notificationRoutes);
 app.use("/api/collection", collectionRoutes);
-
+app.use("/api/reports", reportRoutes);
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => 
