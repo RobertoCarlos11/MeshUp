@@ -1,16 +1,98 @@
-  import Footer from "../components/Footer";
+import { useEffect, useState } from "react";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
+import { GetReports } from "../services/reportService";
+import { GetLikes } from "../services/likeService";
+import Logo from "../assets/Logo.png";
+import { getComments } from "../services/commentService";
+import { GetAllCategories } from "../services/categoryService";
+import { getSavesOfPost } from "../services/collectionService";
 
 function Reports() {
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const [categories, setCategories] = useState();
+    const [posts, setPosts] = useState();
+    const [activeTab, setActiveTab] = useState("likes");
+    const [category, setCategory] = useState(0);
+    const [startDate, setStartDate] = useState(null);
+    const [finalDate, setFinalDate] = useState(null);
+    const [status, setStatus] = useState(null);
+
+    useEffect(() => {
+        const FetchCategories = async () => {
+            const CategoriesFound = await GetAllCategories();
+            setCategories(CategoriesFound.data);
+        }
+        FetchCategories();
+    },[]);
+    useEffect(() => {
+        setPosts(null);
+        const FetchReport = async () => {
+            const Report = await GetReports(user.Email, category, status, startDate === "" ? null : startDate, finalDate === "" ? null : finalDate);
+
+            switch(activeTab)
+            {
+                case "likes":
+                    const postsWithLikes = await Promise.all(
+                        Report.data.map(async (data) => {
+                            const LikesFound = await GetLikes("post", data.PostId, null);
+                            return { ...data, count: LikesFound.data.count };
+                        })
+                    );
+                    postsWithLikes.sort((a, b) => b.count - a.count);
+                    setPosts(postsWithLikes);
+                    break;
+
+                case "comments":
+                    const postsWithComments = await Promise.all(
+                        Report.data.map(async (data) => {
+                            const CommentsFound = await getComments(data.PostId);
+                            return {...data, count: CommentsFound.data.length};
+                        })
+                    );
+                    postsWithComments.sort((a,b) => b.count - a.count);
+                    setPosts(postsWithComments);
+                    break;
+                
+                case "saves":
+                    const postsWithSaves = await Promise.all(
+                        Report.data.map(async (data) => {
+                            const SavesFound = await getSavesOfPost(data.PostId);
+                            return {...data, count: SavesFound.data.count};
+                        })
+                    );
+
+                    postsWithSaves.sort((a,b) => b.count- a.count);
+                    setPosts(postsWithSaves);
+                    break;
+            }
+        }
+
+        FetchReport();
+        console.log(posts);
+    }, [activeTab, category,status, startDate, finalDate]);
+
+    const handleTableTitle = () => {
+        switch(activeTab)
+        {
+            case "likes":
+                return "LIKED";
+            case "saves":
+                return "SAVED";
+            case "comments":
+                return "COMMENTED";
+        }
+    }
     return (
         <div className="h-screen">
             <Header />
             <div className="flex flex-row border-b-2 border-solid m-10 mt-0 mb-0">
                 <div className="w-1/3"></div>
                 <div className="text-base m-5 mb-0">
-                    <button className="cursor-pointer bg-[var(--primary-color)] border-t-2 border-x-2 border-solid border-[var(--primary-color)] font-semibold rounded-t-sm p-3 pl-8 pr-8 m-2 mb-0">LIKES</button>
-                    <button className="cursor-pointer border-t-2 border-x-2 border-solid border-[var(--primary-color)] font-semibold rounded-t-sm p-3 pl-8 pr-8 m-2 mb-0">SAVES</button>
-                    <button className="cursor-pointer border-t-2 border-x-2 border-solid border-[var(--primary-color)] font-semibold rounded-t-sm p-3 pl-8 pr-8 m-2 mb-0">COMMENTS</button>
+                    <button onClick={() => setActiveTab("likes")} className={`cursor-pointer ${activeTab === "likes" ? "bg-[var(--primary-color)]" : ""} border-t-2 border-x-2 border-solid border-[var(--primary-color)] font-semibold rounded-t-sm p-3 pl-8 pr-8 m-2 mb-0`}>LIKES</button>
+                    <button onClick={() => setActiveTab("saves")} className={`cursor-pointer ${activeTab === "saves" ? "bg-[var(--primary-color)]" : ""} border-t-2 border-x-2 border-solid border-[var(--primary-color)] font-semibold rounded-t-sm p-3 pl-8 pr-8 m-2 mb-0`}>SAVES</button>
+                    <button onClick={() => setActiveTab("comments")} className={`cursor-pointer ${activeTab === "comments" ? "bg-[var(--primary-color)]" : ""} border-t-2 border-x-2 border-solid border-[var(--primary-color)] font-semibold rounded-t-sm p-3 pl-8 pr-8 m-2 mb-0`}>COMMENTS</button>
                 </div>
             </div>
 
@@ -24,16 +106,17 @@ function Reports() {
                         <div className="flex flex-col m-2">
                             <label htmlFor="Category" className="font-semibold">Date</label>
                             <div className="flex justify-between items-center space-x-1 mt-2 mb-2">
-                                <input type="date" className="text-sm border-1 border-solid border-[var(--primary-color)] rounded-sm p-1" /> 
-                                <input type="date" className="text-sm border-1 border-solid border-[var(--primary-color)] rounded-sm p-1"/>
+                                <input onChange={e => setStartDate(e.currentTarget.value)} type="date" className="text-sm border-1 border-solid border-[var(--primary-color)] rounded-sm p-1" />
+                                <input onChange={e => setFinalDate(e.currentTarget.value)} type="date" className="text-sm border-1 border-solid border-[var(--primary-color)] rounded-sm p-1" />
                             </div>
                         </div>
                         <div className="flex flex-col m-2">
                             <label htmlFor="Category" className="font-semibold">Category</label>
-                            <select id="Category" className="text-sm bg-[var(--background-color)] border-1 border-solid border-[var(--primary-color)] rounded-sm p-1 mt-2 mb-2">
-                                <option>Youtube</option>
-                                <option>Youtube</option>
-                                <option>Youtube</option>
+                            <select value={category} onChange={e => setCategory(e.currentTarget.value)} id="Category" className="text-sm bg-[var(--background-color)] border-1 border-solid border-[var(--primary-color)] rounded-sm p-1 mt-2 mb-2">
+                                <option value="0">All Categories</option>
+                                {categories && categories.map(category => 
+                                    <option key={category.CategoryId} value={category.CategoryId}>{category.Category_Name}</option>
+                                )}
                             </select>
                         </div>
                         <div className="flex flex-col m-2">
@@ -41,16 +124,16 @@ function Reports() {
                             <div className="flex justify-left">
                                 <div className="flex space-x-2 m-2">
                                     <label class="relative flex items-center cursor-pointer" for="active">
-                                        <input name="framework" type="radio" class="peer h-5 w-5 cursor-pointer appearance-none rounded-full border checked:border-comp-1 transition-all" id="active"/>
-                                        <span class="absolute bg-[var(--primary-color)] w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <input checked={status === true} onClick={() => setStatus(prev => prev === true ? null : true)} name="framework" type="radio" className="peer h-5 w-5 cursor-pointer appearance-none rounded-full border checked:border-comp-1 transition-all" id="active" />
+                                        <span className="absolute bg-[var(--primary-color)] w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                         </span>
                                     </label>
                                     <span>Active</span>
                                 </div>
                                 <div className="flex space-x-2 m-2">
                                     <label class="relative flex items-center cursor-pointer" for="inactive">
-                                        <input name="framework" type="radio" class="peer h-5 w-5 cursor-pointer appearance-none rounded-full border checked:border-comp-1 transition-all" id="inactive"/>
-                                        <span class="absolute bg-[var(--primary-color)] w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <input checked={status === false} onClick={() => setStatus(prev => prev === false ? null : false)} name="framework" type="radio" className="peer h-5 w-5 cursor-pointer appearance-none rounded-full border checked:border-comp-1 transition-all" id="inactive" />
+                                        <span className="absolute bg-[var(--primary-color)] w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                         </span>
                                     </label>
                                     <span>Inactive</span>
@@ -63,24 +146,28 @@ function Reports() {
                 <div className="flex flex-col w-full p-10">
                     <div className="bg-[#191F27] w-full rounded-sm p-10">
                         <div className="border-1 border-solid border-[var(--primary-color)] rounded-sm">
-                            <h1 className="flex font-semibold justify-center text-xl m-4">MOST LIKED POSTS</h1>
+                            <h1 className="flex font-semibold justify-center text-xl m-4">MOST {handleTableTitle()} POSTS</h1>
 
                             <table className="w-full text-base">
-                                <th className="flex bg-secondary font-semibold justify-evenly p-2">
-                                    <td>POST</td>
-                                    <td>CATEGORY</td>
-                                    <td>LIKES</td>
-                                </th>
-                                <tr className="flex justify-evenly py-2">
-                                    <td>Dato 1</td>
-                                    <td>Dato 2</td>
-                                    <td>Dato 3</td>
-                                </tr>
-                                <tr className="flex justify-evenly py-2">
-                                    <td>Dato 1</td>
-                                    <td>Dato 2</td>
-                                    <td>Dato 3</td>
-                                </tr>
+                                    <tr className="justify-evenly bg-secondary font-semibold flex py-2">
+                                        <th className="text-center w-full">POST</th>
+                                        <th className="text-center w-full">CATEGORY</th>
+                                        <th className="text-center w-full">{activeTab.toUpperCase()}</th>
+                                    </tr>
+                                    {posts ? posts.map(post =>
+                                        <tr key={post.PostId} className="text-xs flex justify-evenly py-1">
+                                            <td className="text-center w-full">{post.Post_Name}</td>
+                                            <td className="text-center w-full">{post.category.Category_Name}</td>
+                                            <td className="text-center w-full">{post.count}</td>
+                                        </tr>
+                                    ) :
+                                        (
+
+                                            <div className="text-4xl animate-bounce flex items-center justify-center">
+                                                <img src={Logo} className="w-1/4" alt="LogoName" />
+                                                <p>Loading...</p>
+                                            </div>
+                                        )}
                             </table>
                         </div>
                     </div>
