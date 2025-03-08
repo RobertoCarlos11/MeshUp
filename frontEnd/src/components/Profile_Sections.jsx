@@ -5,9 +5,10 @@ import Pagination from "./Pagination";
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PostCard from "./PostCard";
 import { getCollections } from "../services/collectionService";
+import { useParams } from "react-router-dom";
 
 function Profile_Sections({Posts = null}){
-    const userLoggedIn = JSON.parse(localStorage.getItem("user"));
+    const {ProfileId} = useParams();
     const [activeTab, setActiveTab] = useState("posts");
     const [collections, setCollections] = useState();
 
@@ -15,11 +16,11 @@ function Profile_Sections({Posts = null}){
         if(activeTab !== "collections")
             return;
         const FetchCollectionsUser = async () => {
-            const CollectionsFound = await getCollections(userLoggedIn.Email);
+            const CollectionsFound = await getCollections(ProfileId);
             setCollections(CollectionsFound.data);
         }
         FetchCollectionsUser();
-    }, [userLoggedIn.Email, activeTab]);
+    }, [ProfileId, activeTab]);
 
     return(
         <>
