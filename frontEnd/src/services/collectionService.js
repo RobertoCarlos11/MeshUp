@@ -39,3 +39,15 @@ export const deleteCollection = async (collectionId) => {
         throw error.response?.data || error.message;
     }
 };
+
+export const getSavesOfPost = async (PostId) => 
+{
+    try{
+        const response = await apiClient.get(`/api/collection/saves/${PostId}`);
+        return response.data;
+    }
+    catch(error)
+    {
+        throw error.response?.data || error.message;
+    }
+}
