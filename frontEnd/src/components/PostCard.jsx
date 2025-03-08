@@ -13,7 +13,7 @@ import Like_Button from './Like_Button';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { Modal } from "@mui/material";
 import Swal from 'sweetalert2';
-import { InsertCollection, InsertCollectionElement, getCollections } from '../services/collectionService';
+import { InsertCollection, InsertCollectionElement, getCollections, getSavesOfPost } from '../services/collectionService';
 import { GetAllCategories } from '../services/categoryService';
 import { UpdatePost } from '../services/postService';
 
@@ -26,6 +26,7 @@ function PostCard({ Post }) {
     const [categories, setCategories] = useState(null);
     const [modelUrl, setModelUrl] = useState(null);
     const [likes, setLikes] = useState();
+    const [saves, setSaves] = useState();
     const [userLiked, setUserLiked] = useState();
     const [textureUrl, setTextureUrl] = useState(null);
     const [collectionName, setCollectionName] = useState();
@@ -71,6 +72,13 @@ function PostCard({ Post }) {
         getLikesOfPost();
     }, []);
 
+    useEffect(() => {
+        const getSaves = async () => {
+                const SavesFound = await getSavesOfPost(Post.PostId);
+                setSaves(SavesFound.data.count);
+        }
+        getSaves();
+    });
     useEffect(() => {
         if (open) {
             const FetchCategories = async () => {
@@ -229,7 +237,7 @@ function PostCard({ Post }) {
         <>
             <div className="relative flex flex-col m-2 bg-white shadow-sm rounded-sm w-140">
                 <Scene className="h-75 rounded-sm relative" model={modelUrl} texture={textureUrl}>
-                    {user.Email === Post.Email && location.pathname.includes("/Profile") &&
+                    {user?.Email === Post.Email && location.pathname.includes("/Profile") &&
                         <EditOutlinedIcon onClick={handleOpen} className='cursor-pointer text-[var(--background-color)] text-lg absolute top-0 left-0 m-2' />
                     }
                     <Rating stars={postRating} className="absolute top-2 right-2 text-yellow-400" />
@@ -245,7 +253,7 @@ function PostCard({ Post }) {
                         </div>
                         <div className="flex items-center">
                             <BookmarkBorderIcon className='cursor-pointer'/>
-                            <p className="text-base m-1">{Post.Saves ? Post.Saves : 0}</p>
+                            <p className="text-base m-1">{saves}</p>
                         </div>
                         
                         <Popover className="relative">
