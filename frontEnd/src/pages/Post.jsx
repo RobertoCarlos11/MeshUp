@@ -16,6 +16,7 @@ import Like_Button from "../components/Like_Button";
 import Button_Style from "../components/Button_Style";
 import JSZip from "jszip";
 import Logo from "../assets/Logo.png";
+import { getSavesOfPost } from "../services/collectionService";
 
 
 function Post() {
@@ -36,6 +37,8 @@ function Post() {
             const PostFound = await GetPost(param);
             if (PostFound?.data && PostFound.data !== null) {
                 const LikesFound = await GetLikes("post", PostFound.data.PostId, user?.Email);
+                const SavesFound = await getSavesOfPost(PostFound.data.PostId);
+                console.log(SavesFound);
                 setPost(PostFound.data);
                 console.log(userReviewed);
                 const { model } = await PostFound.data;
@@ -56,6 +59,7 @@ function Post() {
                     ...prev,
                     Likes: LikesFound.data.count,
                     UserLiked: LikesFound.UserLiked?.Status,
+                    Saves: SavesFound.data.count,
                 }));
             }
             else{
@@ -235,7 +239,7 @@ function Post() {
                             </div>
                             <div className="flex">
                                 <BookmarkBorderIcon className='cursor-pointer' />
-                                <p className="text-comp-1 m-1">18</p>
+                                <p className="text-comp-1 m-1">{post.Saves}</p>
                             </div>
                             <FileDownloadOutlinedIcon className='cursor-pointer' onClick={DownloadModel} />
                         </div>
