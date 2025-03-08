@@ -102,6 +102,17 @@ function Upload() {
 
     const handleFileChange = (e) => {
         const { name, files } = e.target;
+        
+        console.log(name);
+        console.log(files[0].name);
+        if (name === "model" && !files[0].name.toLowerCase().endsWith(".fbx")) {
+            return Swal.fire({
+            icon: "error",
+            title: "Oops!!",
+            text: "MeshUp only accepts FBX Files!, please try with an FBX file."
+            });
+        }
+
         if (files.length > 0) {
             setPostInfo((prev) => ({
                 ...prev,
