@@ -127,3 +127,28 @@ export const deleteCollection = async (req, res) => {
         console.los(error);
     }
 }
+
+export const getSavesOfPost = async (req,res) => {
+    try{
+        const {PostId} = req.params;
+
+        const SavesFound = await Collection_Element.findAndCountAll({
+            where:{ 
+                PostId:PostId,
+            }
+        });
+
+        const payload = {
+            status: SavesFound ? true : false,
+            data: SavesFound,
+            message: SavesFound ? "Saves found for post successfully" : "No Saves where found",
+        }
+
+        res.json(payload);
+    }   
+    catch(error)
+    {
+        res.status(500).json(error);
+        console.log(error);
+    }
+}
