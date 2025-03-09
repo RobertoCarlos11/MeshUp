@@ -88,7 +88,7 @@ function Search_History() {
             title: "Deleted!",
             text: "History deleted successfully.",
             icon: "success",
-            timer: 2000, // Auto close in 2 seconds
+            timer: 2000,
             showConfirmButton: false
         });
         FetchHistory();
