@@ -17,6 +17,8 @@ import Button_Style from "../components/Button_Style";
 import JSZip from "jszip";
 import Logo from "../assets/Logo.png";
 import { getSavesOfPost } from "../services/collectionService";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+import AddCollection from "../components/AddCollection";
 
 
 function Post() {
@@ -31,6 +33,10 @@ function Post() {
     const [post, setPost] = useState({});
     const [modelUrl, setModelUrl] = useState(null);
     const [textureUrl, setTextureUrl] = useState(null);
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     useEffect(() => {
         const FetchPost = async () => {
@@ -238,7 +244,9 @@ function Post() {
                                 <p className="text-comp-1 m-1">{post.Likes}</p>
                             </div>
                             <div className="flex">
-                                <BookmarkBorderIcon className='cursor-pointer' />
+                                <AddCollection userLoggedIn={user} Post={post} className={"flex items-center"}>
+                                <BookmarkBorderIcon className='cursor-pointer' onClick={handleOpen} />
+                                </AddCollection>
                                 <p className="text-comp-1 m-1">{post.Saves}</p>
                             </div>
                             <FileDownloadOutlinedIcon className='cursor-pointer' onClick={DownloadModel} />
