@@ -8,7 +8,7 @@ import { useEffect,useState } from "react";
 import { GetAllPosts } from "../services/postService";
 import { CreateSearch } from "../services/historyService";
 
-function Header({UserUpdated = true}){
+function Header({UserUpdated = true, History = null}){
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
     const [user, setUser] = useState();
     const navigate = useNavigate();
@@ -26,6 +26,12 @@ function Header({UserUpdated = true}){
         console.log(postsFound);
     },[]);
 
+    useEffect(() => {
+        if(History === null)
+            return;
+
+        setSearch(History);
+    },[History]);
     const handleLogOut = () => 
         {
             localStorage.clear("user");

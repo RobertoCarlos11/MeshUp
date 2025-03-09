@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 function Search_History() {
     const user = JSON.parse(localStorage.getItem("user"));
     const [history, setHistory] = useState({});
+    const [word, setWord] = useState("");
     const [selected, setSelected] = useState([]);
     const groupByDay = (data) => {
         return data.reduce((acc, item) => {
@@ -96,9 +97,13 @@ function Search_History() {
         }
     } 
 
+    const handleWord = (value) => 
+    {
+        setWord(value);
+    }
     return (
         <>
-            <Header />
+            <Header History={word} />
             <div className="space-x-auto ml-100 mr-100">
                 <div className="flex flex-row justify-between border-b-2 border-solid p-2">
                     <div className="flex items-center m-2">
@@ -109,7 +114,7 @@ function Search_History() {
                     <Button_Style onClick={handleDeleteSelected} name="Selected" classname="text-sm m-2 px-3 py-1" inverted > Delete</Button_Style>
                 </div>
                 {Object.entries(history).map(([date,entries]) => (
-                    <Day_History Date={date} History={entries} HistorySelected={handleSelected} Items={selected}/>
+                    <Day_History Date={date} History={entries} HistorySelected={handleSelected} Items={selected} HandleWord={handleWord}/>
                 ))}
 
                 <Button_Style onClick={handleDeleteSelected} name="All" className="text-sm m-5 p-3 py-1 w-1/3">

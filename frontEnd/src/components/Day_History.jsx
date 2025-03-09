@@ -1,7 +1,10 @@
 import Search_Element from "./Search_Element";
 
-function Day_History({Date,History, HistorySelected, Items}){
+function Day_History({Date,History, HistorySelected, Items, HandleWord}){
 
+    const handleWord = (value) => {
+        HandleWord(value);
+    }
     const ElementSelected = (index) => {
         HistorySelected(index);
     }
@@ -12,7 +15,7 @@ function Day_History({Date,History, HistorySelected, Items}){
 
             <div className="flex flex-col m-5">
                 {History.map(item => 
-                <Search_Element Search={item} ElementSelected={ElementSelected} Items={Items}/>
+                <Search_Element Search={item} ElementSelected={ElementSelected} Items={Items} HandleWord={handleWord}/>
                 )}
             </div>
         </div>
