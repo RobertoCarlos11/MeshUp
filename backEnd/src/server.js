@@ -8,6 +8,7 @@ import commentRoutes from "./routes/commentRoutes.js"
 import likeRoutes from "./routes/likeRoutes.js"
 import notificationRoutes from "./routes/notificationRoutes.js";
 import collectionRoutes from "./routes/collectionRoutes.js";
+import historyRoutes  from "./routes/historyRoutes.js";
 import cors from "cors";
 import {syncDB, sequelize} from "./models/index.js"
 import {createDummyData} from "./postDeploy/dummyData.js"
@@ -28,6 +29,7 @@ app.use("/api/like", likeRoutes);
 app.use("/api/notification", notificationRoutes);
 app.use("/api/collection", collectionRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/History", historyRoutes);
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => 

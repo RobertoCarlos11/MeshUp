@@ -16,7 +16,7 @@ const SearchHistory = sequelize.define(
             type: DataTypes.DATE(),
             allowNull:true,
         },
-        Searh_Status:{
+        Search_Status:{
             type: DataTypes.BOOLEAN(),
             defaultValue: true,
         },
