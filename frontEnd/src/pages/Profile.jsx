@@ -30,6 +30,8 @@ function Profile() {
     const [open, setOpen] = useState(false);
     const [userUpdated, setUserUpdated] = useState(false);
     const [photoArray, setPhotoArray] = useState([]);
+
+    
     const PhotoInputRef = useRef();
     const PhotoRef = useRef();
 
@@ -218,7 +220,7 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            {displayedPosts ? <Profile_Sections Posts={displayedPosts} UserLoggedIn = {userLoggedIn?.Email} UserProfile= {ProfileId}/> : (
+            {displayedPosts ? <Profile_Sections Posts={displayedPosts} Collections={collections} UserLoggedIn = {userLoggedIn?.Email} UserProfile= {ProfileId}/> : (
                                     <div className="text-2xl animate-bounce flex items-center justify-center">
                                         <img src={Logo} className="w-1/5" alt="LogoName" />
                                         <p>Loading...</p>

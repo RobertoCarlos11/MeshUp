@@ -7,21 +7,9 @@ import PostCard from "./PostCard";
 import { getCollections } from "../services/collectionService";
 import { useParams } from "react-router-dom";
 
-function Profile_Sections({Posts = null}){
-    const {ProfileId} = useParams();
+function Profile_Sections({Posts = null, Collections = null}) {
     const [activeTab, setActiveTab] = useState("posts");
-    const [collections, setCollections] = useState();
-
-    useEffect(() => {
-        if(activeTab !== "collections")
-            return;
-        const FetchCollectionsUser = async () => {
-            const CollectionsFound = await getCollections(ProfileId);
-            setCollections(CollectionsFound.data);
-        }
-        FetchCollectionsUser();
-    }, [ProfileId, activeTab]);
-
+    
     return(
         <>
         <div className="flex justify-center border-b-2 border-solid m-10">
@@ -49,9 +37,9 @@ function Profile_Sections({Posts = null}){
             </div>
         )}
 
-        {activeTab === "collections" && collections?.length > 0 &&(
+        {activeTab === "collections" && Collections?.length > 0 &&(
             <div className="flex flex-wrap justify-center space-x-auto m-10">
-                {collections && collections.map(collection =>
+                {Collections && Collections.map(collection =>
                     <User_Collections Collection = {collection}/>
                 )}
             </div>
