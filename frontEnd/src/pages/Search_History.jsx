@@ -59,8 +59,6 @@ function Search_History() {
                     text: "Please select items to delete from your history!",
             });
 
-        console.log(name);
-
         setSelected(prev => {
             const newSelected = name === "All"
             ? Object.values(history).flat().map(item => item.HistoryId) : prev;
@@ -72,29 +70,41 @@ function Search_History() {
 
     const handleDelete = async (newSelected) => {
 
-        Swal.fire({
-            title: "Deleting...",
-            text: "Please wait while the history is being deleted.",
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-
-        
-        const postsdeleted = await DeleteHistory(newSelected);
-        if(postsdeleted.status)
-        {
         await Swal.fire({
-            title: "Deleted!",
-            text: "History deleted successfully.",
-            icon: "success",
-            timer: 2000,
-            showConfirmButton: false
+            title:"Warning!",
+            icon:"warning",
+            text: newSelected.length === Object.values(history).flat().length ? 
+            `You're about to delete your entire history, are you sure?` :
+            `You're about to delete ${newSelected.length} items of your history, are you sure?`,
+            showConfirmButton:true,
+            showCancelButton: true,
+        }).then(async (result) => {
+            if(!result.isConfirmed)
+                return;
+            Swal.fire({
+                title: "Deleting...",
+                text: "Please wait while the history is being deleted.",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            
+            const postsdeleted = await DeleteHistory(newSelected);
+            if(postsdeleted.status)
+                {
+                    await Swal.fire({
+                        title: "Deleted!",
+                        text: "History deleted successfully.",
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    FetchHistory();
+                    setSelected([]);
+                }
         });
-        FetchHistory();
-        setSelected([]);
-        }
     } 
 
     const handleWord = (value) => 
