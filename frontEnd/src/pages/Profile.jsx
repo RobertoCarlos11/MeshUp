@@ -33,7 +33,6 @@ function Profile() {
 
     
     const PhotoInputRef = useRef();
-    const PhotoRef = useRef();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
