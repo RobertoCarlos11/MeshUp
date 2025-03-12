@@ -111,7 +111,7 @@ function Profile() {
             reader.onload = () => {
                 const uint8Array = new Uint8Array(reader.result);
                 setPhotoArray([...uint8Array]);
-                PhotoRef.current.src = URL.createObjectURL(new Blob([reader.result], { type: photoSelected.type }));
+                setPhotoUrl(URL.createObjectURL(new Blob([reader.result], { type: photoSelected.type })));
             };
         }
     }
@@ -206,7 +206,7 @@ function Profile() {
                                 <input type="file" hidden ref={PhotoInputRef} onChange={(e) => handlePhotoChange(e)}/>
                                 <div onMouseEnter={() => setIconHidden(false)} onMouseLeave={() => setIconHidden(true)} className="relative w-50 cursor-pointer">
                                     <div onClick={() => openPhotoFile()} hidden={iconHidden} className="absolute inset-0 bg-black/50"></div>
-                                    <img ref={PhotoRef} src={photoUrl !== null ? photoUrl : DefaultPfp} className="z-0 w-50"/>
+                                    <img src={photoUrl !== null ? photoUrl : DefaultPfp} className="z-0 w-50"/>
                                     <AddAPhotoIcon className="absolute inset-0 m-auto w-12 h-12 text-white" hidden={iconHidden}/>
                                 </div>
                             </div>
