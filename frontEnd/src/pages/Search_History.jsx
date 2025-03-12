@@ -13,7 +13,7 @@ function Search_History() {
     const [word, setWord] = useState("");
     const [selected, setSelected] = useState([]);
     const groupByDay = (data) => {
-        return data.reduce((acc, item) => {
+        const groupedData = data.reduce((acc, item) => {
             const date = new Date(item.Search_Date).toLocaleDateString();
     
             if(!acc[date]){
@@ -23,6 +23,11 @@ function Search_History() {
             acc[date].push(item);
             return acc;
         },{});
+
+        return Object.keys(groupedData).sort((a, b) => new Date(b) - new Date(a)).reduce((acc, key) => {
+            acc[key] = groupedData[key];
+            return acc;
+        }, {});
     };
     
     const FetchHistory = async () => {
@@ -50,6 +55,9 @@ function Search_History() {
         console.log(selected);
     },[selected]);
 
+    useEffect(() => {
+        console.log(Object.entries(history).length);
+    },[history]);
     const handleDeleteSelected = async (e) => {
         const {name} = e.currentTarget;
         if(selected.length == 0 && name == "Selected")
@@ -121,13 +129,15 @@ function Search_History() {
                         <span className="text-base font-semibold m-2">{selected.length}</span>
                         <span className="text-base m-2">Selected elements</span>
                     </div>
-                    <Button_Style onClick={handleDeleteSelected} name="Selected" classname="text-sm m-2 px-3 py-1" inverted > Delete</Button_Style>
+                    <Button_Style onClick={handleDeleteSelected} name="Selected" className="text-sm p-2 m-2" inverted > Delete</Button_Style>
                 </div>
-                {Object.entries(history).map(([date,entries]) => (
+                {Object.entries(history).length !== 0 ? Object.entries(history).map(([date,entries]) => (
                     <Day_History Date={date} History={entries} HistorySelected={handleSelected} Items={selected} HandleWord={handleWord}/>
-                ))}
+                )) : (
+                    <p className="text-center p-12 text-gray-600">No History was found.</p>
+                )}
 
-                <Button_Style onClick={handleDeleteSelected} name="All" className="text-sm m-5 p-3 py-1 w-1/3">
+                <Button_Style onClick={handleDeleteSelected} name="All" className="text-sm p-3 py-1 w-1/3 mx-8">
                     Delete Search History
                 </Button_Style>
             </div>
