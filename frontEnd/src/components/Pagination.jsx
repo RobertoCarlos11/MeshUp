@@ -26,8 +26,8 @@ function Pagination ({Pages, indexSelectedChanged}){
                     {
                         [...Array(Pages)].map((_,index) => 
                             indexSelected === index + 1 ?
-                            <a aria-current="page" className="relative z-10 inline-flex items-center bg-[var(--primary-color)] px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{index+1}</a>:
-                            <a onClick={() => setIndexSelected(index+1)} className="relative hidden items-center px-4 py-2 text-sm font-semibold text-[var(--comp-1-color)] ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">{index+1}</a>
+                            <a key={index} aria-current="page" className="relative z-10 inline-flex items-center bg-[var(--primary-color)] px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{index+1}</a>:
+                            <a key={index} onClick={() => setIndexSelected(index+1)} className="relative hidden items-center px-4 py-2 text-sm font-semibold text-[var(--comp-1-color)] ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">{index+1}</a>
                         )
                     }
                     <a onClick={() => {setIndexSelected(indexSelected !== Pages ? indexSelected + 1 : indexSelected)}}   className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
