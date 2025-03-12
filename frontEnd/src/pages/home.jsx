@@ -34,40 +34,50 @@ function Home() {
     }, []);
 
     useEffect(() => {
-        FetchPosts(categorySelected);
+        FetchPosts(categorySelected.CategoryId);
     }, [categorySelected]);
 
     const handleSearch = (word) => {
         setSearch(word);
     }
 
-    const handleCategoryChange = (CategoryId) => {
-        setCategorySelected(prevCategory => prevCategory === CategoryId ? 0 : CategoryId);
+    const handleCategoryChange = (category) => {
+        setCategorySelected(prevCategory => prevCategory === category ? 0 : category);
+        console.log(category);
     }
 
     const handleIndexChanged = async (index) => {
         setCurrentPage(index);
     }
-    
+
     useEffect(() => {
-        const startIndex = (currentPage -1) * postsPerPage;
-        setDisplayedPosts(postsFound?.slice(startIndex,startIndex + postsPerPage));
-    },[currentPage,postsFound]);
+        const startIndex = (currentPage - 1) * postsPerPage;
+        setDisplayedPosts(postsFound?.slice(startIndex, startIndex + postsPerPage));
+    }, [currentPage, postsFound]);
 
     return (
         <div className="">
             <Header SearchChanged={handleSearch} />
-            <div className="flex text-sm space-x-auto mr-5 ml-5">
+            <div className="flex text-sm space-x-auto mx-5">
                 {categoriesFound && categoriesFound.map((category) => (
                     <Button_Style
-                        onClick={() => handleCategoryChange(category.CategoryId)}
+                        onClick={() => handleCategoryChange(category)}
                         key={category.CategoryId}
                         className="m-2 p-3 pb-1 pt-1"
-                        inverted={categorySelected === category.CategoryId}
+                        inverted={categorySelected === category}
                     >{category.Category_Name}
                     </Button_Style>
                 ))}
             </div>
+            {categorySelected !== 0 && (
+                <div className="mx-10">
+                    <h2 className="text-md font-bold">
+                        Category Description:
+                    </h2>
+                    <p className="text-xs">{categorySelected.Category_Description}</p>
+                </div>
+            )
+            }
             <div className="flex flex-wrap justify-center space-x-auto m-5">
                 {displayedPosts ? (
                     displayedPosts.length > 0 ? (
