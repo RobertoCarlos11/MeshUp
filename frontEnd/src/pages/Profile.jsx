@@ -24,8 +24,6 @@ function Profile() {
     const [posts, setPosts] = useState();
     const [collections, setCollections] = useState();
     const [iconHidden, setIconHidden] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [displayedPosts, setDisplayedPosts] = useState();
     const [photoUrl, setPhotoUrl] = useState(null);
     const [open, setOpen] = useState(false);
     const [userUpdated, setUserUpdated] = useState(false);
@@ -36,16 +34,6 @@ function Profile() {
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    
-    const handleIndexChanged = (index) => {
-        setCurrentPage(index);
-    }
-
-    useEffect(() => {
-    const startIndex = (currentPage -1) * postsPerPage;
-    setDisplayedPosts(posts?.slice(startIndex,startIndex + postsPerPage))
-    },[currentPage,posts, ProfileId]);
 
     useEffect(() => {
         const FetchUserInfo = async () => {
@@ -219,13 +207,12 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            {displayedPosts ? <Profile_Sections Posts={displayedPosts} Collections={collections} UserLoggedIn = {userLoggedIn?.Email} UserProfile= {ProfileId}/> : (
+            {posts ? <Profile_Sections Posts={posts} Collections={collections} UserLoggedIn = {userLoggedIn?.Email} UserProfile= {ProfileId}/> : (
                                     <div className="text-2xl animate-bounce flex items-center justify-center">
                                         <img src={Logo} className="w-1/5" alt="LogoName" />
                                         <p>Loading...</p>
                                     </div>
             )}
-            {posts && <Pagination Pages={Math.ceil(posts?.length / postsPerPage)} indexSelectedChanged={handleIndexChanged} />}
             <Footer />
         </>
     )
