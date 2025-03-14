@@ -2,6 +2,9 @@ import Collection from "../models/CollectionModel.js";
 import Collection_Element from "../models/CollectionElementModel.js";
 import Model from "../models/3DFileModel.js";
 import Post from "../models/PostModel.js";
+import User from "../models/UserModel.js";
+import Comment from "../models/CommentModel.js";
+
 export const InsertCollection = async (req,res) => {
     try{
         const { collectionName, email , postId} = req.body;
@@ -106,25 +109,43 @@ export const getCollections = async (req, res) => {
     }
 }
 
-export const deleteCollection = async (req, res) => {
-    try{
+export const getCollectionElements = async (req, res) => {
+    try {
         const { collectionId } = req.params;
 
-        await Collection.update(
-            { Collection_Status: 0 },
-            { where:{ collectionId: collectionId },}
-        );
+        const response = await Post.findAll({
+            include: [{
+                model: Collection_Element,
+                as: "collectionElements",
+                where: { CollectionId: collectionId },
+                attributes: [] 
+            },
+            {
+                model: User,
+                as: "user"
+                },
+                {
+                model: Model,
+                as: "model",
+                },
+                {
+                model: Comment,
+                as:"comments",
+                attributes:["Rating"],
+            }]
+        });
 
         const payload = {
             status: true,
-            message: "Sucessfully deleted collection"
-        }
+            data: response,
+            message: `Collection elements with collectionId ${collectionId} fetched successfully`
+        };
 
         res.json(payload);
 
-    }catch(error){
-        res.status(500).json(error);
-        console.los(error);
+    } catch (error) {
+        res.status(500).json({ status: false, message: "Internal server error", error });
+        console.error(error);
     }
 }
 
@@ -148,6 +169,50 @@ export const getSavesOfPost = async (req,res) => {
     }   
     catch(error)
     {
+        res.status(500).json(error);
+        console.log(error);
+    }
+}
+
+export const updateCollection = async (req,res) => {
+    try{
+        const { collectionName, collectionId } = req.params;
+
+        await Collection.update(
+            { Collection_Name: collectionName },
+            { where:{ CollectionId: collectionId} } 
+        );
+
+        const payload ={
+            status: true,
+            message: `Collection name ${collectionName} changed`
+        }
+
+        res.json(payload);
+
+    }catch(error){
+        res.status(500).json(error);
+        console.log(error);
+    }
+}
+ 
+export const deleteCollection = async (req, res) => {
+    try{
+        const { collectionId } = req.params;
+
+        await Collection.update(
+            { Collection_Status: 0 },
+            { where:{ CollectionId: collectionId } }
+        );
+
+        const payload = {
+            status: true,
+            message: "Sucessfully deleted collection"
+        }
+
+        res.json(payload);
+
+    }catch(error){
         res.status(500).json(error);
         console.log(error);
     }
