@@ -23,7 +23,7 @@ function App() {
           <Route path="/Upload" element={<ProtectedRoute element={<Upload />} />} />
           <Route path="/Profile/:ProfileId" element={<Profile />} />
           <Route path="/Search_History" element={<ProtectedRoute element={<Search_History />} />} />
-          <Route path="/Collection" element={<ProtectedRoute element={<Collection />} />} />
+          <Route path="/Collection/:ProfileId/:collection_name/:collectionId" element={<ProtectedRoute element={<Collection />} />} />
           <Route path="/Reports" element={<ProtectedRoute element={<Reports />} />} />
           <Route path="*" element= {<NotFound />}/>
         </Routes>
