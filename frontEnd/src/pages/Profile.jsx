@@ -57,8 +57,7 @@ function Profile() {
 
         const FetchPostsOfUser = async () => {
             const PostsFound = await GetAllPostsOfUser(ProfileId);
-        const Posts = PostsFound.data.filter(post => userLoggedIn?.Email === ProfileId || post.Post_Status === true);
-            
+            const Posts = PostsFound.data.filter(post => userLoggedIn?.Email === ProfileId || post.Post_Status === true);
             setPosts(Posts);
         }
         FetchPostsOfUser();
@@ -217,7 +216,7 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            {displayedPosts ? <Profile_Sections Posts={displayedPosts} UserLoggedIn = {userLoggedIn.Email} UserProfile= {ProfileId}/> : <p> Loading...</p>}
+            {displayedPosts ? <Profile_Sections Posts={displayedPosts} UserLoggedIn = {userLoggedIn.Email} UserProfile= {ProfileId}/> : <p className="text-center"> Loading...</p>}
             {posts && <Pagination Pages={Math.ceil(posts?.length / postsPerPage)} indexSelectedChanged={handleIndexChanged} />}
             <Footer />
         </>
