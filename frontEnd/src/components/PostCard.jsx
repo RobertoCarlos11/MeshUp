@@ -2,6 +2,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 import Rating from './Rating';
 import Scene from './Three/Scene';
@@ -19,10 +20,9 @@ import { UpdatePost } from '../services/postService';
 
 function PostCard({ Post }) {
     const navigate = useNavigate();
-    const userLoggedIn = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user"));
     const location = useLocation();
     const [updatedPost, setUpdatedPost] = useState({});
-    const user = JSON.parse(localStorage.getItem("user"));
     const [categories, setCategories] = useState(null);
     const [modelUrl, setModelUrl] = useState(null);
     const [likes, setLikes] = useState();
@@ -38,7 +38,7 @@ function PostCard({ Post }) {
     const handleOpen = ()=> setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const handleOpenCollection = () => userLoggedIn === null ?  handleNoSession() : setOpenCollection(true);
+    const handleOpenCollection = () => user === null ?  handleNoSession() : setOpenCollection(true);
     const handleCloseCollection = () => setOpenCollection(false);
 
     useEffect(() => {
@@ -64,7 +64,7 @@ function PostCard({ Post }) {
 
     useEffect(() => {
         const getLikesOfPost = async () => {
-                const LikesFound = await GetLikes("post", Post.PostId, userLoggedIn.Email);
+                const LikesFound = await GetLikes("post", Post.PostId, user.Email);
                 setLikes(LikesFound.data.count);
                 setUserLiked(LikesFound?.UserLiked.Status);
             }
@@ -94,7 +94,7 @@ function PostCard({ Post }) {
     const handlePostLike = async () => {
         let response;
 
-        if(userLoggedIn === null)
+        if(user === null)
             return Swal.fire({
                 title:"You need to log in.",
                 text:"Please log in to like the post!",
@@ -102,12 +102,12 @@ function PostCard({ Post }) {
                 timer:2000,
             });
         if (userLiked === undefined) {
-            response = await InsertLike("post", Post.PostId, userLoggedIn.Email);
+            response = await InsertLike("post", Post.PostId, user.Email);
             setLikes(likes + 1);
             setUserLiked(true);
         }
         else {
-            response = await UpdateLike("post", Post.PostId, userLoggedIn.Email, !userLiked);
+            response = await UpdateLike("post", Post.PostId, user.Email, !userLiked);
             setLikes(userLiked ? likes - 1 : likes + 1);
             setUserLiked(!userLiked);
         }
@@ -149,7 +149,7 @@ function PostCard({ Post }) {
             });
         }else{
             handleCloseCollection();
-            const response = await InsertCollection(collectionName, userLoggedIn.Email, Post.PostId);
+            const response = await InsertCollection(collectionName, user.Email, Post.PostId);
             console.log(response);
 
             if(response.status == true){
@@ -192,10 +192,10 @@ function PostCard({ Post }) {
     }
     
     const getUserCollections = async () => {
-        if(userLoggedIn === null){
+        if(user === null){
             handleNoSession();
         }else{
-            const collectionsFound = await getCollections(userLoggedIn.Email);
+            const collectionsFound = await getCollections(user.Email);
             setUserCollections(collectionsFound.data);
         }
     }
@@ -230,7 +230,10 @@ function PostCard({ Post }) {
             <div className="relative flex flex-col m-2 bg-white shadow-sm rounded-sm w-140">
                 <Scene className="h-75 rounded-sm relative" model={modelUrl} texture={textureUrl}>
                     {user.Email === Post.Email && location.pathname.includes("/Profile") &&
-                        <EditOutlinedIcon onClick={handleOpen} className='cursor-pointer text-[var(--background-color)] text-lg absolute top-0 left-0 m-2' />
+                        <EditOutlinedIcon onClick={handleOpen} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 absolute top-0 left-0 m-3'/>
+                    }
+                    {user.Email === Post.Email && location.pathname.includes("/Collection") &&
+                        <DeleteOutlineOutlinedIcon className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 absolute top-0 left-0 m-3'/>
                     }
                     <Rating stars={postRating} className="absolute top-2 right-2 text-yellow-400" />
                 </ Scene>
@@ -277,7 +280,7 @@ function PostCard({ Post }) {
                                     </div>
                                 </Modal>
 
-                                {userLoggedIn ? (
+                                {user ? (
                                 <Popover className='relative'>
                                     <PopoverButton className='flex items-center my-2'>
                                         <div className='border-b-1 border-solid border-[var(--primary-color)]'>
