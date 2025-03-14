@@ -1,6 +1,5 @@
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
@@ -11,12 +10,12 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { GetLikes, InsertLike, UpdateLike } from '../services/likeService';
 import Like_Button from './Like_Button';
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { Modal } from "@mui/material";
 import Swal from 'sweetalert2';
-import { InsertCollection, InsertCollectionElement, getCollections } from '../services/collectionService';
+import { getSavesOfPost } from '../services/collectionService';
 import { GetAllCategories } from '../services/categoryService';
 import { UpdatePost } from '../services/postService';
+import AddCollection from './AddCollection';
 
 function PostCard({ Post }) {
     const navigate = useNavigate();
@@ -26,14 +25,11 @@ function PostCard({ Post }) {
     const [categories, setCategories] = useState(null);
     const [modelUrl, setModelUrl] = useState(null);
     const [likes, setLikes] = useState();
+    const [saves, setSaves] = useState();
     const [userLiked, setUserLiked] = useState();
     const [textureUrl, setTextureUrl] = useState(null);
-    const [collectionName, setCollectionName] = useState();
-    const [collectionId, setCollectionId] = useState();
-    const [userCollections, setUserCollections] = useState([]);
     
     const [open, setOpen] = useState(false);
-    const [openCollection, setOpenCollection] = useState(false);
     
     const handleOpen = ()=> setOpen(true);
     const handleClose = () => setOpen(false);
@@ -71,6 +67,13 @@ function PostCard({ Post }) {
         getLikesOfPost();
     }, []);
 
+    useEffect(() => {
+        const getSaves = async () => {
+                const SavesFound = await getSavesOfPost(Post.PostId);
+                setSaves(SavesFound.data.count);
+        }
+        getSaves();
+    });
     useEffect(() => {
         if (open) {
             const FetchCategories = async () => {
@@ -248,7 +251,7 @@ function PostCard({ Post }) {
                         </div>
                         <div className="flex items-center">
                             <BookmarkBorderIcon className='cursor-pointer'/>
-                            <p className="text-base m-1">{Post.Saves ? Post.Saves : 0}</p>
+                            <p className="text-base m-1">{saves}</p>
                         </div>
                         
                         <Popover className="relative">

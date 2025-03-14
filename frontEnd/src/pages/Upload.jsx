@@ -102,6 +102,26 @@ function Upload() {
 
     const handleFileChange = (e) => {
         const { name, files } = e.target;
+        
+        console.log(name);
+        const MBSize = files[0].size / 1000000;
+        console.log(MBSize); 
+        if (name === "model" && !files[0].name.toLowerCase().endsWith(".fbx")) {
+            return Swal.fire({
+            icon: "error",
+            title: "Oops!!",
+            text: "MeshUp only accepts FBX Files!, please try with an FBX file."
+            });
+        }
+
+        if(MBSize >= 16 && name === "texture")
+        {
+            return Swal.fire({
+                icon: "error",
+                title: "Oops!!",
+                text: "The file is too big, please try with a smaller file."
+            });
+        }
         if (files.length > 0) {
             setPostInfo((prev) => ({
                 ...prev,

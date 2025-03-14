@@ -16,6 +16,9 @@ import Like_Button from "../components/Like_Button";
 import Button_Style from "../components/Button_Style";
 import JSZip from "jszip";
 import Logo from "../assets/Logo.png";
+import { getSavesOfPost } from "../services/collectionService";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+import AddCollection from "../components/AddCollection";
 
 
 function Post() {
@@ -30,12 +33,18 @@ function Post() {
     const [post, setPost] = useState({});
     const [modelUrl, setModelUrl] = useState(null);
     const [textureUrl, setTextureUrl] = useState(null);
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     useEffect(() => {
         const FetchPost = async () => {
             const PostFound = await GetPost(param);
             if (PostFound?.data && PostFound.data !== null) {
                 const LikesFound = await GetLikes("post", PostFound.data.PostId, user?.Email);
+                const SavesFound = await getSavesOfPost(PostFound.data.PostId);
+                console.log(SavesFound);
                 setPost(PostFound.data);
                 console.log(userReviewed);
                 const { model } = await PostFound.data;
@@ -56,6 +65,7 @@ function Post() {
                     ...prev,
                     Likes: LikesFound.data.count,
                     UserLiked: LikesFound.UserLiked?.Status,
+                    Saves: SavesFound.data.count,
                 }));
             }
             else{
@@ -234,8 +244,10 @@ function Post() {
                                 <p className="text-comp-1 m-1">{post.Likes}</p>
                             </div>
                             <div className="flex">
-                                <BookmarkBorderIcon className='cursor-pointer' />
-                                <p className="text-comp-1 m-1">18</p>
+                                <AddCollection userLoggedIn={user} Post={post} className={"flex items-center"}>
+                                <BookmarkBorderIcon className='cursor-pointer' onClick={handleOpen} />
+                                </AddCollection>
+                                <p className="text-comp-1 m-1">{post.Saves}</p>
                             </div>
                             <FileDownloadOutlinedIcon className='cursor-pointer' onClick={DownloadModel} />
                         </div>

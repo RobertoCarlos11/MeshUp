@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { GetAllPostsOfUser } from "../services/postService";
 import { getCollections } from "../services/collectionService";
 import Pagination from "../components/Pagination";
+import Logo from "../assets/Logo.png";
 
 function Profile() {
 
@@ -23,27 +24,16 @@ function Profile() {
     const [posts, setPosts] = useState();
     const [collections, setCollections] = useState();
     const [iconHidden, setIconHidden] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [displayedPosts, setDisplayedPosts] = useState();
     const [photoUrl, setPhotoUrl] = useState(null);
     const [open, setOpen] = useState(false);
     const [userUpdated, setUserUpdated] = useState(false);
     const [photoArray, setPhotoArray] = useState([]);
+
+    
     const PhotoInputRef = useRef();
-    const PhotoRef = useRef();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    
-    const handleIndexChanged = (index) => {
-        setCurrentPage(index);
-    }
-
-    useEffect(() => {
-    const startIndex = (currentPage -1) * postsPerPage;
-    setDisplayedPosts(posts?.slice(startIndex,startIndex + postsPerPage))
-    },[currentPage,posts, ProfileId]);
 
     useEffect(() => {
         const FetchUserInfo = async () => {
@@ -107,7 +97,7 @@ function Profile() {
             reader.onload = () => {
                 const uint8Array = new Uint8Array(reader.result);
                 setPhotoArray([...uint8Array]);
-                PhotoRef.current.src = URL.createObjectURL(new Blob([reader.result], { type: photoSelected.type }));
+                setPhotoUrl(URL.createObjectURL(new Blob([reader.result], { type: photoSelected.type })));
             };
         }
     }
@@ -202,7 +192,7 @@ function Profile() {
                                 <input type="file" hidden ref={PhotoInputRef} onChange={(e) => handlePhotoChange(e)}/>
                                 <div onMouseEnter={() => setIconHidden(false)} onMouseLeave={() => setIconHidden(true)} className="relative w-50 cursor-pointer">
                                     <div onClick={() => openPhotoFile()} hidden={iconHidden} className="absolute inset-0 bg-black/50"></div>
-                                    <img ref={PhotoRef} src={photoUrl !== null ? photoUrl : DefaultPfp} className="z-0 w-50"/>
+                                    <img src={photoUrl !== null ? photoUrl : DefaultPfp} className="z-0 w-50"/>
                                     <AddAPhotoIcon className="absolute inset-0 m-auto w-12 h-12 text-white" hidden={iconHidden}/>
                                 </div>
                             </div>
@@ -216,8 +206,12 @@ function Profile() {
                     </div>
                 </div>
             </Modal >
-            {displayedPosts ? <Profile_Sections Posts={displayedPosts} UserLoggedIn = {userLoggedIn.Email} UserProfile= {ProfileId}/> : <p className="text-center"> Loading...</p>}
-            {posts && <Pagination Pages={Math.ceil(posts?.length / postsPerPage)} indexSelectedChanged={handleIndexChanged} />}
+            {posts ? <Profile_Sections Posts={posts} Collections={collections} UserLoggedIn = {userLoggedIn?.Email} UserProfile= {ProfileId}/> : (
+                                    <div className="text-2xl animate-bounce flex items-center justify-center">
+                                        <img src={Logo} className="w-1/5" alt="LogoName" />
+                                        <p>Loading...</p>
+                                    </div>
+            )}
             <Footer />
         </>
     )

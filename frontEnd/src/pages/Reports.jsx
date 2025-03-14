@@ -25,14 +25,13 @@ function Reports() {
             setCategories(CategoriesFound.data);
         }
         FetchCategories();
-    },[]);
+    }, []);
     useEffect(() => {
         setPosts(null);
         const FetchReport = async () => {
             const Report = await GetReports(user.Email, category, status, startDate === "" ? null : startDate, finalDate === "" ? null : finalDate);
 
-            switch(activeTab)
-            {
+            switch (activeTab) {
                 case "likes":
                     const postsWithLikes = await Promise.all(
                         Report.data.map(async (data) => {
@@ -48,22 +47,22 @@ function Reports() {
                     const postsWithComments = await Promise.all(
                         Report.data.map(async (data) => {
                             const CommentsFound = await getComments(data.PostId);
-                            return {...data, count: CommentsFound.data.length};
+                            return { ...data, count: CommentsFound.data.length };
                         })
                     );
-                    postsWithComments.sort((a,b) => b.count - a.count);
+                    postsWithComments.sort((a, b) => b.count - a.count);
                     setPosts(postsWithComments);
                     break;
-                
+
                 case "saves":
                     const postsWithSaves = await Promise.all(
                         Report.data.map(async (data) => {
                             const SavesFound = await getSavesOfPost(data.PostId);
-                            return {...data, count: SavesFound.data.count};
+                            return { ...data, count: SavesFound.data.count };
                         })
                     );
 
-                    postsWithSaves.sort((a,b) => b.count- a.count);
+                    postsWithSaves.sort((a, b) => b.count - a.count);
                     setPosts(postsWithSaves);
                     break;
             }
@@ -71,11 +70,10 @@ function Reports() {
 
         FetchReport();
         console.log(posts);
-    }, [activeTab, category,status, startDate, finalDate]);
+    }, [activeTab, category, status, startDate, finalDate]);
 
     const handleTableTitle = () => {
-        switch(activeTab)
-        {
+        switch (activeTab) {
             case "likes":
                 return "LIKED";
             case "saves":
@@ -114,7 +112,7 @@ function Reports() {
                             <label htmlFor="Category" className="font-semibold">Category</label>
                             <select value={category} onChange={e => setCategory(e.currentTarget.value)} id="Category" className="text-sm bg-[var(--background-color)] border-1 border-solid border-[var(--primary-color)] rounded-sm p-1 mt-2 mb-2">
                                 <option value="0">All Categories</option>
-                                {categories && categories.map(category => 
+                                {categories && categories.map(category =>
                                     <option key={category.CategoryId} value={category.CategoryId}>{category.Category_Name}</option>
                                 )}
                             </select>
@@ -149,25 +147,31 @@ function Reports() {
                             <h1 className="flex font-semibold justify-center text-xl m-4">MOST {handleTableTitle()} POSTS</h1>
 
                             <table className="w-full text-base">
-                                    <tr className="justify-evenly bg-secondary font-semibold flex py-2">
-                                        <th className="text-center w-full">POST</th>
-                                        <th className="text-center w-full">CATEGORY</th>
-                                        <th className="text-center w-full">{activeTab.toUpperCase()}</th>
-                                    </tr>
-                                    {posts ? posts.map(post =>
-                                        <tr key={post.PostId} className="text-xs flex justify-evenly py-1">
-                                            <td className="text-center w-full">{post.Post_Name}</td>
-                                            <td className="text-center w-full">{post.category.Category_Name}</td>
-                                            <td className="text-center w-full">{post.count}</td>
-                                        </tr>
-                                    ) :
+                                <tr className="justify-evenly bg-secondary font-semibold flex py-2">
+                                    <th className="text-center w-full">POST</th>
+                                    <th className="text-center w-full">CATEGORY</th>
+                                    <th className="text-center w-full">{activeTab.toUpperCase()}</th>
+                                </tr>
+                                {posts ?
+                                    posts.length > 0 ?
+                                        posts.map(post =>
+                                            <tr key={post.PostId} className="text-xs flex justify-evenly py-1">
+                                                <td className="text-center w-full">{post.Post_Name}</td>
+                                                <td className="text-center w-full">{post.category.Category_Name}</td>
+                                                <td className="text-center w-full">{post.count}</td>
+                                            </tr>
+                                        ) :
+                                        (<div className="text-gray-600 text-center p-10">
+                                        No Posts Found
+                                        </div>):
                                         (
 
                                             <div className="text-4xl animate-bounce flex items-center justify-center">
                                                 <img src={Logo} className="w-1/4" alt="LogoName" />
                                                 <p>Loading...</p>
                                             </div>
-                                        )}
+                                        )
+                                    }
                             </table>
                         </div>
                     </div>

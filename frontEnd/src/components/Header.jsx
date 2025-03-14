@@ -6,8 +6,9 @@ import HeaderComponent from "./HeaderComponent";
 import {Link, useNavigate} from "react-router-dom";
 import { useEffect,useState } from "react";
 import { GetAllPosts } from "../services/postService";
+import { CreateSearch } from "../services/historyService";
 
-function Header({UserUpdated = true}){
+function Header({UserUpdated = true, History = null}){
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
     const [user, setUser] = useState();
     const navigate = useNavigate();
@@ -25,6 +26,12 @@ function Header({UserUpdated = true}){
         console.log(postsFound);
     },[]);
 
+    useEffect(() => {
+        if(History === null)
+            return;
+
+        setSearch(History);
+    },[History]);
     const handleLogOut = () => 
         {
             localStorage.clear("user");
@@ -54,6 +61,15 @@ function Header({UserUpdated = true}){
     {
         setSearch(e.currentTarget.value);
     }
+
+    const handleSearchClick = async (PostId) => {
+        if(!user)
+            return await navigate(`/Post/${PostId}`);
+
+        await CreateSearch(search, new Date(), user.Email);
+        await navigate(`/Post/${PostId}`);
+        setSearch("");
+    }
     return(
     <>
        <nav className="flex flex-row justify-between items-center p-3 text-xl ml-5 mr-5">
@@ -67,10 +83,8 @@ function Header({UserUpdated = true}){
                     {postsFound && postsFound
                     .filter(item => search !== "" && item.Post_Name.toLowerCase().includes(search.toLowerCase()))
                     .map(post => (
-                        <div className="hover:bg-[var(--primary-color)] p-1 rounded-md">
-                        <Link onClick={() => setSearch("")} to={`/Post/${post.PostId}`}>
+                        <div onClick={() => handleSearchClick(post.PostId)} className="hover:bg-[var(--primary-color)] p-1 rounded-md">
                         <p key={post.PostId}> {post.Post_Name}</p>
-                        </Link>
                         </div>
                     ))}
                 </div>
