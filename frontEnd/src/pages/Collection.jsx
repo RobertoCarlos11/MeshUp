@@ -1,28 +1,132 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Collection_ELement from "../components/Collection_Element";
+import PostCard from "../components/PostCard";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Button_Style from "../components/Button_Style";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Swal from 'sweetalert2';
+import { deleteCollection, updateCollection, getCollectionElements } from '../services/collectionService';
 
 function Collection(){
+    const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user"));
+    const [elements, setElements] = useState();
+    const { ProfileId, collection_name, collectionId } = useParams();
+    const [collectionName, setCollectionName] = useState();
+    const [isEditing, setIsEditing] = useState(false);
+
+    const handleEditCollection = () => { setIsEditing(true); };
+
+    useEffect(() => {
+        setCollectionName(collection_name);
+
+        const FetchCollectionELements = async () => {
+            const elementsFound = await getCollectionElements(collectionId);
+            if(elementsFound?.data && elementsFound.data !== null){
+                console.log('Elementos:' , elementsFound.data);
+                setElements(elementsFound.data);
+            }else{
+                console.log('No elements');
+            }
+        }
+        FetchCollectionELements();
+
+    }, [collection_name, collectionId]);
+    
+    const handleDeleteCollection = () => {
+        Swal.fire({
+            icon: "warning",
+            title: "Hold On!!",
+            text: "Are you sure you want to delete this collection? This action will be permanent!!",
+            showConfirmButton: false,
+            showCancelButton: true,
+            showDenyButton: true,
+            confirmButtonText: "Cancel",
+            denyButtonText: "Delete Collection"
+        }).then((result) => {
+            if(result.isDenied){
+                deleteUserCollection();
+            }
+        })
+    }
+
+    const deleteUserCollection = async () => {
+        const response = await deleteCollection(collectionId);
+        console.log(response);
+        if(response.status == true){
+            Swal.fire({
+                icon: "success",
+                title: "Sucess!!",
+                text: "Sucessfully deleted collection!!"
+            }).then((result) => {
+                navigate(`/Profile/${user.Email}`);
+            });
+        }else{
+            Swal.fire({
+                icon: "error",
+                title: "Oops!!",
+                text: "Error at deleting collection!!"
+            });
+        }
+    }
+
+    const updateCollectionName = async () =>{
+        const response = await updateCollection(collectionName.trim(), collectionId);
+        console.log(response);
+
+        if (response.status == true){
+            Swal.fire({
+                icon: "success",
+                title: "Success!!",
+                text: "Sucessfully re-named collection!!"
+            }).then((result) => {
+                navigate(`/Collection/${collectionName}/${collectionId}`, { replace: true });
+            });
+        }else{
+            Swal.fire({
+                icon: "error",
+                title: "Oops!!",
+                text: "Error at re-naming collection!!"
+            });
+        }
+        setIsEditing(false);
+    }
+
     return (
         <>
         <Header/>
 
         <div className="flex flex-row justify-between items-center bg-[var(--secondary-color)]">
-            <span className="text-3xl font-semibold m-10">Collection Name</span>
-            <div className='bg-[var(--secondary-color)] rounded-t-sm flex'>
-                <EditOutlinedIcon className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 m-10'/>
-            </div>
+            <input type="text" id="Collection_Name" value={collectionName} 
+            className={`text-3xl font-semibold m-10 ${isEditing ? "w-full p-2 border-b-2 border-[var(--primary-color)]" : ""}`} 
+            disabled={!isEditing} 
+            onChange={(e) => setCollectionName(e.target.value)}/>
+
+            { user.Email === ProfileId && (
+                !isEditing ? (
+                    <EditOutlinedIcon 
+                        onClick={handleEditCollection} 
+                        className="cursor-pointer text-[var(--background-color)] text-lg opacity-50 m-10"
+                    />
+                ):(
+                    <Button_Style 
+                        onClick={updateCollectionName}
+                        className="text-sm m-2 p-3 pt-1 pb-1">Save</Button_Style>
+                )
+            )}
         </div>
 
         <div className="flex flex-wrap justify-center space-x-auto m-5 p-5">
-            <Collection_ELement/>
-            <Collection_ELement/>
-            <Collection_ELement/>
+            {elements ? elements.map (element =>
+                <PostCard key={element.PostId} Post={element}/>
+            ) :
+            <div>The Collection is empty :( . <Link to="/Home" className="underline">Find Posts</Link></div>}
         </div>
-
-        <center><Button_Style className="text-sm m-2 p-3 pt-1 pb-1">Delete Collection</Button_Style></center> 
+        { user.Email === ProfileId && (
+            <center><Button_Style onClick={handleDeleteCollection} className="text-sm m-2 p-3 pt-1 pb-1">Delete Collection</Button_Style></center> 
+        )}
         
         <Footer/>
         </>
