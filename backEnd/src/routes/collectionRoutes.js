@@ -6,7 +6,8 @@ import {
     getSavesOfPost,
     getCollectionElements,
     updateCollection,
-    deleteCollection
+    deleteCollection,
+    deleteElement
 } from "../controllers/collectionController.js";
 
 const router = e.Router();
@@ -16,6 +17,7 @@ router.post("/:collectionId/:postId", InsertCollectionElement);
 router.get("/:email", getCollections);
 router.get("/saves/:PostId", getSavesOfPost);
 router.get("/collection/:collectionId", getCollectionElements);
-router.put("/:collectionName/:collectionId", updateCollection);
+router.put("/update/:collectionName/:collectionId", updateCollection);
 router.put("/:collectionId", deleteCollection);
+router.put("/:collectionId/:postId", deleteElement);
 export default router;
