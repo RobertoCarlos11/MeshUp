@@ -126,7 +126,7 @@ function Reports() {
                                         <span className="absolute bg-[var(--primary-color)] w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                         </span>
                                     </label>
-                                    <span>Active</span>
+                                    <span>Public</span>
                                 </div>
                                 <div className="flex space-x-2 m-2">
                                     <label class="relative flex items-center cursor-pointer" for="inactive">
@@ -134,7 +134,7 @@ function Reports() {
                                         <span className="absolute bg-[var(--primary-color)] w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                         </span>
                                     </label>
-                                    <span>Inactive</span>
+                                    <span>Private</span>
                                 </div>
                             </div>
                         </div>
@@ -142,8 +142,8 @@ function Reports() {
                 </div>
 
                 <div className="flex flex-col w-full p-10">
-                    <div className="bg-[#191F27] w-full rounded-sm p-10">
-                        <div className="border-1 border-solid border-[var(--primary-color)] rounded-sm">
+                    <div className="bg-[var(--transparent-color)] w-full rounded-sm p-10">
+                        <div className="border-1 border-solid border-[var(--primary-color)] border-b-0 rounded-sm">
                             <h1 className="flex font-semibold justify-center text-xl m-4">MOST {handleTableTitle()} POSTS</h1>
 
                             <table className="w-full text-base">
@@ -155,14 +155,14 @@ function Reports() {
                                 {posts ?
                                     posts.length > 0 ?
                                         posts.map(post =>
-                                            <tr key={post.PostId} className="text-xs flex justify-evenly py-1">
+                                            <tr key={post.PostId} className=" flex justify-evenly py-3 border-b-1 border-[var(--primary-color)]">
                                                 <td className="text-center w-full">{post.Post_Name}</td>
                                                 <td className="text-center w-full">{post.category.Category_Name}</td>
                                                 <td className="text-center w-full">{post.count}</td>
                                             </tr>
                                         ) :
-                                        (<div className="text-gray-600 text-center p-10">
-                                        No Posts Found
+                                        (<div className="text-comp-1 border-b-1 border-[var(--primary-color)] text-center p-10">
+                                            No Posts Found
                                         </div>):
                                         (
 
