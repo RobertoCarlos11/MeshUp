@@ -53,6 +53,7 @@ function Upload() {
             e.currentTarget.disabled = false;
 
             return Swal.fire({
+                theme: 'dark',
                 title: "Warning",
                 text: "Please fill out the entire post",
                 icon: "error",
@@ -76,13 +77,13 @@ function Upload() {
 
         const responsePost = await CreatePost(PostInfo);
 
-        if (responsePost.status)
-            {
-                await Swal.fire({
-                title: "Success",
-                text: "Post succesfully created!",
-                timer: 2000,
-                icon: "success",
+        if (responsePost.status){
+            await Swal.fire({
+            theme: 'dark',
+            title: "Success",
+            text: "Post succesfully created!",
+            timer: 2000,
+            icon: "success",
             });
 
             await navigate(`/Post/${responsePost.data.PostId}`);
@@ -108,15 +109,17 @@ function Upload() {
         console.log(MBSize); 
         if (name === "model" && !files[0].name.toLowerCase().endsWith(".fbx")) {
             return Swal.fire({
-            icon: "error",
-            title: "Oops!!",
-            text: "MeshUp only accepts FBX Files!, please try with an FBX file."
+                theme: 'dark',
+                icon: "error",
+                title: "Oops!!",
+                text: "MeshUp only accepts FBX Files!, please try with an FBX file."
             });
         }
 
         if(MBSize >= 16 && name === "texture")
         {
             return Swal.fire({
+                theme: 'dark',
                 icon: "error",
                 title: "Oops!!",
                 text: "The file is too big, please try with a smaller file."

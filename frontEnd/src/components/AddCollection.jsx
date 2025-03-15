@@ -25,6 +25,7 @@ function AddCollection({ children, userLoggedIn = null,Post, className='flex ite
         if (!collectionName) {
             handleCloseCollection();
             Swal.fire({
+                theme: 'dark',
                 icon: "error",
                 title: "Oops!!",
                 text: "Name your collection!!"
@@ -38,12 +39,14 @@ function AddCollection({ children, userLoggedIn = null,Post, className='flex ite
 
             if (response.status == true) {
                 Swal.fire({
+                    theme: 'dark',
                     icon: "success",
                     title: "Sucess!!",
                     text: "Collection created sucessfully!!"
                 });
             } else {
                 Swal.fire({
+                    theme: 'dark',
                     icon: "error",
                     title: "Oops!!",
                     text: "Error at creating collection"
@@ -56,6 +59,7 @@ function AddCollection({ children, userLoggedIn = null,Post, className='flex ite
 
     const handleNoSession = () => {
         Swal.fire({
+            theme: 'dark',
             icon: "error",
             title: "Oops!!",
             text: "You need to Log or Sign in to get acess to this function!",
@@ -69,12 +73,14 @@ function AddCollection({ children, userLoggedIn = null,Post, className='flex ite
 
         if (response.status == true) {
             Swal.fire({
+                theme: 'dark',
                 icon: "success",
                 title: "Sucess",
                 text: "Sucessfully added to collection!!"
             });
         } else {
             Swal.fire({
+                theme: 'dark',
                 icon: "warning",
                 title: "Hold On!!",
                 text: "This post is already in the collection!!"

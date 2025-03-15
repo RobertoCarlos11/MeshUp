@@ -12,6 +12,7 @@ function User_Collections({Collection}) {
 
     const handleDeleteCollection = () => {
         Swal.fire({
+            theme: 'dark',
             icon: "warning",
             title: "Hold On!!",
             text: "Are you sure you want to delete this collection? This action will be permanent!!",
@@ -32,6 +33,7 @@ function User_Collections({Collection}) {
         console.log(response);
         if(response.status == true){
             Swal.fire({
+                theme: 'dark',
                 icon: "success",
                 title: "Sucess!!",
                 text: "Sucessfully deleted collection!!"
@@ -40,6 +42,7 @@ function User_Collections({Collection}) {
             });
         }else{
             Swal.fire({
+                theme: 'dark',
                 icon: "error",
                 title: "Oops!!",
                 text: "Error at deleting collection!!"
