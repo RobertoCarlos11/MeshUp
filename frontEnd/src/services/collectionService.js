@@ -40,9 +40,20 @@ export const getCollectionElements = async (collectionId) => {
     }
 }
 
+export const getSavesOfPost = async (PostId) => {
+    try{
+        const response = await apiClient.get(`/api/collection/saves/${PostId}`);
+        return response.data;
+    }
+    catch(error)
+    {
+        throw error.response?.data || error.message;
+    }
+}
+
 export const updateCollection = async (collectionName, collectionId) => {
     try{
-        const response = await apiClient.put(`/api/collection/${collectionName}/${collectionId}`)
+        const response = await apiClient.put(`/api/collection/update/${collectionName}/${collectionId}`)
         return response.data;
     }catch(error){
         throw error.response?.data || error.message;
@@ -58,14 +69,11 @@ export const deleteCollection = async (collectionId) => {
     }
 };
 
-export const getSavesOfPost = async (PostId) => 
-{
+export const deleteElement = async (postId, collectionId) => {
     try{
-        const response = await apiClient.get(`/api/collection/saves/${PostId}`);
+        const response = await apiClient.put(`api/collection/${postId}/${collectionId}`);
         return response.data;
-    }
-    catch(error)
-    {
+    }catch(error){
         throw error.response?.data || error.message;
     }
 }
