@@ -32,7 +32,7 @@ function Search_Element({ Search, ElementSelected, Items,HandleWord }) {
                         </svg>
                     </span>
                 </label>
-                <div  onClick={handleSearch} className="cursor-pointer hover:bg-[var(--primary-color)] rounded-md px-3 transition-all ease-in-out">
+                <div  onClick={handleSearch} className="cursor-pointer rounded-md px-3">
                 {Search?.Search}
                 </div>
             </span>
