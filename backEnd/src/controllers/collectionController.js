@@ -36,22 +36,33 @@ export const InsertCollection = async (req,res) => {
 
 export const InsertCollectionElement = async (req,res) => {
     try{
-        const { collectionId, postId } = req.params;
+        const { postId, collectionId } = req.params;
     
         const existingPost = await Collection_Element.findAll({
             where:{ 
                 CollectionId: collectionId,
-                PostId: postId 
+                PostId: postId
             }
         });
 
         let status;
 
         if(existingPost.length){
-            status = false;
+            const elementStatus = existingPost[0].dataValues.CollectionElement_Status;
+            if(elementStatus == true){
+                status = false;
+            }else{
+                status = true; 
+                await Collection_Element.update(
+                    { CollectionElement_Status: 1},
+                    { where: {
+                        CollectionId: collectionId,
+                        PostId: postId 
+                    }}
+                );
+            }  
         }else{
             status = true; 
-
             await Collection_Element.create({
                 CollectionId: collectionId,
                 PostId: postId 
@@ -117,7 +128,10 @@ export const getCollectionElements = async (req, res) => {
             include: [{
                 model: Collection_Element,
                 as: "collectionElements",
-                where: { CollectionId: collectionId },
+                where: { 
+                    CollectionId: collectionId,
+                    CollectionElement_Status: 1
+                },
                 attributes: [] 
             },
             {
@@ -208,6 +222,31 @@ export const deleteCollection = async (req, res) => {
         const payload = {
             status: true,
             message: "Sucessfully deleted collection"
+        }
+
+        res.json(payload);
+
+    }catch(error){
+        res.status(500).json(error);
+        console.log(error);
+    }
+}
+
+export const deleteElement = async (req, res) => {
+    try{
+        const {collectionId, postId} = req.params;
+
+        await Collection_Element.update(
+            { CollectionElement_Status: 0 },
+            { where: { 
+                CollectionId: collectionId,
+                PostId: postId 
+            }}
+        );
+
+        const payload = {
+            status: true,
+            message: "Sucessfully deleted element from collection"
         }
 
         res.json(payload);
