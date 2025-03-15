@@ -43,6 +43,7 @@ function CommentCard({ commentItem, userLoggedIn = null }) {
 
         if (userLoggedIn === null)
             return Swal.fire({
+                theme: 'dark',
                 title: "You need to log in.",
                 text: "Please log in to like the comment!",
                 icon: "error",
@@ -68,25 +69,24 @@ function CommentCard({ commentItem, userLoggedIn = null }) {
     }
 
     return (
-        <div className="border-1 border-[var(--primary-color)] rounded-md p-2">
+        <div className="bg-[var(--transparent-color)] rounded-sm p-3">
             <div className="flex justify-between">
-                <div className="flex h-full space-x-2">
-                    <img src={photoUrl === null ? DefaultPfp : photoUrl} className="w-10 h-10" />
+                <div className="flex h-full space-x-2 m-1">
+                    <img src={photoUrl === null ? DefaultPfp : photoUrl} className="rounded-full w-10 h-10" />
                     <Link to={`/Profile/${comment.user?.Email}`} className="flex items-center">
                         <h1 className="text-primary text-md font-bold">{comment.user?.Username}</h1>
                     </Link>
                 </div>
                 <Rating className="text-yellow-400" stars={comment?.Rating} />
             </div>
-            <div>
-                <p className="text-comp-1 text-md">{comment?.Review}</p>
-                <div className="flex justify-between">
-                    <div className="flex space-x-1 text-xs">
-                        <Like_Button status={comment?.UserLiked} onClick={handleCommentLike} className="text-primary cursor-pointer" />
-                        <p className="text-comp-1 flex items-center">{comment.Likes} Likes</p>
-                    </div>
+            <p className="text-comp-1 text-md m-2">{comment?.Review}</p>
+            <div className="flex justify-between m-1">
+                <div className="flex space-x-1 text-xs">
+                    <Like_Button status={comment?.UserLiked} onClick={handleCommentLike} className="text-primary cursor-pointer" />
+                    <p className="text-comp-1 flex items-center">{comment.Likes} Likes</p>
                 </div>
             </div>
+
         </div>
     )
 }
