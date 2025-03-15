@@ -2,6 +2,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Collection_ELement from "../components/Collection_Element";
 import PostCard from "../components/PostCard";
+import Logo from "../assets/Logo.png";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Button_Style from "../components/Button_Style";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -37,6 +38,7 @@ function Collection(){
     
     const handleDeleteCollection = () => {
         Swal.fire({
+            theme: 'dark',
             icon: "warning",
             title: "Hold On!!",
             text: "Are you sure you want to delete this collection? This action will be permanent!!",
@@ -57,6 +59,7 @@ function Collection(){
         console.log(response);
         if(response.status == true){
             Swal.fire({
+                theme: 'dark',
                 icon: "success",
                 title: "Sucess!!",
                 text: "Sucessfully deleted collection!!"
@@ -65,6 +68,7 @@ function Collection(){
             });
         }else{
             Swal.fire({
+                theme: 'dark',
                 icon: "error",
                 title: "Oops!!",
                 text: "Error at deleting collection!!"
@@ -78,6 +82,7 @@ function Collection(){
 
         if (response.status == true){
             Swal.fire({
+                theme: 'dark',
                 icon: "success",
                 title: "Success!!",
                 text: "Sucessfully re-named collection!!"
@@ -86,6 +91,7 @@ function Collection(){
             });
         }else{
             Swal.fire({
+                theme: 'dark',
                 icon: "error",
                 title: "Oops!!",
                 text: "Error at re-naming collection!!"
@@ -119,10 +125,18 @@ function Collection(){
         </div>
 
         <div className="flex flex-wrap justify-center space-x-auto m-5 p-5">
-            {elements ? elements.map (element =>
-                <PostCard key={element.PostId} Post={element}/>
-            ) :
-            <div>The Collection is empty :( . <Link to="/Home" className="underline">Find Posts</Link></div>}
+        {elements && elements.length > 0 ? (
+            elements.map((element) => (
+                <PostCard key={element.PostId} Post={element} />
+            ))
+        ) : elements && elements.length === 0 ? (
+            <div>The Collection is empty :( . <Link to="/Home" className="underline">Find Posts.</Link></div>
+        ) : (
+            <div className="text-sm animate-bounce flex items-center justify-center">
+                <img src={Logo} className="w-10" alt="LogoName" />
+                <p>Loading...</p>
+            </div>
+        )}
         </div>
         { user.Email === ProfileId && (
             <center><Button_Style onClick={handleDeleteCollection} className="text-sm m-2 p-3 pt-1 pb-1">Delete Collection</Button_Style></center> 
