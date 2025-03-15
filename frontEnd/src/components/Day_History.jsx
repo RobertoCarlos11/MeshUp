@@ -10,7 +10,7 @@ function Day_History({Date,History, HistorySelected, Items, HandleWord}){
     }
     return(
         <>
-        <div className="bg-[#191F27] rounded-sm p-8 mt-8 mb-8">
+        <div className="bg-[var(--transparent-color)] rounded-sm p-8 mt-8 mb-8">
             <span className="text-xl font-semibold">{Date}</span>
 
             <div className="flex flex-col m-5">
