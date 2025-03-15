@@ -3,28 +3,29 @@ import { DataTypes, SMALLINT } from "sequelize";
 
 const Collection_Element = sequelize.define(
     "Collection_Element",{
-        ElementId:
-        {
+        ElementId:{
             type: DataTypes.SMALLINT(),
             autoIncrement:true,
             primaryKey:true,
         },
-        CollectionId:
-        {
+        CollectionId:{
             type: DataTypes.SMALLINT(),
             references:{
                 model:"Collection",
                 key:"CollectionId",
             },
         },
-        PostId:
-        {
+        PostId:{
             type:DataTypes.SMALLINT(),
             references:
             {
                 model:"Post",
                 key:"PostId",
             },
+        },
+        CollectionElement_Status:{
+            type: DataTypes.BOOLEAN(),
+            defaultValue: true
         }
     },
     {
