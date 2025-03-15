@@ -96,6 +96,7 @@ CREATE TABLE Collection_Element(
 ElementId SMALLINT AUTO_INCREMENT PRIMARY KEY,
 CollectionId SMALLINT,
 PostId SMALLINT,
+CollectionElement_Status BIT DEFAULT 1,
 FOREIGN KEY (CollectionId) REFERENCES Collection(CollectionId),
 FOREIGN KEY (PostId) REFERENCES Post(PostId)
 );
