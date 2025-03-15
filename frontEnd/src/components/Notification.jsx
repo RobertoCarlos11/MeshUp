@@ -43,9 +43,17 @@ function Notification({userLoggedIn = null}) {
                     <NotificationsOutlinedIcon className='cursor-pointer m-2 text-[var(--primary-color)]' />
                 </PopoverButton>
                 {notifications?.length > 0 &&
-                <PopoverPanel className="absolute right-0 w-60 h-auto bg-[var(--background-color)] shadow-sm border-2 border-solid border-[var(--primary-color)] rounded-sm p-2 z-50 text-xs flex flex-col space-y-2">
+                <PopoverPanel className="absolute right-0 w-60 h-auto bg-[var(--background-color)] shadow-sm border-2 border-solid border-[var(--primary-color)] rounded-sm p-2 z-50 text-xs flex flex-col space-y-1">
                     {notifications && notifications.map(notification => (
-                        <h1 className="cursor-pointer" onClick={() => handleCheckNotification(notification)} key={notification.NotificationId}>{`${notification.emitter.Username} ${notification.Matter} on ${notification.posts.Post_Name}`}</h1>
+                        <div 
+                            className="flex flex-wrap items-center cursor-pointer text-[var(--text-color)] hover:bg-[var(--hover-color)] p-1 rounded-sm"
+                            onClick={() => handleCheckNotification(notification)} 
+                            key={notification.NotificationId}
+                        >
+                            <span className='font-bold mr-1'>{notification.emitter.Username}</span>
+                            <span className="whitespace-nowrap mr-1">{notification.Matter} on</span>
+                            <span className='font-bold whitespace-nowrap'>{notification.posts.Post_Name}</span>
+                        </div>
                     ))}
                 </PopoverPanel>
                 }
