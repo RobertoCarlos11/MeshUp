@@ -104,12 +104,13 @@ function Post() {
         let response;
         
         if(user === null)
-            return Swal.fire({
+            return  Swal.fire({
+                theme: 'dark',
                 title: "You need to log in!",
                 text:"Please log in to like the post",
                 icon:"error",
                 timer: 2000,
-        });
+            });
 
         if(post.UserLiked === undefined)
         {
@@ -134,7 +135,8 @@ function Post() {
     const handleReviewSubmit = async () => {
 
         if(user === null)
-        return Swal.fire({
+        return  Swal.fire({
+            theme: 'dark',
             title:"You need to log in.",
             text:"Please log in to like the post!",
             icon:"error",
@@ -142,11 +144,12 @@ function Post() {
         });
         
         if(review === null || review === "" || review === undefined)
-           return Swal.fire({
-            title:"Inputs missing",
-            text:"Please fill out the review befoure you send it",
-            icon:"error",
-        });
+           return  Swal.fire({
+                theme: 'dark',
+                title:"Inputs missing",
+                text:"Please fill out the review befoure you send it",
+                icon:"error",
+            });
 
 
         let response;
@@ -155,7 +158,8 @@ function Post() {
             response = await UpdateComment(review, starsGiven,post.PostId, user.Email, userReviewed.CommentId);
 
             if(response.status) {
-                await Swal.fire({
+                await  Swal.fire({
+                    theme: 'dark',
                     title: "Review updated",
                     text: "The review was updated successfully.",
                     icon: "success",
@@ -171,11 +175,12 @@ function Post() {
 
         if(response.status && userReviewed === undefined)
             Swal.fire({
-            title:"Review created",
-            text:"The review was created succesfully",
-            icon:"success",
-            timer:2000,
-        });
+                theme: 'dark',
+                title:"Review created",
+                text:"The review was created succesfully",
+                icon:"success",
+                timer:2000,
+            });
         
         const newComments = await getComments(post?.PostId);
         
@@ -212,17 +217,14 @@ function Post() {
         });
     }
 
-
     return post.Post_Status === false ? 
-    <>
-    <Header />
-    <div className="flex items-center justify-center h-screen">
-        <img src={Logo} className="w-1/4" alt="LogoName" />
-        <h1>
-            This Post is disabled.
-        </h1>
-    </div>
-    </>
+        <>
+        <Header />
+        <div className="flex items-center justify-center h-screen">
+            <img src={Logo} className="w-10" alt="LogoName" />
+            <h1>This Post is private. <Link to={`/Profile/${user.Email}`} className="underline"> Make Public.</Link></h1>
+        </div>
+        </>
     : 
     (
         <>
@@ -235,8 +237,8 @@ function Post() {
                         <h2 className="text-primary text-md font-semibold">{post.user?.Username}</h2>
                         </Link>
                     </div>
-                    <Scene className="h-96" model={modelUrl} texture={textureUrl}></Scene>
-                    <div className="flex justify-between">
+                    <Scene className="h-96 my-0" model={modelUrl} texture={textureUrl}></Scene>
+                    <div className="flex justify-between border-b-2 border-[var(--primary-color)] my-2 py-1">
                         <Rating stars={finalRating} className="text-yellow-400" />
                         <div className="flex space-x-4 text-primary">
                             <div className="flex">
@@ -252,10 +254,9 @@ function Post() {
                             <FileDownloadOutlinedIcon className='cursor-pointer' onClick={DownloadModel} />
                         </div>
                     </div>
-                    <div className="w-full h-1 rounded-md bg-secondary"></div>
-                    <div className="text-md text-comp-1">
+                    <div className="text-md text-comp-1 p-2">
                         <h2 className="font-bold">Description: </h2>
-                        <p className="text-xs">{post.Post_Description}</p>
+                        <p className="text-xs p-2">{post.Post_Description}</p>
                     </div>
                 </div>
                 <div className="flex flex-col w-1/2 px-2 h-5/6 justify-between">
@@ -269,8 +270,8 @@ function Post() {
                     {
                         userReviewed !== undefined && reviewUpdateAtt === false ? 
                         (<div className="flex flex-col items-center">
-                            <h1>You've already submitted a review</h1>
-                            <Button_Style className="w-1/2" onClick={() => setReviewUpdateAtt(true)}>Update Review</Button_Style>
+                            <p className="text-sm p-5 opacity-50">You've already submitted a review.</p>
+                            <Button_Style className="text-sm p-3 py-1 mx-8" onClick={() => setReviewUpdateAtt(true)}>Update Review</Button_Style>
                         </div>): 
                         (<>
                         <input type="text" value={review} onChange={(e) => setReview(e.target.value)} placeholder="Leave a review..." className="w-full border-b-2 border-[var(--primary-color)] text-comp-1" />
