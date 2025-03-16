@@ -1,3 +1,4 @@
+import LogoName from '../assets/LogoName.png';
 import { useState,useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { userRegister } from "../services/userService";
@@ -11,16 +12,15 @@ function Register() {
     const [birthdate, setBirthdate] = useState(null);
     const [password, setPassword] = useState(null);
 
-
-
-        useEffect(() => {
-            localStorage.removeItem("user");
-        },[]);
+    useEffect(() => {
+        localStorage.removeItem("user");
+    },[]);
 
     const handleSignInButton = async (e) => {
         e.preventDefault();
         if(!user || !email || !birthdate || !password){
             Swal.fire({
+                theme: 'dark',
                 icon: "error",
                 title: "Oops!!",
                 text: "Please fill all fields."
@@ -60,6 +60,7 @@ function Register() {
 
             if (response.status ==  true){
                 Swal.fire({
+                    theme: 'dark',
                     icon: "success",
                     title:"You're all set!",
                     text: "User registrated sucessfullly!!"
@@ -67,6 +68,7 @@ function Register() {
                 navigate("/");
             }else{
                 Swal.fire({
+                    theme: 'dark',
                     icon: "error",
                     title: "Oops!!",
                     text: response.message 
@@ -78,6 +80,7 @@ function Register() {
             const errorMsg =  messages.filter(message => message !== true).join("<br>");
 
             Swal.fire({
+                theme: 'dark',
                 icon: "error",
                 title: "Oops!!",
                 html: errorMsg
@@ -87,10 +90,14 @@ function Register() {
     }
 
     return (
-        <div>
+        <>
+            <Link to={"/Home"}><img src={LogoName} alt="LogoName" className='w-30 m-10 -mb-10'/></Link>
             <div className="h-screen flex justify-center items-center space-x-auto">
-                <div className="bg-secondary px-12 py-16 rounded-md">
-                    <h1 className="text-comp-1 text-center font-bold text-2xl p-8">Welcome To MeshUp!</h1>
+                <div className="bg-secondary p-12 rounded-md">
+                    <div className='flex flex-col items-center'>
+                        <img src={LogoName} alt="LogoName" className='w-20' />
+                        <h1 className="text-comp-1 text-center font-bold text-2xl p-8">Welcome To MeshUp!</h1>
+                    </div>
                     <h2 className="text-comp-1 text-center font-bold text-xl">Sign In</h2>
                     <form className="flex flex-col space-y-6 p-6">
                         <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" onChange={e => setEmail(e.currentTarget.value)} type="text" placeholder="Email Address" />
@@ -107,7 +114,7 @@ function Register() {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 
