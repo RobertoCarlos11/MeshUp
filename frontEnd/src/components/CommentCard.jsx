@@ -44,7 +44,7 @@ function CommentCard({ commentItem, userLoggedIn = null }) {
         if (userLoggedIn === null)
             return Swal.fire({
                 theme: 'dark',
-                title: "You need to log in.",
+                title: "Oops!!",
                 text: "Please log in to like the comment!",
                 icon: "error",
                 timer: 2000,
