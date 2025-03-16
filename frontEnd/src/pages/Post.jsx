@@ -106,8 +106,8 @@ function Post() {
         if(user === null)
             return  Swal.fire({
                 theme: 'dark',
-                title: "You need to log in!",
-                text:"Please log in to like the post",
+                title: "Oops!!",
+                text:"Please log in to like the post!",
                 icon:"error",
                 timer: 2000,
             });
@@ -137,8 +137,8 @@ function Post() {
         if(user === null)
         return  Swal.fire({
             theme: 'dark',
-            title:"You need to log in.",
-            text:"Please log in to like the post!",
+            title:"Oops!!",
+            text:"Please log in to sumbit a review!",
             icon:"error",
             timer:2000,
         });
@@ -146,8 +146,8 @@ function Post() {
         if(review === null || review === "" || review === undefined)
            return  Swal.fire({
                 theme: 'dark',
-                title:"Inputs missing",
-                text:"Please fill out the review befoure you send it",
+                title:"Oops!!",
+                text:"Please fill out the review befoure you send it!",
                 icon:"error",
             });
 
@@ -160,8 +160,8 @@ function Post() {
             if(response.status) {
                 await  Swal.fire({
                     theme: 'dark',
-                    title: "Review updated",
-                    text: "The review was updated successfully.",
+                    title: "Sucess!!",
+                    text: "The review was updated successfully!",
                     icon: "success",
                     showConfirmButton: true
                 }).then(() => {
@@ -176,8 +176,8 @@ function Post() {
         if(response.status && userReviewed === undefined)
             Swal.fire({
                 theme: 'dark',
-                title:"Review created",
-                text:"The review was created succesfully",
+                title:"Sucess!!",
+                text:"The review was created succesfully!",
                 icon:"success",
                 timer:2000,
             });
