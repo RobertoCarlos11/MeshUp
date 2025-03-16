@@ -62,7 +62,7 @@ function AddCollection({ children, userLoggedIn = null,Post, className='flex ite
             theme: 'dark',
             icon: "error",
             title: "Oops!!",
-            text: "You need to Log or Sign in to get acess to this function!",
+            text: "You need to Log in to get access to this function!",
         })
     }
     const addToCollection = async (collectionId) => {
