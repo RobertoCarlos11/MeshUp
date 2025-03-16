@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { userRegister } from "../services/userService";
 import Button_Style from "../components/Button_Style";
 import Swal from "sweetalert2";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 
 function Register() {
     const navigate = useNavigate();
@@ -11,82 +13,85 @@ function Register() {
     const [email, setEmail] = useState(null);
     const [birthdate, setBirthdate] = useState(null);
     const [password, setPassword] = useState(null);
+    
+    const [validEmail, setValidEmail] = useState(null);
+    const [validDate, setValidDate] = useState(null);
+    const [validPassword, setValidPassword] = useState(null);
 
     useEffect(() => {
         localStorage.removeItem("user");
     },[]);
 
+    const validateEmail = (value) => {
+        setEmail(value);
+        const emailRegExp = new RegExp('^[\\w.-]+@([\\w-]+\\.)+[\\w]{2,4}$');
+        setValidEmail(emailRegExp.test(value));
+    }
+
+    const validateDate = (value) => {
+        setBirthdate(value);
+        const today = new Date();
+        const selectedDate = new Date(value);
+        setValidDate(selectedDate < today);
+    }
+    
+    const validatePassword = (value) => {
+        setPassword(value);
+        const passRegExp = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{8,}$');
+        setValidPassword(passRegExp.test(value));
+    }
+
     const handleSignInButton = async (e) => {
         e.preventDefault();
-        if(!user || !email || !birthdate || !password){
+
+        if (!user || !email || !birthdate || !password) {
             Swal.fire({
-                theme: 'dark',
+                theme: "dark",
                 icon: "error",
                 title: "Oops!!",
                 text: "Please fill all fields."
-            })
+            });
+            return;
         }
-
-        const emailValid = validateEmail(email);
-        const dateValid = validateDate(birthdate);
-        const passwordValid = validatePassword(password);
-
-        function validateEmail(email) {
-            const emailRegExp = new RegExp('^.+@.+\..+$');
-            if(!emailRegExp.test(email)){
-                return "Invalid e-mail adress!";
-            }else{ return true; }
-        }
-
-        function validateDate(date){
-            const today = new Date();
-            const birthDate = new Date(date);
-
-            if(birthDate > today){
-                return "Invalid Birthdate!";
-            }else{ return true; }
-        }
-        
-        function validatePassword(password){
-            const passRegExp = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{8,}$');
-            if(!passRegExp.test(password)){
-                return "Password must contain Upper and Lower case letters, numbers and special characters!";
-            }else{ return true; }
-        }
-
-        if (emailValid == true && dateValid == true && passwordValid == true){
+    
+        if (validEmail && validDate && validPassword) {
             const response = await userRegister(user, password, birthdate, email);
             console.log(response);
-
-            if (response.status ==  true){
+    
+            if (response.status === true) {
                 Swal.fire({
-                    theme: 'dark',
+                    theme: "dark",
                     icon: "success",
-                    title:"You're all set!",
-                    text: "User registrated sucessfullly!!"
-                })
+                    title: "You're all set!",
+                    text: "User registered successfully!!"
+                });
                 navigate("/");
-            }else{
+            } else {
                 Swal.fire({
-                    theme: 'dark',
+                    theme: "dark",
                     icon: "error",
                     title: "Oops!!",
-                    text: response.message 
-                })
+                    text: response.message
+                });
             }
-
-        }else{
-            const messages = [emailValid, dateValid, passwordValid];
-            const errorMsg =  messages.filter(message => message !== true).join("<br>");
-
+        } else {
+            let emailMessage;
+            let birthdateMessage;
+            let passwordMessage;
+    
+            if (!validEmail) emailMessage = "Invalid email address!";
+            if (!validDate) birthdateMessage = "Invalid birthdate!";
+            if (!validPassword) passwordMessage = "Password must contain upper & lowercase letters, numbers, and special characters!";
+    
+            const messages = [emailMessage, birthdateMessage, passwordMessage].filter(Boolean);
+    
             Swal.fire({
-                theme: 'dark',
+                theme: "dark",
                 icon: "error",
                 title: "Oops!!",
-                html: errorMsg
-            })
+                html: messages.join("<br>")
+            });
         }
-        
     }
 
     return (
@@ -100,11 +105,38 @@ function Register() {
                     </div>
                     <h2 className="text-comp-1 text-center font-bold text-xl">Sign In</h2>
                     <form className="flex flex-col space-y-6 p-6">
-                        <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" onChange={e => setEmail(e.currentTarget.value)} type="text" placeholder="Email Address" />
-                        <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" onChange={e => setUser(e.currentTarget.value)} type="text" placeholder="Username" />
-                        <label htmlFor="Birthdate" className="text-xs mb-2">Birthdate</label>
-                        <input id="Birthdate" onChange={e => setBirthdate(e.currentTarget.value)} className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" type="date" placeholder="Birthdate" />
-                        <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" onChange = {e => setPassword(e.currentTarget.value)}type="password" placeholder="Password" />
+                        <div className='flex justify-between'>
+                            <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)] w-full" value={email} onChange={e => validateEmail(e.target.value)} type="text" placeholder="Email Address" />
+                            {validEmail === null ? null : validEmail ? (
+                                <CheckOutlinedIcon className='text-[#87E86F]'/>
+                            ):(
+                                <CloseOutlinedIcon className='text-[#E86F91]'/>
+                            )}
+                        </div>
+
+                        <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)]" onChange={e => setUser(e.target.value)} type="text" placeholder="Username" />
+                        
+                        <div className='flex flex-col'>
+                            <label htmlFor="Birthdate" className="text-xs mb-2">Birthdate</label>
+                            <div className='flex justify-between'>
+                                <input id="Birthdate" value={birthdate} onChange={e => validateDate(e.target.value)} className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)] w-full" type="date" placeholder="Birthdate" />
+                                {validDate === null ? null : validDate ? (
+                                    <CheckOutlinedIcon className='text-[#87E86F]'/>
+                                ):(
+                                    <CloseOutlinedIcon className='text-[#E86F91]'/>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className='flex justify-between'>
+                            <input className="text-xs text-comp-1 border-b-1 border-[var(--primary-color)] w-full" value={password} onChange = {e => validatePassword(e.target.value)}type="password" placeholder="Password" />
+                            {validPassword === null ? null : validPassword ? (
+                                <CheckOutlinedIcon className='text-[#87E86F]' />
+                            ) : (
+                                <CloseOutlinedIcon className='text-[#E86F91]' />
+                            )}
+                        </div>
+
                         <div className="flex justify-center">
                             <Button_Style className="w-1/2 text-sm" onClick={handleSignInButton}>Sign In</Button_Style>
                         </div>
