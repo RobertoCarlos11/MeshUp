@@ -1,6 +1,5 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Collection_ELement from "../components/Collection_Element";
 import PostCard from "../components/PostCard";
 import Logo from "../assets/Logo.png";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -17,8 +16,15 @@ function Collection(){
     const { ProfileId, collection_name, collectionId } = useParams();
     const [collectionName, setCollectionName] = useState();
     const [isEditing, setIsEditing] = useState(false);
+    const [userId, setUserId] = useState();
 
     const handleEditCollection = () => { setIsEditing(true); };
+
+    window.onload = () => { alert("INNN")}
+
+    useEffect(() => {
+        user === null ? setUserId("Guest") : setUserId(userId);
+    });
 
     useEffect(() => {
         setCollectionName(collection_name);
@@ -64,7 +70,7 @@ function Collection(){
                 title: "Sucess!!",
                 text: "Sucessfully deleted collection!!"
             }).then((result) => {
-                navigate(`/Profile/${user.Email}`);
+                navigate(`/Profile/${userId}`);
             });
         }else{
             Swal.fire({
@@ -110,7 +116,7 @@ function Collection(){
             disabled={!isEditing} 
             onChange={(e) => setCollectionName(e.target.value)}/>
 
-            { user.Email === ProfileId && (
+            { userId === ProfileId && (
                 !isEditing ? (
                     <EditOutlinedIcon 
                         onClick={handleEditCollection} 
@@ -138,7 +144,7 @@ function Collection(){
             </div>
         )}
         </div>
-        { user.Email === ProfileId && (
+        { userId === ProfileId && (
             <center><Button_Style onClick={handleDeleteCollection} className="text-sm m-2 p-3 pt-1 pb-1">Delete Collection</Button_Style></center> 
         )}
         

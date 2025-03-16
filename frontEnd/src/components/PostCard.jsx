@@ -21,6 +21,7 @@ import AddCollection from './AddCollection';
 function PostCard({ Post }) {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
+    const [userId, setUserId] = useState();
     const { ProfileId, collection_name, collectionId } = useParams();
     const location = useLocation();
     const [updatedPost, setUpdatedPost] = useState({});
@@ -35,6 +36,10 @@ function PostCard({ Post }) {
     
     const handleOpen = ()=> setOpen(true);
     const handleClose = () => setOpen(false);
+
+    useEffect(() => {
+        user === null ? setUserId("Guest") : setUserId(userId);
+    });
 
     useEffect(() => {
         const { model } = Post;
@@ -59,7 +64,7 @@ function PostCard({ Post }) {
 
     useEffect(() => {
         const getLikesOfPost = async () => {
-                const LikesFound = await GetLikes("post", Post.PostId, user.Email);
+                const LikesFound = await GetLikes("post", Post.PostId, userId);
                 setLikes(LikesFound.data.count);
                 setUserLiked(LikesFound?.UserLiked.Status);
             }
@@ -96,11 +101,11 @@ function PostCard({ Post }) {
     const handlePostLike = async () => {
         let response;
 
-        if(user === null)
+        if(userId === "Guest")
             return Swal.fire({
                 theme: 'dark',
-                title:"You need to log in.",
-                text:"Please log in to like the post!",
+                title:"Oops!!",
+                text:"You need log in to like the post!",
                 icon:"error",
                 timer:2000,
             });
@@ -129,7 +134,7 @@ function PostCard({ Post }) {
             handleClose();
             await Swal.fire({
                 theme: 'dark',
-                title:"Post Updated Successfully!",
+                title:"Success!!",
                 text:`The Post ${Post.Post_Name} has been updated successfully!`,
                 icon:"success",
                 timer:2000,
@@ -192,10 +197,10 @@ function PostCard({ Post }) {
         <>
             <div className="relative flex flex-col m-2 bg-white shadow-sm rounded-sm w-140">
                 <Scene className="h-75 rounded-sm relative" model={modelUrl} texture={textureUrl}>
-                    {user.Email === Post.Email && location.pathname.includes("/Profile") &&
+                    {userId === Post.Email && location.pathname.includes("/Profile") &&
                         <EditOutlinedIcon onClick={handleOpen} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 absolute top-0 left-0 m-3'/>
-                    }
-                    {user.Email === ProfileId && location.pathname.includes("/Collection") &&
+                    } 
+                    {userId === ProfileId && location.pathname.includes("/Collection") &&
                         <DeleteOutlineOutlinedIcon onClick={handleDeleteElement} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 absolute top-0 left-0 m-3'/>
                     }
                     <Rating stars={postRating} className="absolute top-2 right-2 text-[var(--star-color)]" />

@@ -9,6 +9,11 @@ function User_Collections({Collection}) {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
     const [models, setModels] = useState();
+    const [userId, setUserId] = useState();
+
+    useEffect(() => {
+        user === null ? setUserId("Guest") : setUserId(userId);
+    });
 
     const handleDeleteCollection = () => {
         Swal.fire({
@@ -94,7 +99,7 @@ function User_Collections({Collection}) {
                         <span onClick={() => {navigate(`/Collection/${Collection.Email}/${Collection.Collection_Name}/${Collection.CollectionId}`)}} className="cursor-pointer text-base text-[var(--secondary-color)] m-1">
                             {Collection.Collection_Name}    
                         </span>
-                        {user.Email === Collection.Email &&
+                        {userId === Collection.Email &&
                             <DeleteOutlineOutlinedIcon onClick={handleDeleteCollection} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50'/>
                         }
                         </div>

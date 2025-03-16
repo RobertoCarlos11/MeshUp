@@ -2,21 +2,26 @@ import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import InsertChartOutlinedOutlinedIcon from '@mui/icons-material/InsertChartOutlinedOutlined';
 import Button_Style from "../components/Button_Style";
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import Notification from './Notification';
 
 function HeaderComponent() {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+    
+    const [userId, setUserId] = useState();
+    useEffect(() => {
+        user === null ? setUserId("Guest") : setUserId(userId);
+    });
 
     return (
         <>
             <div className='flex justify-center'>
-                {user ? (
+                {userId != "Guest" ? (
                     <>
                         <Link to="/Reports">
                             <InsertChartOutlinedOutlinedIcon className='cursor-pointer m-2 text-[var(--primary-color)]' />
                         </Link>
-                        <Notification userLoggedIn={user.Email}/>
+                        <Notification userLoggedIn={userId}/>
                         <Link to="/Upload">
                             <FileUploadOutlinedIcon className='cursor-pointer m-2 text-[var(--primary-color)]' />
                         </Link>
