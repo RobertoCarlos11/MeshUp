@@ -1,6 +1,6 @@
 import { BrowserRouter as Router,Routes, Route } from 'react-router-dom'
 import LogIn from './pages/LogIn'
-import Home from './pages/home'
+import Home from './pages/Home'
 import Reports from './pages/Reports' 
 import Post from './pages/Post'
 import Upload from './pages/Upload'
@@ -23,7 +23,7 @@ function App() {
           <Route path="/Upload" element={<ProtectedRoute element={<Upload />} />} />
           <Route path="/Profile/:ProfileId" element={<Profile />} />
           <Route path="/Search_History" element={<ProtectedRoute element={<Search_History />} />} />
-          <Route path="/Collection/:ProfileId/:collection_name/:collectionId" element={<ProtectedRoute element={<Collection />} />} />
+          <Route path="/Collection/:ProfileId/:collection_name/:collectionId" element={<Collection />} />
           <Route path="/Reports" element={<ProtectedRoute element={<Reports />} />} />
           <Route path="*" element= {<NotFound />}/>
         </Routes>
