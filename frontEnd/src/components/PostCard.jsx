@@ -2,16 +2,18 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import Rating from './Rating';
 import Scene from './Three/Scene';
 import Button_Style from './Button_Style';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GetLikes, InsertLike, UpdateLike } from '../services/likeService';
 import Like_Button from './Like_Button';
 import { Modal } from "@mui/material";
 import Swal from 'sweetalert2';
-import { getSavesOfPost } from '../services/collectionService';
+import { deleteElement, getSavesOfPost } from '../services/collectionService';
 import { GetAllCategories } from '../services/categoryService';
 import { UpdatePost } from '../services/postService';
 import AddCollection from './AddCollection';
@@ -19,6 +21,7 @@ import AddCollection from './AddCollection';
 function PostCard({ Post }) {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
+    const { ProfileId, collection_name, collectionId } = useParams();
     const location = useLocation();
     const [updatedPost, setUpdatedPost] = useState({});
     const [categories, setCategories] = useState(null);
@@ -32,9 +35,6 @@ function PostCard({ Post }) {
     
     const handleOpen = ()=> setOpen(true);
     const handleClose = () => setOpen(false);
-
-    const handleOpenCollection = () => user === null ?  handleNoSession() : setOpenCollection(true);
-    const handleCloseCollection = () => setOpenCollection(false);
 
     useEffect(() => {
         const { model } = Post;
@@ -98,6 +98,7 @@ function PostCard({ Post }) {
 
         if(user === null)
             return Swal.fire({
+                theme: 'dark',
                 title:"You need to log in.",
                 text:"Please log in to like the post!",
                 icon:"error",
@@ -121,93 +122,13 @@ function PostCard({ Post }) {
         return rating;
     }
 
-    const handleNoSession = () => {
-        Swal.fire({
-            icon: "error",
-            title: "Oops!!",
-            text: "You need to Log or Sign in to get acess to this function!",
-            // html: `
-            //     <Link to="/">
-            //         <Button_Style className="text-base w-30 m-2 p-3 pb-1 pt-1">Log In</Button_Style>
-            //     </Link>
-            //     <Link to="/Register">
-            //         <Button_Style inverted className="text-base w-30 m-2 p-3 pb-1 pt-1"> Sign In </Button_Style>
-            //     </Link>
-            // `
-        })
-    }
-
-    const createCollection = async(e) => {
-        e.preventDefault();
-    
-        if (!collectionName ){
-            handleCloseCollection();
-            Swal.fire({
-                icon: "error",
-                title: "Oops!!",
-                text: "Name your collection!!"
-            }).then((result) => {
-                result.isConfirmed ? handleOpen() : '';
-            });
-        }else{
-            handleCloseCollection();
-            const response = await InsertCollection(collectionName, user.Email, Post.PostId);
-            console.log(response);
-
-            if(response.status == true){
-                Swal.fire({
-                    icon: "success",
-                    title: "Sucess!!",
-                    text: "Collection created sucessfully!!"
-                });
-            }else{
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops!!",
-                    text: "Error at creating collection" 
-                })
-            }
-        }
-
-    }
-
-    const addToCollection = async (collectionId) => {
-
-        const response = await InsertCollectionElement(collectionId, Post.PostId);
-        console.log(collectionId, Post.PostId);
-        console.log(response);
-
-        if(response.status == true){
-            Swal.fire({
-                icon: "success",
-                title: "Sucess",
-                text: "Sucessfully added to collection!!"
-            });
-        }else{
-            Swal.fire({
-                icon: "warning",
-                title: "Hold On!!",
-                text: "This post is already in the collection!!"
-            });
-        }
-
-    }
-    
-    const getUserCollections = async () => {
-        if(user === null){
-            handleNoSession();
-        }else{
-            const collectionsFound = await getCollections(user.Email);
-            setUserCollections(collectionsFound.data);
-        }
-    }
-
     const handleUpdatePost = async() => {
         const UpdatedPost = await UpdatePost(updatedPost);
         if(UpdatedPost.status)
         {
             handleClose();
             await Swal.fire({
+                theme: 'dark',
                 title:"Post Updated Successfully!",
                 text:`The Post ${Post.Post_Name} has been updated successfully!`,
                 icon:"success",
@@ -227,6 +148,46 @@ function PostCard({ Post }) {
             [name]:type === "checkbox" ? checked : value,
         }));
     }
+
+    const handleDeleteElement = () => {
+        Swal.fire({
+            theme: 'dark',
+            icon: "warning",
+            title: "Hold On!!",
+            text: "Are you sure you want to delete this post from your collection?",
+            showConfirmButton: false,
+            showCancelButton: true,
+            showDenyButton: true,
+            confirmButtonText: "Cancel",
+            denyButtonText: "Delete Post"
+        }).then((result) => {
+            if(result.isDenied){
+                deletePostfromCollection();
+            }
+        })
+    }
+
+    const deletePostfromCollection = async () => {
+        const response = await deleteElement(collectionId, Post.PostId);
+        console.log(response);
+
+        if (response.status == true){
+            Swal.fire({
+                theme: 'dark',
+                icon: "success",
+                title: "Success!!",
+                text: `Sucessfully deleted post from ${collection_name}`
+            }).then((result) => { window.location.reload(); })
+        }else{
+            Swal.fire({
+                theme: 'dark',
+                icon: "error",
+                title: "Oops!!",
+                text: `Error at deleting post from ${collection_name}`
+            })
+        }
+    }
+
     return (
         <>
             <div className="relative flex flex-col m-2 bg-white shadow-sm rounded-sm w-140">
@@ -234,10 +195,10 @@ function PostCard({ Post }) {
                     {user.Email === Post.Email && location.pathname.includes("/Profile") &&
                         <EditOutlinedIcon onClick={handleOpen} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 absolute top-0 left-0 m-3'/>
                     }
-                    {user.Email === Post.Email && location.pathname.includes("/Collection") &&
-                        <DeleteOutlineOutlinedIcon className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 absolute top-0 left-0 m-3'/>
+                    {user.Email === ProfileId && location.pathname.includes("/Collection") &&
+                        <DeleteOutlineOutlinedIcon onClick={handleDeleteElement} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 absolute top-0 left-0 m-3'/>
                     }
-                    <Rating stars={postRating} className="absolute top-2 right-2 text-yellow-400" />
+                    <Rating stars={postRating} className="absolute top-2 right-2 text-[var(--star-color)]" />
                 </ Scene>
                 <div className="cursor-pointer mx-3 flex justify-between border-t pb-2 pt-2 px-1">
                     <span onClick={() => { navigate(`/Post/${Post.PostId}`) }} className="text-base text-[var(--secondary-color)] m-1">
@@ -261,31 +222,50 @@ function PostCard({ Post }) {
 
 
             <Modal open={open} onClose={handleClose} className='flex items-center justify-center'>
-                <div className='bg-color flex flex-col w-1/3 p-4 rounded-md'>
-                    <div className='w-auto'>
-                        <h3 className='text-xl font-semibold'>Post Title:</h3>
-                        <input name="post_Name" onChange={handleUpdateChange} value={updatedPost.post_Name} className="shadow appearance-none border border-[var(--primary-color)] rounded w-full py-2 px-3 text-comp-1 leading-tight focus:outline-none focus:shadow-outline"  type="text" />
-                    </div>
-                    <div>
-                        <h3 className='text-xl font-semibold'>Post Description:</h3>
-                        <textarea name="post_Description" onChange={handleUpdateChange} value={updatedPost.post_Description} className="shadow appearance-none border border-[var(--primary-color)] rounded w-full py-2 px-3 text-comp-1 leading-tight focus:outline-none focus:shadow-outline" />
-                    </div>
-                    <div>
-                        <h3 className='text-xl font-semibold'>Active</h3>
-                        <input type="checkbox" name="post_Status" onChange={handleUpdateChange} checked={updatedPost.post_Status} />
-                    </div>
-                    <div className=''>
-                        <h3 className='text-xl font-semibold'>Category</h3>
-                        <select name="categoryId" onChange={handleUpdateChange} value={updatedPost.categoryId} className="w-full text-sm bg-[var(--background-color)] border-1 border-solid border-[var(--primary-color)] rounded-sm p-1 my-2">
-                            {   
-                                categories && categories.map(category =>
+                <div className='bg-color flex flex-col w-1/3 rounded-md'>
+                    <div className="p-8 bg-color rounded shadow-lg">
+                        <header className='p-2 border-b-2 border-solid border-[var(--primary-color)]'>
+                            <h2 className='text-center text-lg font-bold'>UPDATE POST</h2>
+                        </header>
+                        <div className='space-x-6 py-2'>
+                            <div className='my-6 mx-2'>
+                                <label className="block font-bold mb-2">Post title</label>
+                                <input name="post_Name" onChange={handleUpdateChange} value={updatedPost.post_Name} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)] leading-tight focus:outline-none focus:shadow-outline"  type="text" />
+                            </div>
+                            <div className='my-6 mx-2'>
+                                <label className="block font-bold mb-2">Post description</label>
+                                <textarea name="post_Description" onChange={handleUpdateChange} value={updatedPost.post_Description} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)] leading-tight focus:outline-none focus:shadow-outline" />
+                            </div>
+                            <div className='my-6 mx-2'>
+                                <label className="block font-bold mb-2">Category</label>
+                                <select name="categoryId" onChange={handleUpdateChange} value={updatedPost.categoryId} className="w-full p-2 py-1 bg-[var(--background-color)] border-1 border-solid border-[var(--primary-color)] rounded-sm">
+                                { categories && categories.map(category =>
                                     <option key={category.CategoryId} value={category.CategoryId}>{category.Category_Name}</option>
                                 )}
-                        </select>
-                    </div>
-                    <div className='w-full justify-evenly flex'>
-                    <Button_Style onClick={handleUpdatePost} className='w-1/3'>Update</Button_Style>
-                    <Button_Style onClick={handleClose} className='w-1/3'>Cancel</Button_Style>
+                                </select>
+                            </div>
+                            <div className='flex justify-start my-6 mx-2'>
+                                <input type="checkbox" name="post_Status" onChange={handleUpdateChange} checked={updatedPost.post_Status} className='mr-2' hidden/>
+
+                                {updatedPost.post_Status ? (
+                                    <>
+                                        <VisibilityOutlinedIcon className='cursor-pointer mr-2'  onClick={() => setUpdatedPost((prev) => ({ ...prev, post_Status: false }))}/>
+                                        <label className="block font-bold">Make private</label>
+                                    </>
+                                ): (
+                                    <>
+                                        <VisibilityOffOutlinedIcon className='cursor-pointer mr-2'  onClick={() => setUpdatedPost((prev) => ({ ...prev, post_Status: true }))}/>
+                                        <label className="block font-bold">Make public</label>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                        <footer className="p-2 border-t-2 border-solid border-[var(--primary-color)]">
+                            <div className="flex justify-center">
+                                <Button_Style onClick={handleUpdatePost} className='text-sm m-2 p-3 pb-1 pt-1'>Update</Button_Style>
+                                <Button_Style onClick={handleClose} className='text-sm m-2 p-3 pb-1 pt-1'>Cancel</Button_Style>
+                            </div>
+                        </footer>
                     </div>
                 </div>
             </Modal>
