@@ -84,7 +84,7 @@ function Home() {
                         displayedPosts
                             .map(item => item && <PostCard key={item.PostId} Post={item} />)
                     ) : (
-                        <p className="text-center text-sm text-gray-500">No posts found.</p>
+                        <p className="text-center text-sm opacity-50">No posts found.</p>
                     )
                 ) : (
                     <div className="text-sm animate-bounce flex items-center justify-center">
