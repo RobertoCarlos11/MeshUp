@@ -84,11 +84,11 @@ function Home() {
                         displayedPosts
                             .map(item => item && <PostCard key={item.PostId} Post={item} />)
                     ) : (
-                        <p className="text-center text-xl text-gray-500">No posts found.</p>
+                        <p className="text-center text-sm opacity-50">No posts found.</p>
                     )
                 ) : (
-                    <div className="text-4xl animate-bounce flex items-center justify-center">
-                        <img src={Logo} className="w-1/4" alt="LogoName" />
+                    <div className="text-sm animate-bounce flex items-center justify-center">
+                        <img src={Logo} className="w-10" alt="LogoName" />
                         <p>Loading...</p>
                     </div>
                 )}

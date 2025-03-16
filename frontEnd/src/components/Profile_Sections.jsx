@@ -5,24 +5,34 @@ import Pagination from "./Pagination";
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PostCard from "./PostCard";
 import { useParams } from "react-router-dom";
+import { getCollections } from "../services/collectionService";
 
 function Profile_Sections({ Posts = null, Collections = null,UserProfile }) {
+    const { ProfileId } = useParams();
     const postsPerPage = 6;
     const [activeTab, setActiveTab] = useState("posts");
     const [currentPage, setCurrentPage] = useState(1);
     const [displayedPosts, setDisplayedPosts] = useState();
 
-        const handleIndexChanged = (index) => {
-            setCurrentPage(index);
+    useEffect(() => {
+        if(activeTab !== "collections")
+            return;
+        const FetchCollectionsUser = async () => {
+            const CollectionsFound = await getCollections(ProfileId);
+            setCollections(CollectionsFound.data);
         }
-    
-        useEffect(() => {
-        const startIndex = (currentPage -1) * postsPerPage;
-        setDisplayedPosts(Posts?.slice(startIndex,startIndex + postsPerPage))
-        },[currentPage,Posts, UserProfile]);
-    
-        
+        FetchCollectionsUser();
+    }, [ProfileId, activeTab]);
 
+    const handleIndexChanged = (index) => {
+        setCurrentPage(index);
+    }
+
+    useEffect(() => {
+    const startIndex = (currentPage -1) * postsPerPage;
+    setDisplayedPosts(Posts?.slice(startIndex,startIndex + postsPerPage))
+    },[currentPage,Posts, UserProfile]);
+    
     return (
         <>
             <div className="flex justify-center border-b-2 border-solid m-10">

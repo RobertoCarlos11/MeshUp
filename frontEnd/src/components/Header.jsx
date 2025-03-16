@@ -83,7 +83,7 @@ function Header({UserUpdated = true, History = null}){
                     {postsFound && postsFound
                     .filter(item => search !== "" && item.Post_Name.toLowerCase().includes(search.toLowerCase()))
                     .map(post => (
-                        <div onClick={() => handleSearchClick(post.PostId)} className="hover:bg-[var(--primary-color)] p-1 rounded-md">
+                        <div onClick={() => handleSearchClick(post.PostId)} className="hover:bg-[var(--primary-color)] p-1 rounded-md cursor-pointer">
                         <p key={post.PostId}> {post.Post_Name}</p>
                         </div>
                     ))}

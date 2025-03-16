@@ -47,8 +47,7 @@ function Profile() {
 
         const FetchPostsOfUser = async () => {
             const PostsFound = await GetAllPostsOfUser(ProfileId);
-        const Posts = PostsFound.data.filter(post => userLoggedIn?.Email === ProfileId || post.Post_Status === true);
-            
+            const Posts = PostsFound.data.filter(post => userLoggedIn?.Email === ProfileId || post.Post_Status === true);
             setPosts(Posts);
         }
         FetchPostsOfUser();
@@ -76,7 +75,7 @@ function Profile() {
         const date = new Date(dateString);
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const day = String(date.getDate() + 1).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
 
@@ -116,6 +115,7 @@ function Profile() {
         if (response.status) {
             handleClose();
             await Swal.fire({
+                theme: 'dark',
                 title: "Successfully updated!",
                 text: "Your information was successfully updated",
                 icon: "success",
@@ -169,7 +169,7 @@ function Profile() {
                     <Button_Style className="text-sm m-2 px-3 py-1 w-32 self-center" onClick={handleOpen}>Edit Profile</Button_Style>}    
             </div>
             <Modal open={open} onClose={handleClose} className="flex items-center justify-center">
-                <div className="flex items-center justify-center  w-1/3 h-1/2">
+                <div className="flex items-center justify-center w-1/3 h-1/2 rounded-md">
                     <div className="p-8 bg-color rounded shadow-lg">
                         <header className="p-2 border-b-2 border-solid border-[var(--primary-color)]">
                             <h2 className="text-center text-lg font-bold">EDIT PROFILE</h2>
@@ -208,10 +208,10 @@ function Profile() {
                 </div>
             </Modal >
             {posts ? <Profile_Sections Posts={posts} Collections={collections} UserLoggedIn = {userLoggedIn?.Email} UserProfile= {ProfileId}/> : (
-                                    <div className="text-2xl animate-bounce flex items-center justify-center">
-                                        <img src={Logo} className="w-1/5" alt="LogoName" />
-                                        <p>Loading...</p>
-                                    </div>
+                <div className="text-sm animate-bounce flex items-center justify-center">
+                <img src={Logo} className="w-10" alt="LogoName" />
+                <p>Loading...</p>
+                </div>
             )}
             <Footer />
         </>

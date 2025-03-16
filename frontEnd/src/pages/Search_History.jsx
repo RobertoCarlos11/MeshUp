@@ -12,6 +12,8 @@ function Search_History() {
     const [history, setHistory] = useState({});
     const [word, setWord] = useState("");
     const [selected, setSelected] = useState([]);
+    const [isDeleting, setIsDeleting] = useState(false);
+
     const groupByDay = (data) => {
         const groupedData = data.reduce((acc, item) => {
             const date = new Date(item.Search_Date).toLocaleDateString();
@@ -53,6 +55,7 @@ function Search_History() {
 
     useEffect(() => {
         console.log(selected);
+        selected.length > 0 ? setIsDeleting(true) : setIsDeleting(false); 
     },[selected]);
 
     useEffect(() => {
@@ -61,10 +64,11 @@ function Search_History() {
     const handleDeleteSelected = async (e) => {
         const {name} = e.currentTarget;
         if(selected.length == 0 && name == "Selected")
-                return Swal.fire({
-                    icon: "error",
-                    title: "Oops!!",
-                    text: "Please select items to delete from your history!",
+            return Swal.fire({
+                theme: 'dark',
+                icon: "error",
+                title: "Oops!!",
+                text: "Please select items to delete from your history!",
             });
 
         setSelected(prev => {
@@ -79,6 +83,7 @@ function Search_History() {
     const handleDelete = async (newSelected) => {
 
         await Swal.fire({
+            theme: 'dark',
             title:"Warning!",
             icon:"warning",
             text: newSelected.length === Object.values(history).flat().length ? 
@@ -89,29 +94,31 @@ function Search_History() {
         }).then(async (result) => {
             if(!result.isConfirmed)
                 return;
-            Swal.fire({
-                title: "Deleting...",
-                text: "Please wait while the history is being deleted.",
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+                Swal.fire({
+                    theme: 'dark',
+                    title: "Deleting...",
+                    text: "Please wait while the history is being deleted.",
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
             
             
             const postsdeleted = await DeleteHistory(newSelected);
             if(postsdeleted.status)
-                {
-                    await Swal.fire({
-                        title: "Deleted!",
-                        text: "History deleted successfully.",
-                        icon: "success",
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                    FetchHistory();
-                    setSelected([]);
-                }
+            {
+                await Swal.fire({
+                    theme: 'dark',
+                    title: "Deleted!",
+                    text: "History deleted successfully.",
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                FetchHistory();
+                setSelected([]);
+            }
         });
     } 
 
@@ -123,23 +130,27 @@ function Search_History() {
         <>
             <Header History={word} />
             <div className="space-x-auto ml-100 mr-100">
-                <div className="flex flex-row justify-between border-b-2 border-solid p-2">
-                    <div className="flex items-center m-2">
-                        <CloseOutlinedIcon className="cursor-pointer m-2" />
-                        <span className="text-base font-semibold m-2">{selected.length}</span>
-                        <span className="text-base m-2">Selected elements</span>
+                {isDeleting && (
+                    <div className="flex flex-row justify-between border-b-2 border-solid p-2">
+                        <div className="flex items-center m-2">
+                            <CloseOutlinedIcon className="cursor-pointer m-2" />
+                            <span className="text-base font-semibold m-2">{selected.length}</span>
+                            <span className="text-base m-2">Selected elements</span>
+                        </div>
+                        <Button_Style onClick={handleDeleteSelected} name="Selected" className="text-sm p-2 m-2" inverted >Delete</Button_Style>
                     </div>
-                    <Button_Style onClick={handleDeleteSelected} name="Selected" className="text-sm p-2 m-2" inverted > Delete</Button_Style>
-                </div>
+                )}
                 {Object.entries(history).length !== 0 ? Object.entries(history).map(([date,entries]) => (
-                    <Day_History Date={date} History={entries} HistorySelected={handleSelected} Items={selected} HandleWord={handleWord}/>
+                    <Day_History SearchDate={date} History={entries} HistorySelected={handleSelected} Items={selected} HandleWord={handleWord}/>
                 )) : (
-                    <p className="text-center p-12 text-gray-600">No History was found.</p>
+                    <p className="text-center p-12 opacity-50">No History was found.</p>
                 )}
 
-                <Button_Style onClick={handleDeleteSelected} name="All" className="text-sm p-3 py-1 w-1/3 mx-8">
-                    Delete Search History
-                </Button_Style>
+                <div className="text-center">
+                    <Button_Style onClick={handleDeleteSelected} name="All" className="text-sm p-3 py-1 w-1/3 mx-8">
+                        Delete Search History
+                    </Button_Style>
+                </div>
             </div>
             <Footer />
         </>

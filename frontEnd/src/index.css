@@ -1,9 +1,12 @@
 @import "tailwindcss";
 :root{
     --background-color:#171219;
+    --transparent-color:#191F27;
     --secondary-color:#225560;
     --primary-color: #06BCC1;
     --comp-1-color:#FFFFFF;
+    --star-color: #FFEE00;
+    /* --star-color: #EFCD0F; */
     --default-font-family: "Kufam";
     color: var(--comp-1-color);
 }

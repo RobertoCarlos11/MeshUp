@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { deleteCollection } from '../services/collectionService';
@@ -5,11 +6,18 @@ import Scene from './Three/Scene';
 import { useEffect, useState } from 'react';
 
 function User_Collections({Collection}) {
-       
+    const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user"));
     const [models, setModels] = useState();
+    const [userId, setUserId] = useState();
+
+    useEffect(() => {
+        user === null ? setUserId("Guest") : setUserId(userId);
+    });
 
     const handleDeleteCollection = () => {
         Swal.fire({
+            theme: 'dark',
             icon: "warning",
             title: "Hold On!!",
             text: "Are you sure you want to delete this collection? This action will be permanent!!",
@@ -25,11 +33,12 @@ function User_Collections({Collection}) {
         })
     }
 
-    const deleteUserCollection = async (e) => {
+    const deleteUserCollection = async () => {
         const response = await deleteCollection(Collection.CollectionId);
         console.log(response);
         if(response.status == true){
             Swal.fire({
+                theme: 'dark',
                 icon: "success",
                 title: "Sucess!!",
                 text: "Sucessfully deleted collection!!"
@@ -38,13 +47,14 @@ function User_Collections({Collection}) {
             });
         }else{
             Swal.fire({
+                theme: 'dark',
                 icon: "error",
                 title: "Oops!!",
                 text: "Error at deleting collection!!"
             });
         }
     }
-    
+
     useEffect(() => {
         const {elements} = Collection;
         const newModels = {};
@@ -73,6 +83,7 @@ function User_Collections({Collection}) {
         }));
 
     },[Collection]);
+
     return (
         <>
             <div className="flex flex-col">
@@ -84,12 +95,14 @@ function User_Collections({Collection}) {
                         </div>
                     ))}
                     </div>
-                    <div className="mx-3 flex justify-between border-t pb-2 pt-2 px-1">
-                    <DeleteOutlineOutlinedIcon onClick={handleDeleteCollection} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 m-3'/>
-                        <span className="cursor-pointer text-base text-[var(--secondary-color)] m-1">
+                    <div className="flex justify-between items-center border-t mx-3 pb-2 pt-2 px-1">
+                        <span onClick={() => {navigate(`/Collection/${Collection.Email}/${Collection.Collection_Name}/${Collection.CollectionId}`)}} className="cursor-pointer text-base text-[var(--secondary-color)] m-1">
                             {Collection.Collection_Name}    
                         </span>
-                    </div>
+                        {userId === Collection.Email &&
+                            <DeleteOutlineOutlinedIcon onClick={handleDeleteCollection} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50'/>
+                        }
+                        </div>
                 </div>
                 <div className="h-4 ml-5 mr-5 mb-4  bg-gray-400 w-140 scale-95 rounded-sm shadow-lg"></div>
             </div>
