@@ -6,12 +6,12 @@ import { useState, useEffect} from 'react';
 import Notification from './Notification';
 
 function HeaderComponent() {
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+    const user = JSON.parse(localStorage.getItem("user"));
     
     const [userId, setUserId] = useState();
     useEffect(() => {
-        user === null ? setUserId("Guest") : setUserId(userId);
-    });
+        user === null ? setUserId("Guest") : setUserId(user.Email);
+    }, [user]);
 
     return (
         <>
