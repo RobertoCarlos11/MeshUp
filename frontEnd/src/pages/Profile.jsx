@@ -88,7 +88,7 @@ function Profile() {
         }
         FetchPhoto();
 
-    }, []);
+    }, [ProfileId]);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -198,7 +198,7 @@ function Profile() {
                         </div>
                     </div>
                 </div>
-                {userLoggedIn?.Email === user.Email &&
+                {userLoggedIn?.Email === user?.Email &&
                     <Button_Style className="text-sm m-2 px-3 py-1 w-32 self-center" onClick={handleOpen}>Edit Profile</Button_Style>}    
             </div>
             <Modal open={open} onClose={handleClose} className="flex items-center justify-center">
@@ -211,16 +211,16 @@ function Profile() {
                             <div className="">
                                 <div className="mb-4">
                                     <label className="block text-sm font-bold mb-2">Username</label>
-                                    <input type="text" name="Username" onChange={handleUpdateUser} defaultValue={user.Username} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)]" />
+                                    <input type="text" name="Username" onChange={handleUpdateUser} defaultValue={user?.Username} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)]" />
                                     <p ref={UsernameTakenRef} hidden className="text-red-600 font-light text-xs">Username already taken!</p>
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-sm font-bold mb-2">Password</label>
-                                    <input type="text" name="Pass" onChange={handleUpdateUser} defaultValue={user.Pass} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)]" />
+                                    <input type="text" name="Pass" onChange={handleUpdateUser} defaultValue={user?.Pass} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)]" />
                                 </div>
                                 <div className="mb-4"></div>
                                 <label className="block text-sm font-bold mb-2">Birthdate</label>
-                                <input type="date" name="Birthdate" onChange={handleUpdateUser} defaultValue={formatDate(user.Birthdate)} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)]" />
+                                <input type="date" name="Birthdate" onChange={handleUpdateUser} defaultValue={formatDate(user?.Birthdate)} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)]" />
                             </div>
                             <div className="flex flex-col items-center">
                                 <label className="block text-sm font-bold mb-2">Profile Picture</label>
