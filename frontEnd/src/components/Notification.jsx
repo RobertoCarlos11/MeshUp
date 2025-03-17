@@ -2,19 +2,19 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { useEffect, useState } from 'react';
 import { getNotifications, updateNotification } from '../services/notificationService';
-import { useNavigate } from 'react-router-dom';
+import { replace, useNavigate } from 'react-router-dom';
 
 function Notification({userLoggedIn = null}) {
 
     const navigate = useNavigate();
     const [notifications, setNotifications] = useState(null);
     useEffect(() => {
-
         const FetchNotifications = async () => {
             const NotificationsFound = await getNotifications(userLoggedIn);
             setNotifications(NotificationsFound.data);
         }
         FetchNotifications();
+
     },[userLoggedIn]);
 
     const handleCheckNotification = async (notification) => {
@@ -22,7 +22,9 @@ function Notification({userLoggedIn = null}) {
         const NotificationUpdated = await updateNotification(notification.NotificationId, !notification.Status);
 
         if(NotificationUpdated.status)
-            navigate(`/Post/${notification.PostId}`)
+            navigate(`/Post/${notification.PostId}`);
+
+        setNotifications(notifications.filter(n => n.NotificationId !== notification.NotificationId));
     }
 
     return (
