@@ -20,6 +20,7 @@ function Profile() {
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
     const [user, setUser] = useState(userLoggedIn);
     const [posts, setPosts] = useState();
+    const [username , setUsername] = useState();
     const [collections, setCollections] = useState();
     const [iconHidden, setIconHidden] = useState(true);
     const [photoUrl, setPhotoUrl] = useState(null);
@@ -49,6 +50,7 @@ function Profile() {
                 return navigate("/Home");
             
             setUser(UserFound.data);
+            setUsername(UserFound.data.Username);
             if(userLoggedIn?.Email !== ProfileId)
                 return;
             setUser((prev) => ({
@@ -164,6 +166,7 @@ function Profile() {
         const { Username, Pass, Birthdate,Email } = user;
         const updatedUser = { Username, Pass, Birthdate,Email };
         localStorage.setItem("user", JSON.stringify(updatedUser));
+        setUsername(Username);
         setUserUpdated(false);
     },[userUpdated]);
 
@@ -185,7 +188,7 @@ function Profile() {
                     <img src={photoUrl !== null ? photoUrl : DefaultPfp} alt="ProfilePicture" className="border-4 border-solid border-[var(--background-color)] rounded-full w-45 h-45" />
                 </div>
                 <div className="flex flex-col -mt-18 mb-3">
-                    <span className="text-center text-2xl font-semibold">{user.Username}</span>
+                    <span className="text-center text-2xl font-semibold">{username}</span>
                     <div className="flex felx-row justify-center">
                         <div className="m-2">
                             <span className="text-base font-semibold mr-2">{posts?.length}</span>Posts
