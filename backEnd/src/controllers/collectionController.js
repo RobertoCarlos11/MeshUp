@@ -36,7 +36,7 @@ export const InsertCollection = async (req,res) => {
 
 export const InsertCollectionElement = async (req,res) => {
     try{
-        const { postId, collectionId } = req.params;
+        const { postId, collectionId } = req.body   ;
     
         const existingPost = await Collection_Element.findAll({
             where:{ 

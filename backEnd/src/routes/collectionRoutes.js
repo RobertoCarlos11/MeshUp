@@ -13,7 +13,7 @@ import {
 const router = e.Router();
 
 router.post("/", InsertCollection);
-router.post("/:collectionId/:postId", InsertCollectionElement);
+router.post("/element/", InsertCollectionElement);
 router.get("/:email", getCollections);
 router.get("/saves/:PostId", getSavesOfPost);
 router.get("/collection/:collectionId", getCollectionElements);
