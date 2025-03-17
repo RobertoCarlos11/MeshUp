@@ -10,6 +10,16 @@ export const getAllUsers = async () => {
     }
 }
 
+export const getUserPhoto = async (Email) => {
+    try{
+        const response = await apiClient.get(`/api/users/photo/${Email}`);
+        return response.data;
+    }
+    catch(error){
+        throw error.response?.data || error.message;
+    }
+}
+
 export const getUser = async (username) => {
     try{
         const response = await apiClient.get(`/api/users/${username}`);
@@ -21,7 +31,7 @@ export const getUser = async (username) => {
 
 export const userLogIn = async (user, password) => {
     try{
-        const response = await apiClient.get(`/api/users/${user}/${password}`);
+        const response = await apiClient.get(`/api/users/login/${user}/${password}`);
         return response.data;
     }catch(error){
         throw error.response?.data || error.message;

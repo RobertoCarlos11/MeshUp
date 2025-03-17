@@ -53,7 +53,10 @@ export const getSavesOfPost = async (PostId) => {
 
 export const updateCollection = async (collectionName, collectionId) => {
     try{
-        const response = await apiClient.put(`/api/collection/update/${collectionName}/${collectionId}`)
+        const response = await apiClient.put(`/api/collection/update/`,{
+            collectionName: collectionName,
+            collectionId: collectionId
+        });
         return response.data;
     }catch(error){
         throw error.response?.data || error.message;
@@ -62,16 +65,21 @@ export const updateCollection = async (collectionName, collectionId) => {
 
 export const deleteCollection = async (collectionId) => {
     try {
-        const response = await apiClient.put(`/api/collection/${collectionId}`);
+        const response = await apiClient.put(`/api/collection/delete`,{
+            collectionId: collectionId
+        });
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
     }
 };
 
-export const deleteElement = async (postId, collectionId) => {
+export const deleteElement = async (collectionId, postId) => {
     try{
-        const response = await apiClient.put(`api/collection/${postId}/${collectionId}`);
+        const response = await apiClient.put(`api/collection/deleteElement`,{
+            postId: postId,
+            collectionId: collectionId
+        });
         return response.data;
     }catch(error){
         throw error.response?.data || error.message;
