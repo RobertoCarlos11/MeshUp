@@ -15,7 +15,10 @@ export const InsertCollection = async (collectionName, email, postId) =>{
 
 export const InsertCollectionElement = async (collectionId, postId) =>{
     try{
-        const response = await apiClient.post(`/api/collection/${collectionId}/${postId}`);
+        const response = await apiClient.post(`/api/collection/element`,{
+            collectionId: collectionId,
+            postId: postId,
+            });
         return response.data;
     }catch(error){
         throw error.response?.data || error.message;
