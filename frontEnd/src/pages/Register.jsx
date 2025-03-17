@@ -96,7 +96,7 @@ function Register() {
 
     return (
         <>
-            <Link to={"/Home"}><img src={LogoName} alt="LogoName" className='w-30 m-10 -mb-10'/></Link>
+            <Link to={"/Home"}><img src={LogoName} alt="LogoName" className='w-30 mx-10 my-5 -mb-15'/></Link>
             <div className="h-screen flex justify-center items-center space-x-auto">
                 <div className="bg-secondary p-12 rounded-md">
                     <div className='flex flex-col items-center'>

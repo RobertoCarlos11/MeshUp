@@ -42,12 +42,12 @@ function LogIn() {
     }
     return (
         <>
-            <Link to={"/Home"}><img src={LogoName} alt="LogoName" className='w-30 m-10 mb-10' /></Link>
-            <div className="h-screen flex justify-center items-center space-x-auto">
-                <div className="bg-secondary p-12 rounded-md">
-                    <div className='flex flex-col items-center'>
+            <Link to={"/Home"}> <img src={LogoName} alt="LogoName" className='w-30 mx-10 my-5 -mb-15' /></Link>
+            <div className="flex justify-center items-center space-x-auto h-screen">
+                <div className="bg-secondary p-12 rounded-md w-1/4">
+                    <div className='flex flex-col items-center' >
                         <img src={LogoName} alt="LogoName" className='w-20' />
-                        <h1 className="text-comp-1 text-center font-bold text-2xl p-6">Welcome Back!</h1>
+                        <h1 className="text-comp-1 text-center font-bold text-lg p-6">Welcome Back!</h1>
                     </div>
                     <h2 className="text-comp-1 text-center font-bold text-xl">Log In</h2>
                     <form className="flex flex-col space-y-6 p-6">
