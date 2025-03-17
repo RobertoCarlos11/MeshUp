@@ -12,8 +12,8 @@ function User_Collections({Collection}) {
     const [userId, setUserId] = useState();
 
     useEffect(() => {
-        user === null ? setUserId("Guest") : setUserId(userId);
-    });
+        user === null ? setUserId("Guest") : setUserId(user.Email);
+    },[]);
 
     const handleDeleteCollection = () => {
         Swal.fire({
@@ -96,7 +96,7 @@ function User_Collections({Collection}) {
                     ))}
                     </div>
                     <div className="flex justify-between items-center border-t mx-3 pb-2 pt-2 px-1">
-                        <span onClick={() => {navigate(`/Collection/${Collection.Email}/${Collection.Collection_Name}/${Collection.CollectionId}`)}} className="cursor-pointer text-base text-[var(--secondary-color)] m-1">
+                        <span onClick={() => {navigate(`/Collection/${Collection.Email}/${Collection.CollectionId}`)}} className="cursor-pointer text-base text-[var(--secondary-color)] m-1">
                             {Collection.Collection_Name}    
                         </span>
                         {userId === Collection.Email &&
