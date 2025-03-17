@@ -13,34 +13,32 @@ function Collection(){
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
     const [elements, setElements] = useState();
-    const { ProfileId, collection_name, collectionId } = useParams();
+    const { ProfileId, collectionId } = useParams();
     const [collectionName, setCollectionName] = useState();
     const [isEditing, setIsEditing] = useState(false);
     const [userId, setUserId] = useState();
 
     const handleEditCollection = () => { setIsEditing(true); };
 
-    window.onload = () => { alert("INNN")}
-
     useEffect(() => {
-        user === null ? setUserId("Guest") : setUserId(userId);
-    });
+        user === null ? setUserId("Guest") : setUserId(user.Email);
+    },[]);
 
-    useEffect(() => {
-        setCollectionName(collection_name);
-
-        const FetchCollectionELements = async () => {
-            const elementsFound = await getCollectionElements(collectionId);
-            if(elementsFound?.data && elementsFound.data !== null){
-                console.log('Elementos:' , elementsFound.data);
-                setElements(elementsFound.data);
-            }else{
-                console.log('No elements');
-            }
+    const FetchCollectionELements = async () => {
+        const elementsFound = await getCollectionElements(collectionId);
+        if(elementsFound?.data && elementsFound.data !== null){
+            console.log('Elementos:' , elementsFound.data);
+            setElements(elementsFound.data);
+            setCollectionName(elementsFound.CollectionName);
+        }else{
+            console.log('No elements');
         }
+    }
+    useEffect(() => {
+
         FetchCollectionELements();
 
-    }, [collection_name, collectionId]);
+    }, [collectionId]);
     
     const handleDeleteCollection = () => {
         Swal.fire({
@@ -83,17 +81,15 @@ function Collection(){
     }
 
     const updateCollectionName = async () =>{
-        const response = await updateCollection(collectionName.trim(), collectionId);
+        const response = await updateCollection(collectionName, collectionId);
         console.log(response);
 
         if (response.status == true){
-            Swal.fire({
+            await Swal.fire({
                 theme: 'dark',
                 icon: "success",
                 title: "Success!!",
                 text: "Sucessfully re-named collection!!"
-            }).then((result) => {
-                navigate(`/Collection/${collectionName}/${collectionId}`, { replace: true });
             });
         }else{
             Swal.fire({
@@ -106,6 +102,11 @@ function Collection(){
         setIsEditing(false);
     }
 
+    const handleElementDeleted = async (postId) => {
+        console.log("PostId:", postId);
+        const elementsFiltered = elements.filter((element) => element.PostId !== postId);
+        setElements(elementsFiltered);
+    }
     return (
         <>
         <Header/>
@@ -116,7 +117,7 @@ function Collection(){
             disabled={!isEditing} 
             onChange={(e) => setCollectionName(e.target.value)}/>
 
-            { userId === ProfileId && (
+            {userId === ProfileId && (
                 !isEditing ? (
                     <EditOutlinedIcon 
                         onClick={handleEditCollection} 
@@ -133,10 +134,15 @@ function Collection(){
         <div className="flex flex-wrap justify-center space-x-auto m-5 p-5">
         {elements && elements.length > 0 ? (
             elements.map((element) => (
-                <PostCard key={element.PostId} Post={element} />
+                <PostCard key={element.PostId} Post={element} ElementDeleted={handleElementDeleted}/>
             ))
         ) : elements && elements.length === 0 ? (
-            <div>The Collection is empty :( . <Link to="/Home" className="underline">Find Posts.</Link></div>
+            <div>The Collection is empty.
+                {
+                    userId === ProfileId &&
+                    <Link to="/Home" className="underline">Find Posts.</Link>
+                }
+                </div>
         ) : (
             <div className="text-sm animate-bounce flex items-center justify-center">
                 <img src={Logo} className="w-10" alt="LogoName" />
