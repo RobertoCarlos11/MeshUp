@@ -1,9 +1,6 @@
 import { where, Op } from 'sequelize';
 import User from '../models/UserModel.js';
 import multer from "multer";
-import Model from "../models/3DFileModel.js";
-import Post from "../models/PostModel.js";
-import Comment from "../models/CommentModel.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -31,6 +28,7 @@ export const getUser = async (req,res) =>
             where:{
                 Email: Email,
             },
+            attributes: { exclude: ["Pass"] },
         });
 
         const payload=
@@ -59,7 +57,8 @@ export const userLogIn = async (req, res) => {
                     { Email: user }
                 ],
                 Pass: password,
-            }
+            },
+            attributes: { exclude: ["Profile_Picture"] },
         });
 
         const payload = {
@@ -128,31 +127,79 @@ export const userUpdate = async (req, res) => {
     try {
         const { Username,Pass,Birthdate,Email,Profile_Picture } = req.body;
 
+        console.log(`Username: ${Username}, Pass: ${Pass}, Birthdate: ${Birthdate}, Email: ${Email}, Profile_Picture: ${Profile_Picture}`);
         let ProfilePictureBuffer = null;
-        if(!Profile_Picture)
+        if(!Profile_Picture && !(req.files["Profile_Picture"] === undefined))
         {
             ProfilePictureBuffer = req.files["Profile_Picture"][0].buffer;
         }
 
+        const ExistingUser = await User.findOne({
+            where:{ [Op.or]:{
+                Username: Username,
+            },}
+        });
+        
+        console.log(ExistingUser);
+        const SameUser = ExistingUser?.Email === Email;
+        let payload;
+        console.log(SameUser);
+
+        if(SameUser || ExistingUser === null)
+        {
         await User.update(
             {
-                Username: Username,
-                Pass: Pass,
-                Birthdate: Birthdate,
-                Profile_Picture: ProfilePictureBuffer === null ? {} : ProfilePictureBuffer,
+            Username: Username,
+            Pass: Pass,
+            Birthdate: Birthdate,
+            Profile_Picture: ProfilePictureBuffer === null ? User.Profile_Picture : ProfilePictureBuffer,
             },
             {
-                where: { Email: Email },
+            where: { Email: Email },
             }
         );
-        const payload = {
+
+        const UserUpdated = await User.findOne({
+            where: { Email: Email },
+        });
+
+        console.log(UserUpdated);
+        payload = {
             status: true,
             message: "User updated successfully",
+            data: UserUpdated,
         };
-        res.json(payload);
+        }
+        else{
+        payload = {
+            status: false,
+            message: "Username or Email already exists",
+        }
+    }
+    res.json(payload);
     }
     catch(error)
     {
+        res.status(500).json(error);
+        console.log(error);
+    }
+}
+
+export const getUserPhoto = async (req, res) => {
+    try {
+        const { Email } = req.params;
+        const user = await User.findOne({
+            where: {
+                Email: Email,
+            }
+        });
+        const payload = {
+            status: true,
+            message: "User photo fetched correctly",
+            data: user.Profile_Picture,
+        };
+        res.json(payload);
+    } catch (error) {
         res.status(500).json(error);
         console.log(error);
     }
