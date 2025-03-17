@@ -18,7 +18,7 @@ import { GetAllCategories } from '../services/categoryService';
 import { UpdatePost } from '../services/postService';
 import AddCollection from './AddCollection';
 
-function PostCard({ Post }) {
+function PostCard({ Post, ElementDeleted = null }) {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
     const [userId, setUserId] = useState();
@@ -38,8 +38,8 @@ function PostCard({ Post }) {
     const handleClose = () => setOpen(false);
 
     useEffect(() => {
-        user === null ? setUserId("Guest") : setUserId(userId);
-    });
+        user === null ? setUserId("Guest") : setUserId(user.Email);
+    },[]);
 
     useEffect(() => {
         const { model } = Post;
@@ -56,9 +56,10 @@ function PostCard({ Post }) {
             textureObjectURL = URL.createObjectURL(textureBlob);
             setTextureUrl(textureObjectURL);
         }
+
         return () => {
-            if (modelObjectURL) URL.revokeObjectURL(modelObjectURL);
-            if (textureObjectURL) URL.revokeObjectURL(textureObjectURL);
+             URL.revokeObjectURL(modelObjectURL);
+             URL.revokeObjectURL(textureObjectURL);
         };
     }, [Post]);
 
@@ -66,10 +67,11 @@ function PostCard({ Post }) {
         const getLikesOfPost = async () => {
                 const LikesFound = await GetLikes("post", Post.PostId, userId);
                 setLikes(LikesFound.data.count);
+                console.log(LikesFound);
                 setUserLiked(LikesFound?.UserLiked.Status);
             }
         getLikesOfPost();
-    }, []);
+    }, [userId]);
 
     useEffect(() => {
         const getSaves = async () => {
@@ -77,7 +79,7 @@ function PostCard({ Post }) {
                 setSaves(SavesFound.data.count);
         }
         getSaves();
-    });
+    },[Post]);
     useEffect(() => {
         if (open) {
             const FetchCategories = async () => {
@@ -177,12 +179,14 @@ function PostCard({ Post }) {
         console.log(response);
 
         if (response.status == true){
-            Swal.fire({
+            await Swal.fire({
                 theme: 'dark',
                 icon: "success",
                 title: "Success!!",
                 text: `Sucessfully deleted post from ${collection_name}`
-            }).then((result) => { window.location.reload(); })
+            });
+
+            ElementDeleted(Post.PostId);
         }else{
             Swal.fire({
                 theme: 'dark',
@@ -196,6 +200,7 @@ function PostCard({ Post }) {
     return (
         <>
             <div className="relative flex flex-col m-2 bg-white shadow-sm rounded-sm w-140">
+                {modelUrl && textureUrl && 
                 <Scene className="h-75 rounded-sm relative" model={modelUrl} texture={textureUrl}>
                     {userId === Post.Email && location.pathname.includes("/Profile") &&
                         <EditOutlinedIcon onClick={handleOpen} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 absolute top-0 left-0 m-3'/>
@@ -203,8 +208,9 @@ function PostCard({ Post }) {
                     {userId === ProfileId && location.pathname.includes("/Collection") &&
                         <DeleteOutlineOutlinedIcon onClick={handleDeleteElement} className='cursor-pointer text-[var(--background-color)] text-lg opacity-50 absolute top-0 left-0 m-3'/>
                     }
-                    <Rating stars={postRating} className="absolute top-2 right-2 text-[var(--star-color)]" />
-                </ Scene>
+                    <Rating stars={postRating()} className="absolute top-2 right-2 text-[var(--star-color)]" />
+                </Scene>
+                }
                 <div className="cursor-pointer mx-3 flex justify-between border-t pb-2 pt-2 px-1">
                     <span onClick={() => { navigate(`/Post/${Post.PostId}`) }} className="text-base text-[var(--secondary-color)] m-1">
                         {Post.Post_Name}
