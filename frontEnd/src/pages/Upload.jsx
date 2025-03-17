@@ -125,6 +125,16 @@ function Upload() {
                 text: "The file is too big, please try with a smaller file."
             });
         }
+
+        if(name==="texture" && !files[0].name.toLowerCase().endsWith(".png") && !files[0].name.toLowerCase().endsWith(".jpg") && !files[0].name.toLowerCase().endsWith(".jpeg"))
+        {
+            return Swal.fire({
+                theme: 'dark',
+                icon: "error",
+                title: "Oops!!",
+                text: "MeshUp only accepts PNG, JPG and JPEG Files!, please try with a PNG, JPG or JPEG file."
+            });
+        }
         if (files.length > 0) {
             setPostInfo((prev) => ({
                 ...prev,

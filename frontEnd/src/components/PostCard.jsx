@@ -22,7 +22,7 @@ function PostCard({ Post, ElementDeleted = null }) {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
     const [userId, setUserId] = useState();
-    const { ProfileId, collection_name, collectionId } = useParams();
+    const { ProfileId, collectionId } = useParams();
     const location = useLocation();
     const [updatedPost, setUpdatedPost] = useState({});
     const [categories, setCategories] = useState(null);
@@ -183,7 +183,7 @@ function PostCard({ Post, ElementDeleted = null }) {
                 theme: 'dark',
                 icon: "success",
                 title: "Success!!",
-                text: `Sucessfully deleted post from ${collection_name}`
+                text: `Sucessfully deleted post from ${response.collection_name}`
             });
 
             ElementDeleted(Post.PostId);
@@ -192,7 +192,7 @@ function PostCard({ Post, ElementDeleted = null }) {
                 theme: 'dark',
                 icon: "error",
                 title: "Oops!!",
-                text: `Error at deleting post from ${collection_name}`
+                text: `Error at deleting post from ${response.collection_name}`
             })
         }
     }
