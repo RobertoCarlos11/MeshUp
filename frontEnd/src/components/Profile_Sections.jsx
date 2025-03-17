@@ -8,6 +8,7 @@ import { Link, useParams } from "react-router-dom";
 import { getCollections } from "../services/collectionService";
 
 function Profile_Sections({ Posts = null, Collections = null,UserProfile }) {
+    const user = JSON.parse(localStorage.getItem("user"));
     const { ProfileId } = useParams();
     const postsPerPage = 6;
     const [activeTab, setActiveTab] = useState("posts");
@@ -65,7 +66,7 @@ function Profile_Sections({ Posts = null, Collections = null,UserProfile }) {
             ):(
                 <div className="flex items-center flex-col">
                 <h3 className='text-center text-gray-600'>No posts where found.</h3>
-                {UserProfile === ProfileId && <Link to="/Upload" className="text-center text-[var(--primary-color)]">Upload a Post</Link>}
+                {UserProfile === user.Email && <Link to="/Upload" className="text-center text-[var(--primary-color)]">Upload a post.</Link>}
                 </div>
             ):null}
 
