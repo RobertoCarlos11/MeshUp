@@ -7,13 +7,16 @@ import Button_Style from "../components/Button_Style";
 import { useEffect, useRef, useState } from "react";
 import { GetAllCategories } from "../services/categoryService";
 import { CreateModel } from "../services/modelService";
-import { CreatePost } from "../services/PostService";
+import { CreatePost } from "../services/postService";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
 function Upload() {
     const user = JSON.parse(localStorage.getItem("user"));
     const navigate = useNavigate(); 
+    const [modelUrl, setModelUrl] = useState();
+    const [textureUrl, setTextureUrl] = useState();
+
     const [postInfo, setPostInfo] = useState({
         title: "",
         model: null,
@@ -143,13 +146,23 @@ function Upload() {
         }
     }
 
+    useEffect(() => {
+        if (postInfo.model) {
+            setModelUrl(URL.createObjectURL(postInfo.model));
+        }
+    
+        if (postInfo.texture) {
+            setTextureUrl(URL.createObjectURL(postInfo.texture));
+        }
+    },[postInfo.model, postInfo.texture]);
+
     return (
         <>
             <Header />
             <div className="space-x-auto h-screen flex justify-center">
                 <div className="w-1/2 flex flex-col space-y-4">
                     <input type="text" name="title" placeholder="Add Title..." onChange={handlePostChange} className="text-comp-1 font-bold text-2xl w-full border-b-2 border-solid border-[var(--primary-color)]" />
-                    <Scene className="h-1/2" model={postInfo.model && URL.createObjectURL(postInfo.model)} texture={postInfo.texture && URL.createObjectURL(postInfo.texture)} />
+                    <Scene className="h-1/2" model={modelUrl} texture={textureUrl} />
                     <div className="flex w-full justify-between">
                         <div className="flex flex-row">
                             <Button_Style inverted onClick={handleUploadModel} className="cursor-pointer m-1 px-3 py-1">
