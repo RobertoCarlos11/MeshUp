@@ -17,7 +17,6 @@ import Button_Style from "../components/Button_Style";
 import JSZip from "jszip";
 import Logo from "../assets/Logo.png";
 import { getSavesOfPost } from "../services/collectionService";
-import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import AddCollection from "../components/AddCollection";
 
 
@@ -164,9 +163,8 @@ function Post() {
                     text: "The review was updated successfully!",
                     icon: "success",
                     showConfirmButton: true
-                }).then(() => {
-                    window.location.reload();
                 });
+            
             }
         }
         else{
@@ -183,8 +181,6 @@ function Post() {
             });
         
         const newComments = await getComments(post?.PostId);
-        
-        setPost({});
 
         setPost((prev) => 
         ({
@@ -222,7 +218,12 @@ function Post() {
         <Header />
         <div className="flex items-center justify-center h-screen">
             <img src={Logo} className="w-10" alt="LogoName" />
-            <h1>This Post is private. <Link to={`/Profile/${user.Email}`} className="underline"> Make Public.</Link></h1>
+            <h1>This Post is private.
+                {
+                    user?.Email === post.user?.Email &&
+                    <Link to={`/Profile/${user.Email}`} className="underline"> Make Public.</Link>
+                }
+            </h1>
         </div>
         </>
     : 
