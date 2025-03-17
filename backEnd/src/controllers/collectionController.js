@@ -133,7 +133,12 @@ export const getCollectionElements = async (req, res) => {
                     CollectionId: collectionId,
                     CollectionElement_Status: 1
                 },
-                attributes: [] 
+                attributes: ["ElementId"],
+                include:[{
+                model: Collection,
+                as: "collection",
+                attributes: ["Collection_Status"],
+                }],
             },
             {
                 model: User,
@@ -249,10 +254,15 @@ export const deleteElement = async (req, res) => {
                 PostId: postId 
             }}
         );
-
+    
+        const CollectionName = await Collection.findOne({
+            where:{ CollectionId: collectionId },
+            attributes: ["Collection_Name"]
+        });
         const payload = {
             status: true,
-            message: "Sucessfully deleted element from collection"
+            message: "Sucessfully deleted element from collection",
+            collection_name: CollectionName.Collection_Name,
         }
 
         res.json(payload);

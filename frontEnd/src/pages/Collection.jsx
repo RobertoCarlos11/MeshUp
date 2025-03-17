@@ -4,7 +4,7 @@ import PostCard from "../components/PostCard";
 import Logo from "../assets/Logo.png";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Button_Style from "../components/Button_Style";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, replace } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from 'sweetalert2';
 import { deleteCollection, updateCollection, getCollectionElements } from '../services/collectionService';
@@ -24,12 +24,18 @@ function Collection(){
         user === null ? setUserId("Guest") : setUserId(user.Email);
     },[]);
 
+
     const FetchCollectionELements = async () => {
         const elementsFound = await getCollectionElements(collectionId);
         if(elementsFound?.data && elementsFound.data !== null){
             console.log('Elementos:' , elementsFound.data);
             setElements(elementsFound.data);
             setCollectionName(elementsFound.CollectionName);
+
+            if(!elementsFound.data[0].collectionElements[0].collection.Collection_Status)
+            {
+                navigate(`/Home`,{ replace:true});
+            }
         }else{
             console.log('No elements');
         }
