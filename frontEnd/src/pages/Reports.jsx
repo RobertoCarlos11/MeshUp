@@ -167,7 +167,7 @@ function Reports() {
                                         (
 
                                             <div className="text-4xl animate-bounce flex items-center justify-center">
-                                                <img src={Logo} className="w-1/4" alt="LogoName" />
+                                                <img src={Logo} className="w-1/6" alt="LogoName" />
                                                 <p>Loading...</p>
                                             </div>
                                         )
