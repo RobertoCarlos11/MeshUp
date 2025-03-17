@@ -8,18 +8,14 @@ function Notification({userLoggedIn = null}) {
 
     const navigate = useNavigate();
     const [notifications, setNotifications] = useState(null);
-    const [notificationUpdated, setNotificationUpdated] = useState(true);
     useEffect(() => {
-        if(!notificationUpdated)
-            return;
 
         const FetchNotifications = async () => {
             const NotificationsFound = await getNotifications(userLoggedIn);
             setNotifications(NotificationsFound.data);
         }
         FetchNotifications();
-        setNotificationUpdated(false);
-    },[notificationUpdated]);
+    },[userLoggedIn]);
 
     const handleCheckNotification = async (notification) => {
 
@@ -27,8 +23,6 @@ function Notification({userLoggedIn = null}) {
 
         if(NotificationUpdated.status)
             navigate(`/Post/${notification.PostId}`)
-
-        setNotificationUpdated(true);
     }
 
     return (
