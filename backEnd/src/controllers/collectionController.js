@@ -93,6 +93,7 @@ export const getCollections = async (req, res) => {
             include:{
                 model:Collection_Element,
                 as:"elements",
+                where:{ CollectionElement_Status: 1 },
                 include:
                 {
                 model:Post,
@@ -149,10 +150,14 @@ export const getCollectionElements = async (req, res) => {
             }]
         });
 
+        const CollectionName = await Collection.findOne({
+            where:{ CollectionId: collectionId }
+        });
         const payload = {
             status: true,
             data: response,
-            message: `Collection elements with collectionId ${collectionId} fetched successfully`
+            message: `Collection elements with collectionId ${collectionId} fetched successfully`,
+            CollectionName: CollectionName.Collection_Name,
         };
 
         res.json(payload);
@@ -190,7 +195,7 @@ export const getSavesOfPost = async (req,res) => {
 
 export const updateCollection = async (req,res) => {
     try{
-        const { collectionName, collectionId } = req.params;
+        const { collectionName, collectionId } = req.body;
 
         await Collection.update(
             { Collection_Name: collectionName },
@@ -212,7 +217,7 @@ export const updateCollection = async (req,res) => {
  
 export const deleteCollection = async (req, res) => {
     try{
-        const { collectionId } = req.params;
+        const { collectionId } = req.body;
 
         await Collection.update(
             { Collection_Status: 0 },
@@ -234,8 +239,9 @@ export const deleteCollection = async (req, res) => {
 
 export const deleteElement = async (req, res) => {
     try{
-        const {collectionId, postId} = req.params;
+        const {collectionId, postId} = req.body;
 
+        console.log(collectionId, postId);
         await Collection_Element.update(
             { CollectionElement_Status: 0 },
             { where: { 
