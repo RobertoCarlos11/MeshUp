@@ -10,11 +10,15 @@ import { GetLikes, InsertLike, UpdateLike } from "../services/likeService";
 function CommentCard({ commentItem, userLoggedIn = null }) {
 
     const [photoUrl, setPhotoUrl] = useState(null);
-    const [comment, setComment] = useState(commentItem);
+    const [comment, setComment] = useState();
+
+    useEffect(() => {
+        setComment(commentItem);
+    }, [commentItem]);
 
     useEffect(() => {
         const getLikesOfComment = async () => {
-            const LikesFound = await GetLikes("comment", comment.CommentId, userLoggedIn);
+            const LikesFound = await GetLikes("comment", comment?.CommentId, userLoggedIn);
 
             setComment((prev) => ({
                 ...prev,
@@ -23,7 +27,7 @@ function CommentCard({ commentItem, userLoggedIn = null }) {
             }));
         }
         getLikesOfComment();
-    }, []);
+    }, [commentItem]);
 
     useEffect(() => {
         if (!comment?.user?.Profile_Picture)
@@ -32,7 +36,7 @@ function CommentCard({ commentItem, userLoggedIn = null }) {
         const PhotoBlob = new Blob([PhotoArray]);
         const PhotoUrl = URL.createObjectURL(PhotoBlob);
         setPhotoUrl(PhotoUrl);
-    }, []);
+    }, [comment]);
 
     useEffect(() => {
         return () => URL.revokeObjectURL(photoUrl);
@@ -73,8 +77,8 @@ function CommentCard({ commentItem, userLoggedIn = null }) {
             <div className="flex justify-between">
                 <div className="flex h-full space-x-2 m-1">
                     <img src={photoUrl === null ? DefaultPfp : photoUrl} className="rounded-full w-10 h-10" />
-                    <Link to={`/Profile/${comment.user?.Email}`} className="flex items-center">
-                        <h1 className="text-primary text-md font-bold">{comment.user?.Username}</h1>
+                    <Link to={`/Profile/${comment?.user?.Email}`} className="flex items-center">
+                        <h1 className="text-primary text-md font-bold">{comment?.user?.Username}</h1>
                     </Link>
                 </div>
                 <Rating className="text-yellow-400" stars={comment?.Rating} />
@@ -83,7 +87,7 @@ function CommentCard({ commentItem, userLoggedIn = null }) {
             <div className="flex justify-between m-1">
                 <div className="flex space-x-1 text-xs">
                     <Like_Button status={comment?.UserLiked} onClick={handleCommentLike} className="text-primary cursor-pointer" />
-                    <p className="text-comp-1 flex items-center">{comment.Likes} Likes</p>
+                    <p className="text-comp-1 flex items-center">{comment?.Likes} Likes</p>
                 </div>
             </div>
 
