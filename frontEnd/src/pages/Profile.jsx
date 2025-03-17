@@ -6,34 +6,41 @@ import Button_Style from "../components/Button_Style";
 import { useEffect, useRef, useState } from "react";
 import { Modal } from "@mui/material";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import { updateUser, getUser } from "../services/userService";
+import { updateUser, getUser, getUserPhoto } from "../services/userService";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetAllPostsOfUser } from "../services/postService";
 import { getCollections } from "../services/collectionService";
-import Pagination from "../components/Pagination";
 import Logo from "../assets/Logo.png";
 
 function Profile() {
 
-    const postsPerPage = 6;
     const navigate = useNavigate();
     const { ProfileId } = useParams();
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(userLoggedIn);
     const [posts, setPosts] = useState();
     const [collections, setCollections] = useState();
     const [iconHidden, setIconHidden] = useState(true);
     const [photoUrl, setPhotoUrl] = useState(null);
     const [open, setOpen] = useState(false);
     const [userUpdated, setUserUpdated] = useState(false);
-    const [photoArray, setPhotoArray] = useState([]);
-
-    
     const PhotoInputRef = useRef();
+    const UsernameTakenRef = useRef();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const validateDate = (value) => {
+        const today = new Date();
+        const selectedDate = new Date(value);
+        return selectedDate < today;
+    }
+    
+    const validatePassword = (value) => {
+        const passRegExp = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{8,}$');
+        return passRegExp.test(value);
+    }
 
     useEffect(() => {
         const FetchUserInfo = async () => {
@@ -42,6 +49,12 @@ function Profile() {
                 return navigate("/Home");
             
             setUser(UserFound.data);
+            if(userLoggedIn?.Email !== ProfileId)
+                return;
+            setUser((prev) => ({
+                ...prev,
+            Pass: userLoggedIn.Pass,
+            }));
         }
         FetchUserInfo();
 
@@ -62,14 +75,18 @@ function Profile() {
 
 
     useEffect(() => {
-        if (!user.Profile_Picture)
-            return;
 
-        const PhotoArray = new Uint8Array(photoArray.length > 0 ? photoArray : user.Profile_Picture.data);
+        const FetchPhoto = async () => {
+        const PhotoFound = await getUserPhoto(ProfileId);
+        console.log(PhotoFound);
+        const PhotoArray = new Uint8Array(PhotoFound.data.data);
         const PhotoBlob = new Blob([PhotoArray], { type: "image/png" });
         const PhotoUrl = URL.createObjectURL(PhotoBlob);
         setPhotoUrl(PhotoUrl);
-    }, [user.Profile_Picture]);
+        }
+        FetchPhoto();
+
+    }, []);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -95,15 +112,26 @@ function Profile() {
             reader.readAsArrayBuffer(photoSelected);
 
             reader.onload = () => {
-                const uint8Array = new Uint8Array(reader.result);
-                setPhotoArray([...uint8Array]);
                 setPhotoUrl(URL.createObjectURL(new Blob([reader.result], { type: photoSelected.type })));
             };
         }
     }
 
     const handleSave = async (e) => {
+
         e.preventDefault();
+
+        if(!validateDate(user.Birthdate) || !validatePassword(user.Pass))
+        {
+            handleClose();
+            return Swal.fire({
+                theme: 'dark',
+                title: "Invalid Information!",
+                text: "Please fill out all information correctly",
+                icon: "error",
+            });
+        }
+
         const formData = new FormData();
 
         for (const key in user) {
@@ -121,19 +149,21 @@ function Profile() {
                 icon: "success",
                 timer: 2000,
             });
+            setUserUpdated(true);
         }
-        setUser((prev) => ({
-            ...prev,
-            Profile_Picture: { data: photoArray.length === 0 ? prev.Profile_Picture.data : photoArray, type: "buffer", },
-        }));
-        setUserUpdated(true);
+        else{
+            UsernameTakenRef.current.hidden = false;
+        }
+
     }
 
     useEffect(() => {
         if(!userUpdated)
             return;
 
-        localStorage.setItem("user", JSON.stringify(user));
+        const { Username, Pass, Birthdate,Email } = user;
+        const updatedUser = { Username, Pass, Birthdate,Email };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
         setUserUpdated(false);
     },[userUpdated]);
 
@@ -147,7 +177,7 @@ function Profile() {
 
     return (
         <>
-            <Header />
+            <Header UserUpdated={userUpdated}/>
             <div className="bg-[var(--secondary-color)] h-40"></div>
 
             <div className="flex flex-col justify-center">
@@ -179,6 +209,7 @@ function Profile() {
                                 <div className="mb-4">
                                     <label className="block text-sm font-bold mb-2">Username</label>
                                     <input type="text" name="Username" onChange={handleUpdateUser} defaultValue={user.Username} className="text-comp-1 w-full p-2 py-1 border-b-1 border-[var(--primary-color)]" />
+                                    <p ref={UsernameTakenRef} hidden className="text-red-600 font-light text-xs">Username already taken!</p>
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-sm font-bold mb-2">Password</label>
