@@ -7,8 +7,9 @@ import {Link, useNavigate} from "react-router-dom";
 import { useEffect,useState } from "react";
 import { GetAllPosts } from "../services/postService";
 import { CreateSearch } from "../services/historyService";
+import { getUserPhoto } from "../services/userService";
 
-function Header({UserUpdated = true, History = null}){
+function Header({ History = null, UserUpdated = true}){
     const userLoggedIn = JSON.parse(localStorage.getItem("user"));
     const [user, setUser] = useState();
     const navigate = useNavigate();
@@ -38,23 +39,16 @@ function Header({UserUpdated = true, History = null}){
             navigate("/");
         }
         
-        useEffect(() => {
-        if(!UserUpdated)
-                return;
+    useEffect(() => {
         setUser(userLoggedIn);
-        console.log(userLoggedIn);
-
-        if(!userLoggedIn?.Profile_Picture)
-        {
-            console.log("Photo does not exist");
-            return;
-        }
-
-        const PhotoArray = new Uint8Array(userLoggedIn.Profile_Picture?.data);
+        const FetchPhoto = async () => {
+        const PhotoFound = await getUserPhoto(userLoggedIn.Email);
+        const PhotoArray = new Uint8Array(PhotoFound.data.data);
         const PhotoBlob = new Blob([PhotoArray], {type:"image/png"});
         const PhotoUrl = URL.createObjectURL(PhotoBlob);
         setPhotoUrl(PhotoUrl);
-        
+        }
+        FetchPhoto();
     },[UserUpdated]);
 
     const handleWordChange = (e) => 
@@ -83,8 +77,8 @@ function Header({UserUpdated = true, History = null}){
                     {postsFound && postsFound
                     .filter(item => search !== "" && item.Post_Name.toLowerCase().includes(search.toLowerCase()))
                     .map(post => (
-                        <div onClick={() => handleSearchClick(post.PostId)} className="hover:bg-[var(--primary-color)] p-1 rounded-md cursor-pointer">
-                        <p key={post.PostId}> {post.Post_Name}</p>
+                        <div key={post.PostId} onClick={() => handleSearchClick(post.PostId)} className="hover:bg-[var(--primary-color)] p-1 rounded-md cursor-pointer">
+                        <p> {post.Post_Name}</p>
                         </div>
                     ))}
                 </div>
