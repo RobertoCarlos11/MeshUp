@@ -4,7 +4,7 @@ import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import Pagination from "./Pagination";
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PostCard from "./PostCard";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getCollections } from "../services/collectionService";
 
 function Profile_Sections({ Posts = null, Collections = null,UserProfile }) {
@@ -52,7 +52,7 @@ function Profile_Sections({ Posts = null, Collections = null,UserProfile }) {
                 </button>
             </div>
 
-            {activeTab === "posts" && displayedPosts?.length > 0 && (
+            {activeTab === "posts" ? displayedPosts?.length > 0 ? (
                 <>
                     <div className="flex flex-wrap justify-center space-x-auto m-10">
                         {displayedPosts && displayedPosts.map(post =>
@@ -62,15 +62,22 @@ function Profile_Sections({ Posts = null, Collections = null,UserProfile }) {
                     {Posts && <Pagination Pages={Math.ceil(Posts?.length / postsPerPage)} indexSelectedChanged={handleIndexChanged} />}
 
                 </>
-            )}
+            ):(
+                <div className="flex items-center flex-col">
+                <h3 className='text-center text-gray-600'>No posts where found.</h3>
+                {UserProfile === ProfileId && <Link to="/Upload" className="text-center text-[var(--primary-color)]">Upload a Post</Link>}
+                </div>
+            ):null}
 
-            {activeTab === "collections" && Collections?.length > 0 && (
+            {activeTab === "collections" ? Collections?.length > 0 ? (
                 <div className="flex flex-wrap justify-center space-x-auto m-10">
                     {Collections && Collections.map(collection =>
                         <User_Collections key={collection.CollectionId} Collection={collection} />
                     )}
                 </div>
-            )}
+            ):(
+                <h3 className='text-center text-gray-600'>No collections where found.</h3>
+            ):null}
 
         </>
     )
