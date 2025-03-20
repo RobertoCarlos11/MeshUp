@@ -59,7 +59,10 @@ function Search_History() {
     },[selected]);
 
     useEffect(() => {
+
         console.log(Object.entries(history).length);
+        const Entries = Object.entries(history);
+        console.log("Entries:", Entries.reverse());
     },[history]);
     const handleDeleteSelected = async (e) => {
         const {name} = e.currentTarget;
@@ -140,7 +143,7 @@ function Search_History() {
                         <Button_Style onClick={handleDeleteSelected} name="Selected" className="text-sm p-2 m-2" inverted >Delete</Button_Style>
                     </div>
                 )}
-                {Object.entries(history).length !== 0 ? Object.entries(history).map(([date,entries]) => (
+                {Object.entries(history).length !== 0 ? Object.entries(history).reverse().map(([date,entries]) => (
                     <Day_History SearchDate={date} History={entries} HistorySelected={handleSelected} Items={selected} HandleWord={handleWord}/>
                 )) : (
                     <p className="text-center p-12 opacity-50">No History was found.</p>
