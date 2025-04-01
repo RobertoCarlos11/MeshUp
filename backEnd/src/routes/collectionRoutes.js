@@ -18,6 +18,6 @@ router.get("/:email", getCollections);
 router.get("/saves/:PostId", getSavesOfPost);
 router.get("/collection/:collectionId", getCollectionElements);
 router.put("/update/", updateCollection);
-router.put("/delete/", deleteCollection);
-router.put("/deleteElement/", deleteElement);
+router.delete("/delete/:collectionId", deleteCollection);
+router.delete("/deleteElement/:collectionId/:postId", deleteElement);
 export default router;

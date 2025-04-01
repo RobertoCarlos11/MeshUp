@@ -23,8 +23,4 @@ const Model = sequelize.define(
     }
 );
 
-Model.associate = (models) => {
-    Model.hasMany(models.Post,{foreignKey:"ModelId", as: "posts"});
-}
-
 export default Model;

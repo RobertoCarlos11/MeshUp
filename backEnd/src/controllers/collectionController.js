@@ -222,7 +222,7 @@ export const updateCollection = async (req,res) => {
  
 export const deleteCollection = async (req, res) => {
     try{
-        const { collectionId } = req.body;
+        const { collectionId } = req.params;
 
         await Collection.update(
             { Collection_Status: 0 },
@@ -244,7 +244,7 @@ export const deleteCollection = async (req, res) => {
 
 export const deleteElement = async (req, res) => {
     try{
-        const {collectionId, postId} = req.body;
+        const {collectionId, postId} = req.params;
 
         console.log(collectionId, postId);
         await Collection_Element.update(
