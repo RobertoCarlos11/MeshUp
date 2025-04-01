@@ -66,7 +66,7 @@ function Profile_Sections({ Posts = null, Collections = null,UserProfile }) {
             ):(
                 <div className="flex items-center flex-col">
                 <h3 className='text-center text-gray-600'>No posts where found.</h3>
-                {UserProfile === user.Email && <Link to="/Upload" className="text-center text-[var(--primary-color)]">Upload a post.</Link>}
+                {UserProfile === user?.Email && <Link to="/Upload" className="text-center text-[var(--primary-color)]">Upload a post.</Link>}
                 </div>
             ):null}
 
