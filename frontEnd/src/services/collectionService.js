@@ -68,9 +68,7 @@ export const updateCollection = async (collectionName, collectionId) => {
 
 export const deleteCollection = async (collectionId) => {
     try {
-        const response = await apiClient.put(`/api/collection/delete`,{
-            collectionId: collectionId
-        });
+        const response = await apiClient.delete(`/api/collection/delete/${collectionId}`);
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -79,10 +77,7 @@ export const deleteCollection = async (collectionId) => {
 
 export const deleteElement = async (collectionId, postId) => {
     try{
-        const response = await apiClient.put(`api/collection/deleteElement`,{
-            postId: postId,
-            collectionId: collectionId
-        });
+        const response = await apiClient.delete(`api/collection/deleteElement/${collectionId}/${postId}`);
         return response.data;
     }catch(error){
         throw error.response?.data || error.message;
