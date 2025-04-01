@@ -43,7 +43,7 @@ function User_Collections({Collection}) {
                 title: "Sucess!!",
                 text: "Sucessfully deleted collection!!"
             }).then(() => {
-                window.location.reload();
+                window.location.reload();   
             });
         }else{
             Swal.fire({
