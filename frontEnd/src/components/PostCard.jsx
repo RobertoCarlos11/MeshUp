@@ -64,6 +64,8 @@ function PostCard({ Post, ElementDeleted = null }) {
     }, [Post]);
 
     useEffect(() => {
+        if(userId === "Guest" || userId === undefined || userId === null)
+            return;
         const getLikesOfPost = async () => {
                 const LikesFound = await GetLikes("post", Post.PostId, userId);
                 setLikes(LikesFound.data.count);
