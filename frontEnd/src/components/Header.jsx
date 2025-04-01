@@ -40,9 +40,11 @@ function Header({ History = null, UserUpdated = true}){
         }
         
     useEffect(() => {
+        if(userLoggedIn === null || userLoggedIn === undefined)
+            return;
         setUser(userLoggedIn);
         const FetchPhoto = async () => {
-        const PhotoFound = await getUserPhoto(userLoggedIn.Email);
+        const PhotoFound = await getUserPhoto(userLoggedIn?.Email);
         const PhotoArray = new Uint8Array(PhotoFound.data.data);
         const PhotoBlob = new Blob([PhotoArray], {type:"image/png"});
         const PhotoUrl = URL.createObjectURL(PhotoBlob);
