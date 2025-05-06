@@ -1,7 +1,3 @@
-Ah, I understand! You want a more comprehensive ReadMe file that explicitly details all the features and technologies. Here's an updated version for your GitHub repository:
-
-Markdown
-
 # MeshUp
 
 ## Overview
